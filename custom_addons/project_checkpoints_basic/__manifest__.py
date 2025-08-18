@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+{
+    "name": "Project Checkpoints Basic",
+    "summary": "Basic checkpoint functionality for project tasks - Step by step development",
+    "version": "18.0.1.0.0",
+    "category": "Project",
+    "author": "Sabry",
+    "license": "LGPL-3",
+    "depends": [
+        "base",
+        "project",
+        "product",
+    ],
+    "data": [
+        "views/checkpoint_views.xml",
+        "views/task_views.xml",
+        "views/checkpoint_tag_views.xml",
+        "views/checkpoint_template_views.xml",
+        "views/product_views.xml",
+        "views/milestone_views.xml",
+        "views/milestone_template_views.xml",
+        "wizard/apply_checkpoint_template_wizard_views.xml",
+        "wizard/template_selection_wizard_views.xml",
+        "views/menu_views.xml",
+        "security/ir.model.access.csv",
+    ],
+    "demo": [
+        "data/demo_data.xml",
+        "data/demo_checkpoint_templates.xml",
+        "data/demo_business_scenarios.xml",
+        "data/demo_additional_scenarios.xml",
+    ],
+    "application": False,
+    "installable": True,
+    "auto_install": False,
+}
