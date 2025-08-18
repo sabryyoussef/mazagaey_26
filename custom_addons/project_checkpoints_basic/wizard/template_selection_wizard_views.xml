@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_template_selection_wizard_form" model="ir.ui.view">
+            <field name="name">template.selection.wizard.form</field>
+            <field name="model">template.selection.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Template Selection">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="template_type"/>
+                                <field name="project_id"/>
+                                <field name="task_id" invisible="template_type == 'milestone'"/>
+                            </group>
+                            <group>
+                                <field name="milestone_template_id" invisible="template_type != 'milestone'"/>
+                                <field name="checkpoint_template_id" invisible="template_type != 'checkpoint'"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Template Details Section -->
+                        <group invisible="not template_name">
+                            <group>
+                                <field name="template_name" readonly="1"/>
+                                <field name="checkpoint_count" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="template_description" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <footer>
+                            <button name="action_preview_template" 
+                                    type="object" 
+                                    string="Preview Template" 
+                                    class="btn-secondary"
+                                    invisible="not template_name"/>
+                            <button name="action_apply_template" 
+                                    type="object" 
+                                    string="Apply Template" 
+                                    class="btn-primary"
+                                    invisible="not template_name"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_template_selection_wizard" model="ir.actions.act_window">
+            <field name="name">Apply Template</field>
+            <field name="res_model">template.selection.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_project_id': context.get('default_project_id'),
+                'default_task_id': context.get('default_task_id'),
+            }</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_template_selection_wizard"
+                  name="Apply Template"
+                  parent="project.menu_project_config"
+                  action="action_template_selection_wizard"
+                  sequence="53"/>
+    </data>
+</odoo>

@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ========================================
+             DEMO PROJECTS - UAE BUSINESS SCENARIOS
+             ======================================== -->
+        
+        <!-- Main Company Formation Project -->
+        <record id="demo_project_company_formation" model="project.project">
+            <field name="name">UAE Company Formation - ABC Trading LLC</field>
+            <field name="partner_id" ref="base.res_partner_12"/> <!-- Demo partner -->
+            <field name="description">Complete company formation process for ABC Trading LLC including all required documents, approvals, and compliance checks.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- Visa Processing Project -->
+        <record id="demo_project_visa_processing" model="project.project">
+            <field name="name">Employee Visa Processing - ABC Trading LLC</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="description">Process employment visas for 5 employees including medical tests, Emirates ID, and work permits.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- Trade License Renewal Project -->
+        <record id="demo_project_license_renewal" model="project.project">
+            <field name="name">Trade License Renewal - ABC Trading LLC</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="description">Annual trade license renewal including compliance checks, fee payments, and document updates.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- ========================================
+             DEMO MILESTONES
+             ======================================== -->
+        
+        <!-- Company Formation Milestones -->
+        <record id="demo_milestone_document_collection" model="project.milestone">
+            <field name="name">Document Collection Phase</field>
+            <field name="project_id" ref="demo_project_company_formation"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="True"/>
+        </record>
+        
+        <record id="demo_milestone_approval_process" model="project.milestone">
+            <field name="name">Government Approval Process</field>
+            <field name="project_id" ref="demo_project_company_formation"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=35)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <record id="demo_milestone_final_registration" model="project.milestone">
+            <field name="name">Final Registration & Handover</field>
+            <field name="project_id" ref="demo_project_company_formation"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <!-- Visa Processing Milestones -->
+        <record id="demo_milestone_visa_application" model="project.milestone">
+            <field name="name">Visa Application Submission</field>
+            <field name="project_id" ref="demo_project_visa_processing"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="True"/>
+        </record>
+        
+        <record id="demo_milestone_medical_tests" model="project.milestone">
+            <field name="name">Medical Tests & Emirates ID</field>
+            <field name="project_id" ref="demo_project_visa_processing"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <!-- ========================================
+             DEMO CHECKPOINT TAGS
+             ======================================== -->
+        
+        <record id="demo_tag_required_document" model="project.task.checkpoint.tag">
+            <field name="name">Required Document</field>
+            <field name="color">1"/>
+        </record>
+        
+        <record id="demo_tag_deliverable" model="project.task.checkpoint.tag">
+            <field name="name">Deliverable</field>
+            <field name="color">2"/>
+        </record>
+        
+        <record id="demo_tag_compliance" model="project.task.checkpoint.tag">
+            <field name="name">Compliance</field>
+            <field name="color">3"/>
+        </record>
+        
+        <record id="demo_tag_government_approval" model="project.task.checkpoint.tag">
+            <field name="name">Government Approval</field>
+            <field name="color">4"/>
+        </record>
+        
+        <record id="demo_tag_handover" model="project.task.checkpoint.tag">
+            <field name="name">Handover</field>
+            <field name="color">5"/>
+        </record>
+        
+        <record id="demo_tag_attachment" model="project.task.checkpoint.tag">
+            <field name="name">Attachment Required</field>
+            <field name="color">6"/>
+        </record>
+        
+        <record id="demo_tag_partner_related" model="project.task.checkpoint.tag">
+            <field name="name">Partner Related</field>
+            <field name="color">7"/>
+        </record>
+        
+        <!-- ========================================
+             DEMO CHECKPOINTS - COMPANY FORMATION
+             ======================================== -->
+        
+        <!-- Document Collection Phase Checkpoints -->
+        <record id="demo_checkpoint_passport_copies" model="project.task.checkpoint">
+            <field name="name">Collect Passport Copies (All Partners)</field>
+            <field name="sequence">10</field>
+            <field name="milestone_id" ref="demo_milestone_document_collection"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Ensure all passport copies are clear and valid for at least 6 months. Include visa pages if applicable.</field>
+        </record>
+        
+        <record id="demo_checkpoint_emirates_id" model="project.task.checkpoint">
+            <field name="name">Collect Emirates ID Copies (All Partners)</field>
+            <field name="sequence">20</field>
+            <field name="milestone_id" ref="demo_milestone_document_collection"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Front and back copies required. Ensure IDs are valid and not expired.</field>
+        </record>
+        
+        <record id="demo_checkpoint_noc_letters" model="project.task.checkpoint">
+            <field name="name">Obtain NOC Letters from Current Sponsors</field>
+            <field name="sequence">30</field>
+            <field name="milestone_id" ref="demo_milestone_document_collection"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_compliance')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">NOC letters must be on company letterhead with stamp and signature. Required for all partners currently sponsored by other companies.</field>
+        </record>
+        
+        <record id="demo_checkpoint_business_plan" model="project.task.checkpoint">
+            <field name="name">Prepare Business Plan & Activity Description</field>
+            <field name="sequence">40</field>
+            <field name="milestone_id" ref="demo_milestone_document_collection"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_deliverable')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Detailed business plan including activities, target market, and financial projections. Must be approved by partners.</field>
+        </record>
+        
+        <!-- Approval Process Checkpoints -->
+        <record id="demo_checkpoint_ded_submission" model="project.task.checkpoint">
+            <field name="name">Submit Application to DED</field>
+            <field name="sequence">50</field>
+            <field name="milestone_id" ref="demo_milestone_approval_process"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_compliance')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Submit complete application package to Department of Economic Development. Track application number.</field>
+        </record>
+        
+        <record id="demo_checkpoint_ded_approval" model="project.task.checkpoint">
+            <field name="name">Receive DED Initial Approval</field>
+            <field name="sequence">60</field>
+            <field name="milestone_id" ref="demo_milestone_approval_process"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_deliverable')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Wait for DED approval notification. Usually takes 5-7 working days.</field>
+        </record>
+        
+        <record id="demo_checkpoint_office_contract" model="project.task.checkpoint">
+            <field name="name">Sign Office Contract & Submit</field>
+            <field name="sequence">70</field>
+            <field name="milestone_id" ref="demo_milestone_approval_process"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Office contract must be registered with Ejari. Submit contract copy to DED.</field>
+        </record>
+        
+        <!-- Final Registration Checkpoints -->
+        <record id="demo_checkpoint_trade_license" model="project.task.checkpoint">
+            <field name="name">Collect Trade License</field>
+            <field name="sequence">80</field>
+            <field name="milestone_id" ref="demo_milestone_final_registration"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable'), ref('demo_tag_handover')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Collect original trade license from DED. Verify all details are correct.</field>
+        </record>
+        
+        <record id="demo_checkpoint_corporate_bank_account" model="project.task.checkpoint">
+            <field name="name">Open Corporate Bank Account</field>
+            <field name="sequence">90</field>
+            <field name="milestone_id" ref="demo_milestone_final_registration"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable'), ref('demo_tag_partner_related')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Assist client in opening corporate bank account. Provide required documents and introductions.</field>
+        </record>
+        
+        <record id="demo_checkpoint_handover_package" model="project.task.checkpoint">
+            <field name="name">Prepare Handover Package</field>
+            <field name="sequence">100</field>
+            <field name="milestone_id" ref="demo_milestone_final_registration"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_handover'), ref('demo_tag_deliverable')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Prepare complete handover package including all documents, certificates, and compliance guidelines.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO CHECKPOINTS - VISA PROCESSING
+             ======================================== -->
+        
+        <!-- Visa Application Checkpoints -->
+        <record id="demo_checkpoint_employee_documents" model="project.task.checkpoint">
+            <field name="name">Collect Employee Documents</field>
+            <field name="sequence">10</field>
+            <field name="milestone_id" ref="demo_milestone_visa_application"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Passport, photos, educational certificates, experience letters for all 5 employees.</field>
+        </record>
+        
+        <record id="demo_checkpoint_visa_application_submit" model="project.task.checkpoint">
+            <field name="name">Submit Visa Applications</field>
+            <field name="sequence">20</field>
+            <field name="milestone_id" ref="demo_milestone_visa_application"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_compliance')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Submit all 5 visa applications to MOHRE. Track application numbers.</field>
+        </record>
+        
+        <!-- Medical Tests Checkpoints -->
+        <record id="demo_checkpoint_medical_appointments" model="project.task.checkpoint">
+            <field name="name">Schedule Medical Appointments</field>
+            <field name="sequence">30</field>
+            <field name="milestone_id" ref="demo_milestone_medical_tests"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_compliance')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Schedule medical tests at approved centers for all employees. Coordinate with employees for availability.</field>
+        </record>
+        
+        <record id="demo_checkpoint_emirates_id_application" model="project.task.checkpoint">
+            <field name="name">Apply for Emirates ID</field>
+            <field name="sequence">40</field>
+            <field name="milestone_id" ref="demo_milestone_medical_tests"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_deliverable')])]"/>
+            <field name="is_reached" eval="False"/>
+            <field name="notes">Submit Emirates ID applications after medical test approval. Track application status.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO MILESTONE TEMPLATES
+             ======================================== -->
+        
+        <!-- Company Formation Template -->
+        <record id="demo_milestone_template_company_formation" model="project.milestone.template">
+            <field name="name">UAE Company Formation - Complete Process</field>
+            <field name="sequence">10</field>
+            <field name="milestone_name">Document Collection Phase</field>
+            <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="notes">Complete template for UAE company formation including all required documents and compliance checks.</field>
+        </record>
+        
+        <!-- Visa Processing Template -->
+        <record id="demo_milestone_template_visa_processing" model="project.milestone.template">
+            <field name="name">Employee Visa Processing - Standard Package</field>
+            <field name="sequence">20</field>
+            <field name="milestone_name">Visa Application Phase</field>
+            <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="notes">Standard template for processing employment visas including medical tests and Emirates ID.</field>
+        </record>
+        
+        <!-- Trade License Renewal Template -->
+        <record id="demo_milestone_template_license_renewal" model="project.milestone.template">
+            <field name="name">Trade License Renewal - Annual Process</field>
+            <field name="sequence">30</field>
+            <field name="milestone_name">Renewal Application Phase</field>
+            <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="notes">Annual trade license renewal template including compliance checks and fee payments.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO MILESTONE TEMPLATE CHECKPOINTS
+             ======================================== -->
+        
+        <!-- Company Formation Template Checkpoints -->
+        <record id="demo_milestone_template_checkpoint_passports" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="sequence">10</field>
+            <field name="name">Collect Passport Copies (All Partners)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Ensure all passport copies are clear and valid for at least 6 months.</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_emirates_id" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="sequence">20</field>
+            <field name="name">Collect Emirates ID Copies (All Partners)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Front and back copies required. Ensure IDs are valid and not expired.</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_noc" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="sequence">30</field>
+            <field name="name">Obtain NOC Letters from Current Sponsors</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_compliance')])]"/>
+            <field name="notes">NOC letters must be on company letterhead with stamp and signature.</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_business_plan" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="sequence">40</field>
+            <field name="name">Prepare Business Plan & Activity Description</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Detailed business plan including activities, target market, and financial projections.</field>
+        </record>
+        
+        <!-- Visa Processing Template Checkpoints -->
+        <record id="demo_milestone_template_checkpoint_employee_docs" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="sequence">10</field>
+            <field name="name">Collect Employee Documents</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Passport, photos, educational certificates, experience letters.</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_visa_submit" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="sequence">20</field>
+            <field name="name">Submit Visa Applications</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_compliance')])]"/>
+            <field name="notes">Submit visa applications to MOHRE. Track application numbers.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO CHECKPOINT TEMPLATES
+             ======================================== -->
+        
+        <!-- Company Formation Checkpoint Template -->
+        <record id="demo_checkpoint_template_company_formation" model="project.task.checkpoint.template">
+            <field name="name">UAE Company Formation - Document Collection</field>
+            <field name="sequence">10</field>
+            <field name="create_milestone" eval="True"/>
+            <field name="milestone_name">Document Collection Phase</field>
+            <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="notes">Template for collecting all required documents for UAE company formation.</field>
+        </record>
+        
+        <!-- Visa Processing Checkpoint Template -->
+        <record id="demo_checkpoint_template_visa_processing" model="project.task.checkpoint.template">
+            <field name="name">Employee Visa Processing - Standard</field>
+            <field name="sequence">20</field>
+            <field name="create_milestone" eval="True"/>
+            <field name="milestone_name">Visa Application Phase</field>
+            <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="notes">Standard template for processing employment visas.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO CHECKPOINT TEMPLATE LINES
+             ======================================== -->
+        
+        <!-- Company Formation Template Lines -->
+        <record id="demo_checkpoint_template_line_passports" model="project.task.checkpoint.template.line">
+            <field name="template_id" ref="demo_checkpoint_template_company_formation"/>
+            <field name="sequence">10</field>
+            <field name="name">Collect Passport Copies (All Partners)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Ensure all passport copies are clear and valid for at least 6 months.</field>
+        </record>
+        
+        <record id="demo_checkpoint_template_line_emirates_id" model="project.task.checkpoint.template.line">
+            <field name="template_id" ref="demo_checkpoint_template_company_formation"/>
+            <field name="sequence">20</field>
+            <field name="name">Collect Emirates ID Copies (All Partners)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Front and back copies required. Ensure IDs are valid and not expired.</field>
+        </record>
+        
+        <record id="demo_checkpoint_template_line_noc" model="project.task.checkpoint.template.line">
+            <field name="template_id" ref="demo_checkpoint_template_company_formation"/>
+            <field name="sequence">30</field>
+            <field name="name">Obtain NOC Letters from Current Sponsors</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_compliance')])]"/>
+            <field name="notes">NOC letters must be on company letterhead with stamp and signature.</field>
+        </record>
+        
+        <!-- Visa Processing Template Lines -->
+        <record id="demo_checkpoint_template_line_employee_docs" model="project.task.checkpoint.template.line">
+            <field name="template_id" ref="demo_checkpoint_template_visa_processing"/>
+            <field name="sequence">10</field>
+            <field name="name">Collect Employee Documents</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
+            <field name="notes">Passport, photos, educational certificates, experience letters.</field>
+        </record>
+        
+        <record id="demo_checkpoint_template_line_visa_submit" model="project.task.checkpoint.template.line">
+            <field name="template_id" ref="demo_checkpoint_template_visa_processing"/>
+            <field name="sequence">20</field>
+            <field name="name">Submit Visa Applications</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_government_approval'), ref('demo_tag_compliance')])]"/>
+            <field name="notes">Submit visa applications to MOHRE. Track application numbers.</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO TASKS
+             ======================================== -->
+        
+        <!-- Company Formation Tasks -->
+        <record id="demo_task_company_formation" model="project.task">
+            <field name="name">Complete Company Formation Process</field>
+            <field name="project_id" ref="demo_project_company_formation"/>
+            <field name="description">Manage the complete company formation process for ABC Trading LLC including document collection, government approvals, and final registration.</field>
+            <field name="priority">1"/>
+            <field name="date_deadline" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- Visa Processing Tasks -->
+        <record id="demo_task_visa_processing" model="project.task">
+            <field name="name">Process Employee Visas</field>
+            <field name="project_id" ref="demo_project_visa_processing"/>
+            <field name="description">Process employment visas for 5 employees including medical tests, Emirates ID, and work permits.</field>
+            <field name="priority">1"/>
+            <field name="date_deadline" eval="(DateTime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- ========================================
+             DEMO TASK CHECKPOINTS
+             ======================================== -->
+        
+        <!-- Company Formation Task Checkpoints -->
+        <record id="demo_task_checkpoint_initial_consultation" model="project.task.checkpoint">
+            <field name="name">Initial Consultation & Requirements Gathering</field>
+            <field name="sequence">5</field>
+            <field name="task_id" ref="demo_task_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_partner_related')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Meet with client to understand business requirements, activities, and partner structure.</field>
+        </record>
+        
+        <record id="demo_task_checkpoint_fee_payment" model="project.task.checkpoint">
+            <field name="name">Process Initial Fee Payment</field>
+            <field name="sequence">15</field>
+            <field name="task_id" ref="demo_task_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_compliance'), ref('demo_tag_deliverable')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Collect and process initial service fees. Issue receipt and payment confirmation.</field>
+        </record>
+        
+        <!-- Visa Processing Task Checkpoints -->
+        <record id="demo_task_checkpoint_visa_consultation" model="project.task.checkpoint">
+            <field name="name">Visa Requirements Consultation</field>
+            <field name="sequence">5</field>
+            <field name="task_id" ref="demo_task_visa_processing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required_document'), ref('demo_tag_partner_related')])]"/>
+            <field name="is_reached" eval="True"/>
+            <field name="notes">Consult with client about visa requirements, employee positions, and salary structures.</field>
+        </record>
+        
+    </data>
+</odoo>

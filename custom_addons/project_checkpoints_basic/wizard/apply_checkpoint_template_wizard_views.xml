@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Wizard Form View -->
+        <record id="view_apply_checkpoint_template_wizard_form" model="ir.ui.view">
+            <field name="name">project.apply.checkpoint.template.wizard.form</field>
+            <field name="model">project.apply.checkpoint.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Apply Checkpoint Templates">
+                    <sheet>
+                        <group>
+                            <field name="template_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="append_only"/>
+                            <field name="merge_duplicates"/>
+                            <field name="overwrite_existing"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_apply_templates" 
+                                string="Apply Templates" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Wizard Action -->
+        <record id="action_apply_checkpoint_template_wizard" model="ir.actions.act_window">
+            <field name="name">Apply Checkpoint Templates</field>
+            <field name="res_model">project.apply.checkpoint.template.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_template_ids': []}</field>
+        </record>
+
+        <!-- Add to Task Form View -->
+        <record id="view_task_form_inherit_checkpoints_wizard" model="ir.ui.view">
+            <field name="name">project.task.form.inherit.checkpoints.wizard</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_checkpoints_basic.view_task_form_inherit_checkpoints"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(project_checkpoints_basic.action_apply_checkpoint_template_wizard)d" 
+                            type="action" 
+                            string="Apply Templates" 
+                            class="oe_stat_button"
+                            icon="fa-magic"
+                            context="{'default_template_ids': []}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
