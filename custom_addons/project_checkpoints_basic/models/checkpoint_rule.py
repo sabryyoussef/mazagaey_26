@@ -55,7 +55,7 @@ class ProjectTaskCheckpointRule(models.Model):
     target_stage_id = fields.Many2one(
         'project.task.type',
         string='Target Stage',
-        required=True,
+        required=False,
         help='Target stage to advance to when rule condition is met'
     )
     

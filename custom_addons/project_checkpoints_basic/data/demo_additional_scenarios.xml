@@ -9,7 +9,6 @@
         <!-- Corporate Tax Registration Project -->
         <record id="demo_project_corporate_tax" model="project.project">
             <field name="name">Corporate Tax Registration - ABC Trading LLC</field>
-            <field name="partner_id" ref="base.res_partner_12"/>
             <field name="description">Register company for UAE Corporate Tax including compliance setup and documentation.</field>
             <field name="privacy_visibility">employees</field>
             <field name="date_start" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
@@ -19,7 +18,6 @@
         <!-- VAT Registration Project -->
         <record id="demo_project_vat_registration" model="project.project">
             <field name="name">VAT Registration - ABC Trading LLC</field>
-            <field name="partner_id" ref="base.res_partner_12"/>
             <field name="description">Register company for UAE VAT including system setup and compliance training.</field>
             <field name="privacy_visibility">employees</field>
             <field name="date_start" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
@@ -28,8 +26,7 @@
         
         <!-- Office Setup Project -->
         <record id="demo_project_office_setup" model="project.project">
-            <field name="name">Office Setup & Ejari Registration - ABC Trading LLC</field>
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="name">Office Setup &amp; Ejari Registration - ABC Trading LLC</field>
             <field name="description">Complete office setup including Ejari registration, utilities, and compliance requirements.</field>
             <field name="privacy_visibility">employees</field>
             <field name="date_start" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
@@ -42,14 +39,14 @@
         
         <!-- Corporate Tax Milestones -->
         <record id="demo_milestone_tax_assessment" model="project.milestone">
-            <field name="name">Tax Assessment & Planning</field>
+            <field name="name">Tax Assessment &amp; Planning</field>
             <field name="project_id" ref="demo_project_corporate_tax"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
         </record>
         
         <record id="demo_milestone_tax_registration" model="project.milestone">
-            <field name="name">FTA Registration & Compliance</field>
+            <field name="name">FTA Registration &amp; Compliance</field>
             <field name="project_id" ref="demo_project_corporate_tax"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
@@ -57,14 +54,14 @@
         
         <!-- VAT Registration Milestones -->
         <record id="demo_milestone_vat_assessment" model="project.milestone">
-            <field name="name">VAT Assessment & System Setup</field>
+            <field name="name">VAT Assessment &amp; System Setup</field>
             <field name="project_id" ref="demo_project_vat_registration"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=8)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
         </record>
         
         <record id="demo_milestone_vat_compliance" model="project.milestone">
-            <field name="name">VAT Compliance & Training</field>
+            <field name="name">VAT Compliance &amp; Training</field>
             <field name="project_id" ref="demo_project_vat_registration"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
@@ -72,21 +69,21 @@
         
         <!-- Office Setup Milestones -->
         <record id="demo_milestone_office_selection" model="project.milestone">
-            <field name="name">Office Selection & Contract</field>
+            <field name="name">Office Selection &amp; Contract</field>
             <field name="project_id" ref="demo_project_office_setup"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
         </record>
         
         <record id="demo_milestone_ejari_registration" model="project.milestone">
-            <field name="name">Ejari Registration & Utilities</field>
+            <field name="name">Ejari Registration &amp; Utilities</field>
             <field name="project_id" ref="demo_project_office_setup"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
         </record>
         
         <record id="demo_milestone_office_handover" model="project.milestone">
-            <field name="name">Office Handover & Compliance</field>
+            <field name="name">Office Handover &amp; Compliance</field>
             <field name="project_id" ref="demo_project_office_setup"/>
             <field name="deadline" eval="(DateTime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
             <field name="is_reached" eval="False"/>
@@ -98,27 +95,27 @@
         
         <record id="demo_tag_tax_related" model="project.task.checkpoint.tag">
             <field name="name">Tax Related</field>
-            <field name="color">8"/>
+            <field name="color">8</field>
         </record>
         
         <record id="demo_tag_vat_related" model="project.task.checkpoint.tag">
             <field name="name">VAT Related</field>
-            <field name="color">9"/>
+            <field name="color">9</field>
         </record>
         
         <record id="demo_tag_office_setup" model="project.task.checkpoint.tag">
             <field name="name">Office Setup</field>
-            <field name="color">10"/>
+            <field name="color">10</field>
         </record>
         
         <record id="demo_tag_ejari" model="project.task.checkpoint.tag">
             <field name="name">Ejari Registration</field>
-            <field name="color">11"/>
+            <field name="color">11</field>
         </record>
         
         <record id="demo_tag_utilities" model="project.task.checkpoint.tag">
             <field name="name">Utilities Setup</field>
-            <field name="color">12"/>
+            <field name="color">12</field>
         </record>
         
         <!-- ========================================
@@ -256,7 +253,7 @@
         </record>
         
         <record id="demo_checkpoint_office_contract" model="project.task.checkpoint">
-            <field name="name">Negotiate & Sign Office Contract</field>
+            <field name="name">Negotiate &amp; Sign Office Contract</field>
             <field name="sequence">30</field>
             <field name="milestone_id" ref="demo_milestone_office_selection"/>
             <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_office_setup'), ref('demo_tag_required_document'), ref('demo_tag_attachment')])]"/>
@@ -284,7 +281,7 @@
         </record>
         
         <record id="demo_checkpoint_utilities_setup" model="project.task.checkpoint">
-            <field name="name">Setup Utilities & Services</field>
+            <field name="name">Setup Utilities &amp; Services</field>
             <field name="sequence">60</field>
             <field name="milestone_id" ref="demo_milestone_ejari_registration"/>
             <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_utilities'), ref('demo_tag_office_setup')])]"/>
@@ -319,7 +316,7 @@
         <record id="demo_milestone_template_corporate_tax" model="project.milestone.template">
             <field name="name">UAE Corporate Tax Registration - Complete Process</field>
             <field name="sequence">40</field>
-            <field name="milestone_name">Tax Assessment & Planning</field>
+            <field name="milestone_name">Tax Assessment &amp; Planning</field>
             <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
             <field name="notes">Complete template for UAE corporate tax registration including assessment, planning, and compliance setup.</field>
         </record>
@@ -328,7 +325,7 @@
         <record id="demo_milestone_template_vat_registration" model="project.milestone.template">
             <field name="name">UAE VAT Registration - Standard Package</field>
             <field name="sequence">50</field>
-            <field name="milestone_name">VAT Assessment & System Setup</field>
+            <field name="milestone_name">VAT Assessment &amp; System Setup</field>
             <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=8)).strftime('%Y-%m-%d')"/>
             <field name="notes">Standard template for UAE VAT registration including assessment, system setup, and compliance training.</field>
         </record>
@@ -337,7 +334,7 @@
         <record id="demo_milestone_template_office_setup" model="project.milestone.template">
             <field name="name">UAE Office Setup - Complete Process</field>
             <field name="sequence">60</field>
-            <field name="milestone_name">Office Selection & Contract</field>
+            <field name="milestone_name">Office Selection &amp; Contract</field>
             <field name="milestone_deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
             <field name="notes">Complete template for UAE office setup including selection, Ejari registration, and utilities setup.</field>
         </record>
@@ -351,7 +348,7 @@
             <field name="name">Complete Corporate Tax Registration</field>
             <field name="project_id" ref="demo_project_corporate_tax"/>
             <field name="description">Manage complete corporate tax registration process including assessment, planning, and compliance setup.</field>
-            <field name="priority">1"/>
+            <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
         </record>
         
@@ -360,7 +357,7 @@
             <field name="name">Complete VAT Registration</field>
             <field name="project_id" ref="demo_project_vat_registration"/>
             <field name="description">Manage complete VAT registration process including assessment, system setup, and compliance training.</field>
-            <field name="priority">1"/>
+            <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
         </record>
         
@@ -369,7 +366,7 @@
             <field name="name">Complete Office Setup</field>
             <field name="project_id" ref="demo_project_office_setup"/>
             <field name="description">Manage complete office setup process including selection, Ejari registration, utilities, and handover.</field>
-            <field name="priority">1"/>
+            <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
         </record>
         
