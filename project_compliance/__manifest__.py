@@ -4,7 +4,8 @@
     'description': """
         This module provides comprehensive compliance functionality for Odoo projects,
         including shareholder management, UBO tracking, and compliance workflows.
-        Integrates with project_handover_notes and project_documents_extension.
+        Integrates with project_handover_notes, unified_documents, project_templates_basic,
+        and project_checkpoints_basic modules.
     """,
     'author': "BeshoyWageh",
     'version': '18.0.1.0.0',
@@ -13,8 +14,10 @@
         'base',
         'project',
         'mail',
-        'project_documents_extension',
+        'unified_documents',
         'project_handover_notes',
+        'project_templates_basic',
+        'project_checkpoints_basic',
     ],
                     'data': [
                     'security/security.xml',
