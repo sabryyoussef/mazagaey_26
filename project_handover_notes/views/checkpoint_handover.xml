@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Checkpoint Form Integration -->
+        <record id="view_project_checkpoint_form_handover_integration" model="ir.ui.view">
+            <field name="name">project.task.checkpoint.form.handover.integration</field>
+            <field name="model">project.task.checkpoint</field>
+            <field name="inherit_id" ref="project_checkpoints_basic.view_project_task_checkpoint_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
+                    <group string="Handover Integration" name="handover_integration">
+                        <group>
+                            <field name="requires_handover"/>
+                            <field name="handover_template_id" invisible="not requires_handover"/>
+                        </group>
+                        <group>
+                            <field name="handover_count" widget="statinfo" string="Related Handovers"/>
+                            <field name="handover_status"/>
+                            <button name="action_create_handover" type="object" string="Create Handover"
+                                    class="btn btn-primary"
+                                    invisible="not requires_handover"/>
+                            <button name="action_view_handovers" type="object" string="View Handovers"
+                                    class="btn btn-secondary"
+                                    invisible="handover_count == 0"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Checkpoint List View Integration -->
+        <record id="view_project_checkpoint_list_handover_integration" model="ir.ui.view">
+            <field name="name">project.task.checkpoint.list.handover.integration</field>
+            <field name="model">project.task.checkpoint</field>
+            <field name="inherit_id" ref="project_checkpoints_basic.view_project_task_checkpoint_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_reached']" position="after">
+                    <field name="requires_handover"/>
+                    <field name="handover_count" widget="statinfo" string="Handovers"/>
+                    <field name="handover_status"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

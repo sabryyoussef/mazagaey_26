@@ -1,0 +1,132 @@
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+
+
+class BusinessRelationships(models.Model):
+    _name = 'business.relationships'
+    _description = 'Business Relationships'
+    _order = 'name'
+
+    name = fields.Char(string='Relationship Type', required=True)
+    code = fields.Char(string='Code')
+    description = fields.Text(string='Description')
+    active = fields.Boolean(default=True, string='Active')
+
+
+class PartnerUbo(models.Model):
+    _name = 'res.partner.ubo'
+    _description = 'Partner UBO'
+    _order = 'name'
+
+    name = fields.Char(string='UBO Name', required=True)
+    code = fields.Char(string='Code')
+    description = fields.Text(string='Description')
+    active = fields.Boolean(default=True, string='Active')
+
+
+class BusinessShareholder(models.Model):
+    _name = 'res.partner.business.shareholder'
+    _description = 'Business Shareholder'
+    _order = 'name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(string='Shareholder Name', required=True, tracking=True)
+    
+    # Project and partner relations
+    project_id = fields.Many2one('project.project', string='Project', tracking=True)
+    customer_id = fields.Many2one('res.partner', string='Customer', tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
+    contact_id = fields.Many2one('res.partner', string='Contact Person', 
+                                domain="[('is_company', '=', False)]", tracking=True)
+    ubo_id = fields.Many2one('res.partner.ubo', string='UBO', tracking=True)
+
+    # Shareholding information
+    shareholding = fields.Float(string='Shareholding (%)', 
+                               help='Percentage of shares owned', tracking=True)
+    relationship_ids = fields.Many2many('business.relationships', string='Relationships', 
+                                       widget='many2many_tags', tracking=True)
+
+    # Contact information
+    email = fields.Char(string='Email', tracking=True)
+    mobile = fields.Char(string='Mobile', tracking=True)
+    company_type = fields.Selection([
+        ('person', 'Individual'),
+        ('company', 'Company')
+    ], string='Company Type', default='person', tracking=True)
+
+    # Individual information
+    nationality_id = fields.Many2one('res.country', string='Nationality', tracking=True)
+    gender = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female')
+    ], string='Gender', tracking=True)
+
+    # Corporate information
+    license_authority_id = fields.Char(string='License Authority', tracking=True)
+    incorporation_date = fields.Date(string='Incorporation Date', tracking=True)
+    license_number = fields.Char(string='License Number', tracking=True)
+    license_validity = fields.Selection([
+        ('1', '1 Year'),
+        ('2', '2 Years'),
+        ('3', '3 Years'),
+        ('4', '4 Years'),
+        ('5', '5 Years'),
+        ('6', '6 Years'),
+        ('7', '7 Years'),
+        ('8', '8 Years'),
+        ('9', '9 Years'),
+        ('10', '10 Years'),
+    ], string='License Validity', tracking=True)
+
+    # Address fields
+    street = fields.Char(string='Street', tracking=True)
+    street2 = fields.Char(string='Street 2', tracking=True)
+    city = fields.Char(string='City', tracking=True)
+    state_id = fields.Many2one('res.country.state', string='State', tracking=True)
+    zip = fields.Char(string='ZIP', tracking=True)
+    country_id = fields.Many2one('res.country', string='Country', tracking=True)
+    address_type = fields.Selection([
+        ('home', 'Home'),
+        ('work', 'Work'),
+        ('billing', 'Billing'),
+        ('shipping', 'Shipping'),
+        ('other', 'Other')
+    ], string='Address Type', default='work', tracking=True)
+    is_primary_address = fields.Boolean(string='Primary Address', default=False, tracking=True)
+
+    # Document references (using project_documents_extension)
+    passport = fields.Char(string='Passport Reference', tracking=True)
+    uae_resident = fields.Boolean(string='UAE Resident', tracking=True)
+    eid_copy = fields.Char(string='EID Copy Reference', tracking=True)
+    residence_visa_copy = fields.Char(string='Residence Visa Copy Reference', tracking=True)
+    current_visa = fields.Char(string='Current Visa Reference', tracking=True)
+    entry_stamp = fields.Char(string='Entry Stamp Reference', tracking=True)
+    trade_license = fields.Char(string='Trade License Reference', tracking=True)
+    memorandum_association = fields.Char(string='Memorandum of Association Reference', tracking=True)
+    apply_visa = fields.Boolean(string='Apply Visa', tracking=True)
+
+    # Additional fields
+    notes = fields.Text(string='Notes', tracking=True)
+
+    @api.constrains('shareholding')
+    def _check_shareholding(self):
+        for record in self:
+            if record.shareholding and (record.shareholding < 0 or record.shareholding > 100):
+                raise ValidationError(_('Shareholding percentage must be between 0 and 100.'))
+
+    @api.onchange('company_type')
+    def _onchange_company_type(self):
+        if self.company_type == 'company':
+            self.nationality_id = False
+            self.gender = False
+        else:
+            self.license_authority_id = False
+            self.incorporation_date = False
+            self.license_number = False
+            self.license_validity = False
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        """Reset state when country changes"""
+        if self.country_id:
+            self.state_id = False

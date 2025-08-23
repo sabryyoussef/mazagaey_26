@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Business Relationships -->
+        <record id="business_relationship_family" model="business.relationships">
+            <field name="name">Family</field>
+            <field name="code">FAM</field>
+            <field name="description">Family relationship</field>
+        </record>
+
+        <record id="business_relationship_partner" model="business.relationships">
+            <field name="name">Business Partner</field>
+            <field name="code">BP</field>
+            <field name="description">Business partnership</field>
+        </record>
+
+        <record id="business_relationship_investor" model="business.relationships">
+            <field name="name">Investor</field>
+            <field name="code">INV</field>
+            <field name="description">Investment relationship</field>
+        </record>
+
+        <record id="business_relationship_director" model="business.relationships">
+            <field name="name">Director</field>
+            <field name="code">DIR</field>
+            <field name="description">Board director</field>
+        </record>
+
+        <!-- Demo UBOs -->
+        <record id="ubo_individual" model="res.partner.ubo">
+            <field name="name">Individual UBO</field>
+            <field name="code">IND</field>
+            <field name="description">Individual ultimate beneficial owner</field>
+        </record>
+
+        <record id="ubo_corporate" model="res.partner.ubo">
+            <field name="name">Corporate UBO</field>
+            <field name="code">CORP</field>
+            <field name="description">Corporate ultimate beneficial owner</field>
+        </record>
+
+    </data>
+</odoo>

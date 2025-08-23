@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Business Shareholder Address Form View -->
+        <record id="view_business_shareholder_address_form" model="ir.ui.view">
+            <field name="name">business.shareholder.address.form</field>
+            <field name="model">business.shareholder.address</field>
+            <field name="arch" type="xml">
+                <form string="Address">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="street"/>
+                                <field name="street2"/>
+                            </group>
+                            <group>
+                                <field name="city"/>
+                                <field name="state_id"/>
+                                <field name="zip"/>
+                                <field name="country_id"/>
+                                <field name="is_primary"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Business Shareholder Address List View -->
+        <record id="view_business_shareholder_address_list" model="ir.ui.view">
+            <field name="name">business.shareholder.address.list</field>
+            <field name="model">business.shareholder.address</field>
+            <field name="arch" type="xml">
+                <list string="Addresses">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="street"/>
+                    <field name="city"/>
+                    <field name="state_id"/>
+                    <field name="zip"/>
+                    <field name="country_id"/>
+                    <field name="is_primary"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Business Shareholder Form View -->
+        <record id="view_business_shareholder_form" model="ir.ui.view">
+            <field name="name">res.partner.business.shareholder.form</field>
+            <field name="model">res.partner.business.shareholder</field>
+            <field name="arch" type="xml">
+                <form string="Business Shareholder">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="partner_id"/>
+                                <field name="contact_id"/>
+                                <field name="ubo_id"/>
+                            </group>
+                            <group>
+                                <field name="shareholding"/>
+                                <field name="relationship_ids" widget="many2many_tags"/>
+                                <field name="address_count" widget="statinfo" string="Addresses"/>
+                                <field name="email"/>
+                                <field name="mobile"/>
+                                <field name="company_type" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Address Information">
+                                <field name="address_ids" context="{'default_shareholder_id': id}">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="street"/>
+                                        <field name="city"/>
+                                        <field name="state_id"/>
+                                        <field name="zip"/>
+                                        <field name="country_id"/>
+                                        <field name="is_primary"/>
+                                    </list>
+                                </field>
+                            </page>
+                            
+                            <page string="Individual Information" invisible="company_type == 'company'">
+                                <group>
+                                    <group>
+                                        <field name="nationality_id"/>
+                                        <field name="gender"/>
+                                        <field name="passport"/>
+                                        <field name="uae_resident" widget="boolean_toggle"/>
+                                    </group>
+                                    <group>
+                                        <field name="eid_copy" invisible="uae_resident != True"/>
+                                        <field name="residence_visa_copy" invisible="uae_resident != True"/>
+                                        <field name="current_visa" invisible="uae_resident == True"/>
+                                        <field name="entry_stamp" invisible="uae_resident == True"/>
+                                        <field name="apply_visa" widget="boolean_toggle"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Corporate Information" invisible="company_type == 'person'">
+                                <group>
+                                    <group>
+                                        <field name="license_authority_id"/>
+                                        <field name="incorporation_date"/>
+                                        <field name="license_number"/>
+                                        <field name="license_validity"/>
+                                    </group>
+                                    <group>
+                                        <field name="trade_license"/>
+                                        <field name="memorandum_association"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+
+                            
+                            <page string="Notes">
+                                <field name="notes" placeholder="Enter additional notes here..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Business Shareholder List View -->
+        <record id="view_business_shareholder_list" model="ir.ui.view">
+            <field name="name">res.partner.business.shareholder.list</field>
+            <field name="model">res.partner.business.shareholder</field>
+            <field name="arch" type="xml">
+                <list string="Business Shareholders">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="partner_id"/>
+                    <field name="contact_id"/>
+                    <field name="ubo_id"/>
+                    <field name="shareholding"/>
+                    <field name="company_type"/>
+                    <field name="relationship_ids" widget="many2many_tags"/>
+                    <field name="address_count" widget="statinfo" string="Addresses"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Business Shareholder Search View -->
+        <record id="view_business_shareholder_search" model="ir.ui.view">
+            <field name="name">res.partner.business.shareholder.search</field>
+            <field name="model">res.partner.business.shareholder</field>
+            <field name="arch" type="xml">
+                <search string="Search Business Shareholders">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="partner_id"/>
+                    <field name="contact_id"/>
+                    <field name="company_type"/>
+                    <filter string="Individuals" name="individuals" domain="[('company_type', '=', 'person')]"/>
+                    <filter string="Companies" name="companies" domain="[('company_type', '=', 'company')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Company Type" name="group_company_type" context="{'group_by': 'company_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Business Shareholder Action -->
+        <record id="action_business_shareholder" model="ir.actions.act_window">
+            <field name="name">Business Shareholders</field>
+            <field name="res_model">res.partner.business.shareholder</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first business shareholder!
+                </p>
+                <p>
+                    Business shareholders help track ownership and compliance information for projects.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_business_shareholder"
+                  name="Business Shareholders"
+                  parent="project.menu_main_pm"
+                  action="action_business_shareholder"
+                  sequence="52"/>
+    </data>
+</odoo>

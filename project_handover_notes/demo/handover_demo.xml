@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Handover Notes -->
+        <record id="demo_handover_notes_1" model="project.handover.notes">
+            <field name="name">HOV00001</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="hand_partner_id" ref="base.res_partner_1"/>
+            <field name="hand_partner_company_type">company</field>
+            <field name="handover_status">complete</field>
+            <field name="handover_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="handover_by" ref="base.user_admin"/>
+            <field name="handover_notes"><![CDATA[
+                <p><strong>Project Handover Summary:</strong></p>
+                <ul>
+                    <li>All deliverables completed and delivered to client</li>
+                    <li>Project documentation updated and stored in shared drive</li>
+                    <li>Client training completed successfully</li>
+                    <li>Support handover completed to maintenance team</li>
+                </ul>
+                <p><strong>Next Steps:</strong></p>
+                <ul>
+                    <li>Monthly support meetings scheduled</li>
+                    <li>Client feedback collection process established</li>
+                </ul>
+            ]]></field>
+            <field name="correspondence_email_address">contact@demo-company.com</field>
+            <field name="preferred_mobile_number">+971501234567</field>
+            <field name="is_visa_application" eval="False"/>
+            <field name="initial_company_info" eval="True"/>
+            <field name="proposed_name1">Demo Company FZCO</field>
+            <field name="hand_legal_type">fzco</field>
+            <field name="license_authority_id">Dubai Multi Commodities Centre</field>
+            <field name="license_activity_ids">Trading and Consulting Services</field>
+            <field name="price_per_share" eval="100.0"/>
+            <field name="total_number_shares" eval="1000.0"/>
+            <field name="is_complete_hand" eval="True"/>
+        </record>
+
+        <record id="demo_handover_notes_2" model="project.handover.notes">
+            <field name="name">HOV00002</field>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="hand_partner_id" ref="base.res_partner_2"/>
+            <field name="hand_partner_company_type">person</field>
+            <field name="handover_status">draft</field>
+            <field name="handover_notes"><![CDATA[
+                <p><strong>Individual Visa Application Handover:</strong></p>
+                <ul>
+                    <li>Visa application documents prepared</li>
+                    <li>Medical examination scheduled</li>
+                    <li>Biometric appointment arranged</li>
+                </ul>
+            ]]></field>
+            <field name="correspondence_email_address">john.doe@email.com</field>
+            <field name="preferred_mobile_number">+971507654321</field>
+            <field name="is_visa_application" eval="True"/>
+            <field name="apply_visa" eval="True"/>
+            <field name="hand_partner_first_name">John</field>
+            <field name="hand_partner_last_name">Doe</field>
+            <field name="hand_partner_gender">male</field>
+            <field name="hand_partner_nationality_id" ref="base.us"/>
+            <field name="hand_partner_place_of_birth" ref="base.us"/>
+        </record>
+    </data>
+</odoo>
