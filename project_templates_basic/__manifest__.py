@@ -33,6 +33,7 @@
     ],
     "demo": [
         "data/demo_data_consolidated.xml",
+        "demo/demo_data.xml",
     ],
     "application": False,
     "installable": True,

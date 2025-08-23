@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo UBO Records -->
+        <record id="demo_ubo_1" model="res.partner.ubo">
+            <field name="name">Individual UBO</field>
+            <field name="code">IND</field>
+            <field name="description">Individual ultimate beneficial owner</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_ubo_2" model="res.partner.ubo">
+            <field name="name">Corporate UBO</field>
+            <field name="code">CORP</field>
+            <field name="description">Corporate ultimate beneficial owner</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Demo Business Relationships -->
+        <record id="demo_business_relationship_1" model="business.relationships">
+            <field name="name">Family</field>
+            <field name="code">FAM</field>
+            <field name="description">Family relationship</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_business_relationship_2" model="business.relationships">
+            <field name="name">Business Partner</field>
+            <field name="code">BP</field>
+            <field name="description">Business partner relationship</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_business_relationship_3" model="business.relationships">
+            <field name="name">Investor</field>
+            <field name="code">INV</field>
+            <field name="description">Investor relationship</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_business_relationship_4" model="business.relationships">
+            <field name="name">Director</field>
+            <field name="code">DIR</field>
+            <field name="description">Director relationship</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Demo Business Shareholders -->
+        <record id="demo_business_shareholder_1" model="res.partner.business.shareholder">
+            <field name="name">Ahmed Al Mansouri</field>
+            <field name="company_type">person</field>
+            <field name="shareholding">60.0</field>
+            <field name="ubo_id" ref="demo_ubo_1"/>
+            <field name="relationship_ids" eval="[(6, 0, [ref('demo_business_relationship_1'), ref('demo_business_relationship_2')])]"/>
+            <field name="email">ahmed.mansouri@demo.com</field>
+            <field name="mobile">+971501234567</field>
+            <field name="nationality_id" ref="base.ae"/>
+            <field name="gender">male</field>
+            <field name="passport">A123456789</field>
+            <field name="uae_resident">True</field>
+            <field name="eid_copy">EID001</field>
+            <field name="residence_visa_copy">VISA001</field>
+            <field name="current_visa">CURRENT001</field>
+            <field name="entry_stamp">STAMP001</field>
+            <field name="apply_visa">False</field>
+            <field name="notes">Majority shareholder with UAE residency</field>
+        </record>
+
+        <record id="demo_business_shareholder_2" model="res.partner.business.shareholder">
+            <field name="name">Sarah Johnson</field>
+            <field name="company_type">person</field>
+            <field name="shareholding">25.0</field>
+            <field name="ubo_id" ref="demo_ubo_1"/>
+            <field name="relationship_ids" eval="[(6, 0, [ref('demo_business_relationship_3')])]"/>
+            <field name="email">sarah.johnson@demo.com</field>
+            <field name="mobile">+971502345678</field>
+            <field name="nationality_id" ref="base.us"/>
+            <field name="gender">female</field>
+            <field name="passport">US987654321</field>
+            <field name="uae_resident">False</field>
+            <field name="eid_copy">EID002</field>
+            <field name="residence_visa_copy">VISA002</field>
+            <field name="current_visa">CURRENT002</field>
+            <field name="entry_stamp">STAMP002</field>
+            <field name="apply_visa">True</field>
+            <field name="notes">International investor shareholder</field>
+        </record>
+
+        <record id="demo_business_shareholder_3" model="res.partner.business.shareholder">
+            <field name="name">Tech Solutions LLC</field>
+            <field name="company_type">company</field>
+            <field name="shareholding">15.0</field>
+            <field name="ubo_id" ref="demo_ubo_2"/>
+            <field name="relationship_ids" eval="[(6, 0, [ref('demo_business_relationship_2'), ref('demo_business_relationship_4')])]"/>
+            <field name="email">info@techsolutions.demo</field>
+            <field name="mobile">+971503456789</field>
+            <field name="license_authority_id">DED</field>
+            <field name="incorporation_date">2023-01-15</field>
+            <field name="license_number">LIC001</field>
+            <field name="license_validity">5</field>
+            <field name="trade_license">TRADE001</field>
+            <field name="memorandum_association">MEMO001</field>
+            <field name="notes">Corporate shareholder with technology focus</field>
+        </record>
+
+        <!-- Demo Business Shareholder Addresses -->
+        <record id="demo_shareholder_address_1" model="business.shareholder.address">
+            <field name="name">Home Address</field>
+            <field name="shareholder_id" ref="demo_business_shareholder_1"/>
+            <field name="type">home</field>
+            <field name="street">Sheikh Zayed Road</field>
+            <field name="street2">Tower 1, Floor 15</field>
+            <field name="city">Dubai</field>
+            <field name="state_id" ref="base.state_ae_du"/>
+            <field name="country_id" ref="base.ae"/>
+            <field name="zip">12345</field>
+            <field name="is_primary">True</field>
+        </record>
+
+        <record id="demo_shareholder_address_2" model="business.shareholder.address">
+            <field name="name">Work Address</field>
+            <field name="shareholder_id" ref="demo_business_shareholder_1"/>
+            <field name="type">work</field>
+            <field name="street">Business Bay</field>
+            <field name="street2">Office 201</field>
+            <field name="city">Dubai</field>
+            <field name="state_id" ref="base.state_ae_du"/>
+            <field name="country_id" ref="base.ae"/>
+            <field name="zip">54321</field>
+            <field name="is_primary">False</field>
+        </record>
+
+        <record id="demo_shareholder_address_3" model="business.shareholder.address">
+            <field name="name">Home Address</field>
+            <field name="shareholder_id" ref="demo_business_shareholder_2"/>
+            <field name="type">home</field>
+            <field name="street">Corniche Street</field>
+            <field name="street2">Apartment 5B</field>
+            <field name="city">Abu Dhabi</field>
+            <field name="state_id" ref="base.state_ae_az"/>
+            <field name="country_id" ref="base.ae"/>
+            <field name="zip">67890</field>
+            <field name="is_primary">True</field>
+        </record>
+
+        <record id="demo_shareholder_address_4" model="business.shareholder.address">
+            <field name="name">Business Address</field>
+            <field name="shareholder_id" ref="demo_business_shareholder_3"/>
+            <field name="type">work</field>
+            <field name="street">Al Khan Street</field>
+            <field name="street2">Business Center</field>
+            <field name="city">Sharjah</field>
+            <field name="state_id" ref="base.state_ae_sh"/>
+            <field name="country_id" ref="base.ae"/>
+            <field name="zip">11111</field>
+            <field name="is_primary">True</field>
+        </record>
+
+        <!-- Demo Compliance Projects -->
+        <record id="demo_compliance_project_1" model="project.project">
+            <field name="name">Software Company Compliance</field>
+            <field name="description">Compliance project for software development company with multiple shareholders</field>
+            <field name="compliance_shareholder_ids" eval="[(6, 0, [ref('demo_business_shareholder_1'), ref('demo_business_shareholder_2'), ref('demo_business_shareholder_3')])]"/>
+            <field name="is_complete_compliance">True</field>
+            <field name="is_confirm_compliance">True</field>
+            <field name="is_update_compliance">False</field>
+            <field name="is_complete_return_compliance">False</field>
+            <field name="is_second_complete_compliance_check">2</field>
+            <field name="auto_create_handover">True</field>
+            <field name="auto_copy_documents">True</field>
+            <field name="auto_notify_stakeholders">True</field>
+        </record>
+
+        <record id="demo_compliance_project_2" model="project.project">
+            <field name="name">Consulting Firm Compliance</field>
+            <field name="description">Compliance project for consulting services firm with individual shareholders</field>
+            <field name="compliance_shareholder_ids" eval="[(6, 0, [ref('demo_business_shareholder_1'), ref('demo_business_shareholder_2')])]"/>
+            <field name="is_complete_compliance">False</field>
+            <field name="is_confirm_compliance">False</field>
+            <field name="is_update_compliance">False</field>
+            <field name="is_complete_return_compliance">False</field>
+            <field name="is_second_complete_compliance_check">0</field>
+            <field name="auto_create_handover">True</field>
+            <field name="auto_copy_documents">True</field>
+            <field name="auto_notify_stakeholders">True</field>
+        </record>
+
+        <!-- Demo Partners for Shareholder References -->
+        <record id="demo_partner_1" model="res.partner">
+            <field name="name">Demo Customer Company</field>
+            <field name="is_company">True</field>
+            <field name="email">info@democustomer.com</field>
+            <field name="phone">+971504567890</field>
+        </record>
+
+        <record id="demo_partner_2" model="res.partner">
+            <field name="name">Demo Partner Company</field>
+            <field name="is_company">True</field>
+            <field name="email">info@demopartner.com</field>
+            <field name="phone">+971505678901</field>
+        </record>
+
+        <record id="demo_contact_1" model="res.partner">
+            <field name="name">Mohammed Ali</field>
+            <field name="is_company">False</field>
+            <field name="email">mohammed.ali@demo.com</field>
+            <field name="phone">+971506789012</field>
+        </record>
+
+        <record id="demo_contact_2" model="res.partner">
+            <field name="name">Fatima Hassan</field>
+            <field name="is_company">False</field>
+            <field name="email">fatima.hassan@demo.com</field>
+            <field name="phone">+971507890123</field>
+        </record>
+
+        <!-- Update Shareholders with Partner References -->
+        <record id="demo_business_shareholder_1" model="res.partner.business.shareholder">
+            <field name="customer_id" ref="demo_partner_1"/>
+            <field name="partner_id" ref="demo_partner_2"/>
+            <field name="contact_id" ref="demo_contact_1"/>
+        </record>
+
+        <record id="demo_business_shareholder_2" model="res.partner.business.shareholder">
+            <field name="customer_id" ref="demo_partner_1"/>
+            <field name="contact_id" ref="demo_contact_2"/>
+        </record>
+
+        <record id="demo_business_shareholder_3" model="res.partner.business.shareholder">
+            <field name="customer_id" ref="demo_partner_2"/>
+            <field name="contact_id" ref="demo_contact_1"/>
+        </record>
+    </data>
+</odoo>

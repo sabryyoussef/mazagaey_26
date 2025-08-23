@@ -370,6 +370,49 @@
             <field name="notes">VAT compliance and reporting documentation</field>
             <field name="sequence">20</field>
         </record>
+
+        <!-- Compliance Project Templates -->
+        <record id="demo_project_template_software_compliance" model="project.project">
+            <field name="name">Software Company Compliance Template</field>
+            <field name="description">Standard compliance template for software development companies</field>
+            <field name="is_template">True</field>
+            <field name="template_category">compliance_services</field>
+            <field name="template_description">Comprehensive compliance template for software companies with multiple shareholders</field>
+            <field name="estimated_duration">30</field>
+            <field name="complexity_level">complex</field>
+            <field name="compliance_requirements">Complete compliance setup for software development companies including shareholder management, UBO tracking, and regulatory compliance</field>
+            <field name="shareholder_requirements">Individual and corporate shareholders with proper documentation and residency verification</field>
+            <field name="ubo_requirements">Ultimate Beneficial Owner identification and verification for transparency</field>
+            <field name="document_requirements">Passport copies, EID verification, Trade License, Memorandum of Association, and compliance certificates</field>
+        </record>
+
+        <record id="demo_project_template_consulting_compliance" model="project.project">
+            <field name="name">Consulting Firm Compliance Template</field>
+            <field name="description">Standard compliance template for consulting services firms</field>
+            <field name="is_template">True</field>
+            <field name="template_category">compliance_services</field>
+            <field name="template_description">Compliance template for consulting services with individual shareholders</field>
+            <field name="estimated_duration">20</field>
+            <field name="complexity_level">medium</field>
+            <field name="compliance_requirements">Compliance setup for consulting firms with simplified shareholder structure</field>
+            <field name="shareholder_requirements">Individual shareholders with basic documentation requirements</field>
+            <field name="ubo_requirements">Basic UBO identification for individual shareholders</field>
+            <field name="document_requirements">Passport copies, EID verification, and basic compliance documentation</field>
+        </record>
+
+        <record id="demo_project_template_construction_compliance" model="project.project">
+            <field name="name">Construction Company Compliance Template</field>
+            <field name="description">Standard compliance template for construction companies</field>
+            <field name="is_template">True</field>
+            <field name="template_category">compliance_services</field>
+            <field name="template_description">Compliance template for construction companies with complex ownership structures</field>
+            <field name="estimated_duration">45</field>
+            <field name="complexity_level">very_complex</field>
+            <field name="compliance_requirements">Comprehensive compliance for construction companies including safety, licensing, and regulatory requirements</field>
+            <field name="shareholder_requirements">Mixed individual and corporate shareholders with construction-specific requirements</field>
+            <field name="ubo_requirements">Detailed UBO tracking for construction licensing and safety compliance</field>
+            <field name="document_requirements">Construction licenses, safety certificates, shareholder documentation, and regulatory approvals</field>
+        </record>
         
     </data>
 </odoo>

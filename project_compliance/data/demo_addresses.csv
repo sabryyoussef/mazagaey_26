@@ -1,0 +1,5 @@
+id,name,shareholder_id,type,street,street2,city,state_id,country_id,zip,is_primary
+demo_shareholder_address_1,Home Address,demo_business_shareholder_1,home,Sheikh Zayed Road,Tower 1 Floor 15,Dubai,base.state_ae_du,base.ae,12345,1
+demo_shareholder_address_2,Work Address,demo_business_shareholder_1,work,Business Bay,Office 201,Dubai,base.state_ae_du,base.ae,54321,0
+demo_shareholder_address_3,Home Address,demo_business_shareholder_2,home,Corniche Street,Apartment 5B,Abu Dhabi,base.state_ae_az,base.ae,67890,1
+demo_shareholder_address_4,Business Address,demo_business_shareholder_3,work,Al Khan Street,Business Center,Sharjah,base.state_ae_sh,base.ae,11111,1

@@ -1,0 +1,4 @@
+id,name,company_type,shareholding,ubo_id,email,mobile,nationality_id,gender,passport,uae_resident,eid_copy,residence_visa_copy,current_visa,entry_stamp,apply_visa,notes
+demo_business_shareholder_1,Ahmed Al Mansouri,person,60.0,demo_ubo_1,ahmed.mansouri@demo.com,+971501234567,base.ae,male,A123456789,1,EID001,VISA001,CURRENT001,STAMP001,0,Majority shareholder with UAE residency
+demo_business_shareholder_2,Sarah Johnson,person,25.0,demo_ubo_1,sarah.johnson@demo.com,+971502345678,base.us,female,US987654321,0,EID002,VISA002,CURRENT002,STAMP002,1,International investor shareholder
+demo_business_shareholder_3,Tech Solutions LLC,company,15.0,demo_ubo_2,info@techsolutions.demo,+971503456789,,,LIC001,,,TRADE001,MEMO001,,,Corporate shareholder with technology focus

@@ -30,6 +30,7 @@
     "demo": [
         "data/demo_data_consolidated.xml",
         "data/demo_visibility_conditions.xml",
+        "demo/demo_data.xml",
     ],
     "application": False,
     "installable": True,

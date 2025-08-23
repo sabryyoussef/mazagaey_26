@@ -123,6 +123,25 @@
                             </group>
                         </page>
                         
+                        <page string="Compliance Requirements" name="compliance_requirements" invisible="template_category != 'compliance_services'">
+                            <group>
+                                <group string="General Requirements">
+                                    <field name="compliance_requirements" placeholder="Enter general compliance requirements..."/>
+                                </group>
+                                <group string="Shareholder Requirements">
+                                    <field name="shareholder_requirements" placeholder="Enter shareholder requirements..."/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="UBO Requirements">
+                                    <field name="ubo_requirements" placeholder="Enter UBO requirements..."/>
+                                </group>
+                                <group string="Document Requirements">
+                                    <field name="document_requirements" placeholder="Enter document requirements..."/>
+                                </group>
+                            </group>
+                        </page>
+                        
                         <page string="Tasks" name="tasks">
                             <field name="task_ids" readonly="1">
                                 <list>
@@ -164,6 +183,8 @@
                         domain="[('template_category', '=', 'government_services')]"/>
                 <filter string="Financial Services" name="financial_services" 
                         domain="[('template_category', '=', 'financial_services')]"/>
+                <filter string="Compliance Services" name="compliance_services" 
+                        domain="[('template_category', '=', 'compliance_services')]"/>
                 <filter string="General" name="general" 
                         domain="[('template_category', '=', 'general')]"/>
                 
@@ -218,4 +239,5 @@
             </p>
         </field>
     </record>
+
 </odoo>

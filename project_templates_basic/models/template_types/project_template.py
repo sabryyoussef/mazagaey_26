@@ -21,6 +21,7 @@ class ProjectTemplate(models.Model):
         ('visa_services', 'Visa Services'),
         ('government_services', 'Government Services'),
         ('financial_services', 'Financial Services'),
+        ('compliance_services', 'Compliance Services'),
         ('general', 'General')
     ], string='Template Category', default='general')
     
@@ -66,6 +67,27 @@ class ProjectTemplate(models.Model):
         'project.checkpoint.template',
         string='Related Checkpoint Templates',
         help='Checkpoint templates that are commonly used with this project template'
+    )
+    
+    # Compliance-specific fields
+    compliance_requirements = fields.Text(
+        string='Compliance Requirements',
+        help='Compliance requirements for this project template'
+    )
+    
+    shareholder_requirements = fields.Text(
+        string='Shareholder Requirements',
+        help='Shareholder requirements for compliance'
+    )
+    
+    ubo_requirements = fields.Text(
+        string='UBO Requirements',
+        help='Ultimate Beneficial Owner requirements'
+    )
+    
+    document_requirements = fields.Text(
+        string='Document Requirements',
+        help='Required documents for compliance'
     )
     
     @api.depends('task_ids')
