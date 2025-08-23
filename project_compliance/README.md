@@ -1,7 +1,7 @@
 # Project Compliance Module
 
 ## Overview
-This module provides comprehensive compliance functionality for Odoo projects, including shareholder management, UBO tracking, and compliance workflows. It integrates with `project_handover_notes` and `project_documents_extension` modules.
+This module provides comprehensive compliance functionality for Odoo projects, including shareholder management, UBO tracking, and compliance workflows. It integrates with `project_handover_notes`, `unified_documents`, `project_templates_basic`, and `project_checkpoints_basic` modules.
 
 ## Features
 
@@ -29,8 +29,10 @@ This module provides comprehensive compliance functionality for Odoo projects, i
 - `base`
 - `project`
 - `mail`
-- `project_documents_extension`
+- `unified_documents`
 - `project_handover_notes`
+- `project_templates_basic`
+- `project_checkpoints_basic`
 
 ## Installation
 1. Place the module in your `custom_addons` directory

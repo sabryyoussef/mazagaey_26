@@ -4,6 +4,9 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    def _valid_field_parameter(self, field, name):
+        return name in ('tracking',) or super()._valid_field_parameter(field, name)
+
     # Compliance Integration
     compliance_shareholder_ids = fields.One2many('res.partner.business.shareholder', 'partner_id', string='Compliance Shareholders')
     compliance_shareholder_count = fields.Integer(compute='_compute_compliance_shareholder_count', string='Compliance Shareholders Count')

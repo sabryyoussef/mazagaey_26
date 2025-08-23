@@ -1,5 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class BusinessRelationships(models.Model):
@@ -70,6 +73,9 @@ class BusinessShareholder(models.Model):
     _order = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    def _valid_field_parameter(self, field, name):
+        return name in ('tracking',) or super()._valid_field_parameter(field, name)
+
     name = fields.Char(string='Shareholder Name', required=True, tracking=True)
     
     # Project and partner relations
@@ -121,7 +127,7 @@ class BusinessShareholder(models.Model):
     # Address fields - One2many relationship for multiple addresses
     address_ids = fields.One2many('business.shareholder.address', 'shareholder_id', string='Addresses')
 
-    # Document references (using project_documents_extension)
+    # Document references (using unified_documents)
     passport = fields.Char(string='Passport Reference', tracking=True)
     uae_resident = fields.Boolean(string='UAE Resident', tracking=True)
     eid_copy = fields.Char(string='EID Copy Reference', tracking=True)
@@ -165,38 +171,41 @@ class BusinessShareholder(models.Model):
     @api.model
     def _fix_dangling_foreign_keys(self):
         """Fix any dangling foreign keys that might cause read errors"""
-        # Fix ubo_id references
-        invalid_ubos = self.search([('ubo_id', '!=', False)])
-        for shareholder in invalid_ubos:
-            if not shareholder.ubo_id.exists():
-                shareholder.ubo_id = False
-        
-        # Fix project_id references
-        invalid_projects = self.search([('project_id', '!=', False)])
-        for shareholder in invalid_projects:
-            if not shareholder.project_id.exists():
-                shareholder.project_id = False
-        
-        # Fix partner_id references
-        invalid_partners = self.search([('partner_id', '!=', False)])
-        for shareholder in invalid_partners:
-            if not shareholder.partner_id.exists():
-                shareholder.partner_id = False
-        
-        # Fix customer_id references
-        invalid_customers = self.search([('customer_id', '!=', False)])
-        for shareholder in invalid_customers:
-            if not shareholder.customer_id.exists():
-                shareholder.customer_id = False
-        
-        # Fix contact_id references
-        invalid_contacts = self.search([('contact_id', '!=', False)])
-        for shareholder in invalid_contacts:
-            if not shareholder.contact_id.exists():
-                shareholder.contact_id = False
-        
-        # Fix nationality_id references
-        invalid_nationalities = self.search([('nationality_id', '!=', False)])
-        for shareholder in invalid_nationalities:
-            if not shareholder.nationality_id.exists():
-                shareholder.nationality_id = False
+        try:
+            # Fix ubo_id references
+            invalid_ubos = self.search([('ubo_id', '!=', False)])
+            for shareholder in invalid_ubos:
+                if not shareholder.ubo_id.exists():
+                    shareholder.ubo_id = False
+            
+            # Fix project_id references
+            invalid_projects = self.search([('project_id', '!=', False)])
+            for shareholder in invalid_projects:
+                if not shareholder.project_id.exists():
+                    shareholder.project_id = False
+            
+            # Fix partner_id references
+            invalid_partners = self.search([('partner_id', '!=', False)])
+            for shareholder in invalid_partners:
+                if not shareholder.partner_id.exists():
+                    shareholder.partner_id = False
+            
+            # Fix customer_id references
+            invalid_customers = self.search([('customer_id', '!=', False)])
+            for shareholder in invalid_customers:
+                if not shareholder.customer_id.exists():
+                    shareholder.customer_id = False
+            
+            # Fix contact_id references
+            invalid_contacts = self.search([('contact_id', '!=', False)])
+            for shareholder in invalid_contacts:
+                if not shareholder.contact_id.exists():
+                    shareholder.contact_id = False
+            
+            # Fix nationality_id references
+            invalid_nationalities = self.search([('nationality_id', '!=', False)])
+            for shareholder in invalid_nationalities:
+                if not shareholder.nationality_id.exists():
+                    shareholder.nationality_id = False
+        except Exception as e:
+            _logger.warning(f"Error fixing dangling foreign keys: {e}")
