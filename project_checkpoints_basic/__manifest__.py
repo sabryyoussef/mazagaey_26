@@ -10,6 +10,7 @@
         "base",
         "project",
         "product",
+        "documents",  # For document integration
     ],
     "data": [
         # Security (load first)
