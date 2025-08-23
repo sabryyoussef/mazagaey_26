@@ -1,0 +1,79 @@
+# Python bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Backup files
+*.backup
+*.backup2
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# Odoo specific
+*.log
+*.sql
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+*.orig
+
+# Documentation build
+docs/_build/
+docs/build/
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Environment files
+.env
+.venv/
+venv/
+env/
+
+# Database files
+*.db
+*.sqlite
+
+# Log files
+logs/
+*.log
+
+# Cache directories
+.cache/
+cache/
+
+# Compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Backup files
+*.backup*
+*.bak
+*.old
+
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
