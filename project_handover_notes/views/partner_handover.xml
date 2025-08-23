@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Partner Form Integration -->
+        <record id="view_partner_form_handover_integration" model="ir.ui.view">
+            <field name="name">res.partner.form.handover.integration</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Handover Notes" name="handover_notes">
+                        <group>
+                            <group>
+                                <button name="action_view_handover_notes" type="object" string="View Handover Notes"
+                                        class="btn btn-secondary"
+                                        invisible="handover_notes_count == 0"/>
+                                <field name="handover_notes_count" widget="statinfo" string="Handover Notes"/>
+                            </group>
+                            <group>
+                                <field name="hand_legal_type"/>
+                                <field name="hand_legal_type_id"/>
+                                <field name="visa_eligibility"/>
+                                <field name="channel_plan_id"/>
+                            </group>
+                        </group>
+                        <field name="hand_country_ids" widget="many2many_tags"/>
+                        
+                        <!-- Handover Notes List -->
+                        <field name="handover_notes_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="handover_status"/>
+                                <field name="handover_date"/>
+                                <field name="handover_by"/>
+                                <field name="create_date"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Partner List View Integration -->
+        <record id="view_partner_list_handover_integration" model="ir.ui.view">
+            <field name="name">res.partner.list.handover.integration</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="handover_notes_count" widget="statinfo" string="Handover Notes"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

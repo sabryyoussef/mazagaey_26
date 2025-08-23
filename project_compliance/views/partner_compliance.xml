@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Partner Form Integration -->
+        <record id="view_partner_form_compliance_integration" model="ir.ui.view">
+            <field name="name">res.partner.form.compliance.integration</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Compliance" name="compliance">
+                        <group>
+                            <group>
+                                <button name="action_view_compliance_shareholders" type="object" string="View Compliance Shareholders"
+                                        class="btn btn-secondary"
+                                        invisible="compliance_shareholder_count == 0"/>
+                                <field name="compliance_shareholder_count" widget="statinfo" string="Compliance Shareholders"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Compliance Shareholders List -->
+                        <field name="compliance_shareholder_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="project_id"/>
+                                <field name="contact_id"/>
+                                <field name="ubo_id"/>
+                                <field name="shareholding"/>
+                                <field name="relationship_ids" widget="many2many_tags"/>
+                                <field name="address_count" widget="statinfo" string="Addresses"/>
+                                <field name="company_type"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Partner List View Integration -->
+        <record id="view_partner_list_compliance_integration" model="ir.ui.view">
+            <field name="name">res.partner.list.compliance.integration</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="compliance_shareholder_count" widget="statinfo" string="Compliance"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
