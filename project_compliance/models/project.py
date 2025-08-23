@@ -5,6 +5,9 @@ from odoo.exceptions import UserError
 class Project(models.Model):
     _inherit = 'project.project'
 
+    def _valid_field_parameter(self, field, name):
+        return name in ('tracking',) or super()._valid_field_parameter(field, name)
+
     # Compliance fields
     compliance_shareholder_ids = fields.One2many(
         'res.partner.business.shareholder', 'project_id', string='Compliance Shareholders'
