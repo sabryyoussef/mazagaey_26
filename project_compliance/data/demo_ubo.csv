@@ -1,0 +1,3 @@
+id,name,code,description,active
+demo_ubo_1,Individual UBO,IND,Individual ultimate beneficial owner,1
+demo_ubo_2,Corporate UBO,CORP,Corporate ultimate beneficial owner,1

@@ -15,10 +15,8 @@ class ResPartner(models.Model):
         ('llc', 'LLC'),
     ], string='Legal Entity/Type')
     
-    hand_legal_type_id = fields.Many2one('hand.legal.type', string='Legal Entity/Type', ondelete='set null')
     visa_eligibility = fields.Float(string='Visa Eligibility')
     hand_country_ids = fields.Many2many('res.country', string='Top 5 Countries of Operation')
-    channel_plan_id = fields.Many2one('channel.partner.plan', string='Channel Partner Plan', ondelete='set null')
     
     @api.depends('handover_notes_ids')
     def _compute_handover_notes_count(self):

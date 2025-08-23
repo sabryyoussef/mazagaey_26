@@ -30,6 +30,7 @@
     ],
     'demo': [
         'demo/handover_demo.xml',
+        'demo/demo_data.xml',
     ],
     'installable': True,
     'application': False,

@@ -62,9 +62,11 @@ class Project(models.Model):
     auto_copy_compliance_documents = fields.Boolean(string='Auto Copy Compliance Documents', default=True, tracking=True)
     
     # Template Integration
-    compliance_template_id = fields.Many2one('unified.product.template', string='Compliance Template', tracking=True)
-    compliance_template_type = fields.Selection(related='compliance_template_id.template_type', readonly=True, store=True)
-    compliance_template_description = fields.Text(related='compliance_template_id.description', readonly=True)
+    compliance_template_id = fields.Many2one('project.project', string='Compliance Template', 
+                                           domain=[('is_template', '=', True), ('template_category', '=', 'compliance_services')], 
+                                           tracking=True)
+    compliance_template_type = fields.Selection(related='compliance_template_id.template_category', readonly=True, store=True)
+    compliance_template_description = fields.Text(related='compliance_template_id.template_description', readonly=True)
 
     @api.depends('compliance_shareholder_ids')
     def _compute_compliance_shareholder_count(self):
@@ -497,19 +499,25 @@ class Project(models.Model):
         if self.compliance_template_id:
             template = self.compliance_template_id
             
-            # Apply template structure and settings
-            if template.description:
-                # Create a compliance note with template description
-                self.message_post(body=_("Compliance template applied: %s") % template.description)
+            # Apply template requirements
+            if template.compliance_requirements:
+                self.message_post(body=_("Compliance template applied: %s") % template.compliance_requirements)
             
-            # Apply template document automations if any
-            if hasattr(template, 'document_automation_ids') and template.document_automation_ids:
-                self.compliance_document_automation_ids = template.document_automation_ids
-                self.message_post(body=_("Template document automations applied"))
+            # Apply shareholder requirements
+            if template.shareholder_requirements:
+                self.message_post(body=_("Shareholder requirements: %s") % template.shareholder_requirements)
             
-            # Apply template settings
-            if template.template_type:
-                self.message_post(body=_("Template type applied: %s") % template.template_type)
+            # Apply UBO requirements
+            if template.ubo_requirements:
+                self.message_post(body=_("UBO requirements: %s") % template.ubo_requirements)
+            
+            # Apply document requirements
+            if template.document_requirements:
+                self.message_post(body=_("Document requirements: %s") % template.document_requirements)
+            
+            # Apply related checkpoint templates if available
+            if template.related_checkpoint_templates:
+                self.compliance_checkpoint_template_ids = template.related_checkpoint_templates
             
             self.message_post(body=_("Compliance template '%s' successfully applied to project") % template.name)
         else:
@@ -519,17 +527,31 @@ class Project(models.Model):
     def action_create_compliance_template(self):
         """Create compliance template from project"""
         self.ensure_one()
+        
+        # Create a new project template from this project
+        template_vals = {
+            'name': f'Compliance Template - {self.name}',
+            'description': f'Compliance template created from project {self.name}',
+            'is_template': True,
+            'template_category': 'compliance_services',
+            'template_description': f'Compliance template created from project {self.name}',
+            'compliance_requirements': f'Compliance requirements from project {self.name}',
+            'shareholder_requirements': 'Shareholder requirements based on project structure',
+            'ubo_requirements': 'UBO requirements based on project structure',
+            'document_requirements': 'Document requirements based on project structure',
+        }
+        
+        template = self.env['project.project'].create(template_vals)
+        
+        self.message_post(body=_("Compliance template '%s' created successfully") % template.name)
+        
         return {
-            'name': _('Create Compliance Template'),
+            'name': _('Compliance Template Created'),
             'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
             'view_mode': 'form',
-            'res_model': 'unified.product.template',
-            'context': {
-                'default_name': f'Compliance Template - {self.name}',
-                'default_template_type': 'document_based',
-                'default_description': f'Compliance template created from project {self.name}',
-            },
-            'target': 'new',
+            'res_id': template.id,
+            'target': 'current',
         }
 
     def action_copy_compliance_documents(self):

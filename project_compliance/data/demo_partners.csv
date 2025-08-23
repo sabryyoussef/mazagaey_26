@@ -1,0 +1,5 @@
+id,name,is_company,email,phone
+demo_partner_1,Demo Customer Company,1,info@democustomer.com,+971504567890
+demo_partner_2,Demo Partner Company,1,info@demopartner.com,+971505678901
+demo_contact_1,Mohammed Ali,0,mohammed.ali@demo.com,+971506789012
+demo_contact_2,Fatima Hassan,0,fatima.hassan@demo.com,+971507890123
