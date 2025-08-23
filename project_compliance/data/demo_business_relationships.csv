@@ -1,0 +1,5 @@
+id,name,code,description,active
+demo_business_relationship_1,Family,FAM,Family relationship,1
+demo_business_relationship_2,Business Partner,BP,Business partner relationship,1
+demo_business_relationship_3,Investor,INV,Investor relationship,1
+demo_business_relationship_4,Director,DIR,Director relationship,1

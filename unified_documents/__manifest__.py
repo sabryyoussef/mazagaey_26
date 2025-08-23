@@ -25,6 +25,7 @@
         "data/demo_automation_simple.xml",
         "data/demo_product_templates.xml",
         "data/demo_service_products.xml",
+        "demo/demo_data.xml",
         # Core views
         "views/core/documents_document_views.xml",
         "views/core/document_copy_automation_views.xml",

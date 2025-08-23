@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Handover Templates -->
+        <record id="demo_handover_template_1" model="project.project">
+            <field name="name">Demo: Technical Handover Template</field>
+            <field name="description">Template for technical project handovers</field>
+            <field name="is_template">True</field>
+            <field name="template_category">technical</field>
+            <field name="template_description">Complete technical handover including code documentation, deployment procedures, and maintenance guidelines</field>
+        </record>
+
+        <record id="demo_handover_template_2" model="project.project">
+            <field name="name">Demo: Project Management Handover Template</field>
+            <field name="description">Template for project management handovers</field>
+            <field name="is_template">True</field>
+            <field name="template_category">management</field>
+            <field name="template_description">Project management handover including stakeholder contacts, project status, and pending decisions</field>
+        </record>
+
+        <!-- Demo Handover Workflow Automations -->
+        <record id="demo_handover_automation_1" model="project.handover.auto">
+            <field name="name">Demo: Auto Create Technical Handover</field>
+            <field name="trigger_type">checkpoint_completion</field>
+            <field name="checkpoint_type_selection">development</field>
+            <field name="template_id" ref="demo_handover_template_1"/>
+            <field name="active">True</field>
+            <field name="sequence">10</field>
+            <field name="auto_create_handover">True</field>
+            <field name="auto_assign_template">True</field>
+            <field name="auto_copy_documents">True</field>
+        </record>
+
+        <record id="demo_handover_automation_2" model="project.handover.auto">
+            <field name="name">Demo: Auto Create Management Handover</field>
+            <field name="trigger_type">project_milestone</field>
+            <field name="checkpoint_type_selection">milestone</field>
+            <field name="template_id" ref="demo_handover_template_2"/>
+            <field name="active">True</field>
+            <field name="sequence">20</field>
+            <field name="auto_create_handover">True</field>
+            <field name="auto_assign_template">True</field>
+            <field name="auto_copy_documents">True</field>
+        </record>
+
+        <!-- Demo Handover Notes -->
+        <record id="demo_handover_note_1" model="project.handover.notes">
+            <field name="name">Demo: Web Development Handover</field>
+            <field name="handover_type">technical</field>
+            <field name="handover_status">draft</field>
+            <field name="handover_notes">This is a demo handover note for web development project. It includes technical details, deployment procedures, and maintenance guidelines.</field>
+        </record>
+
+        <record id="demo_handover_note_2" model="project.handover.notes">
+            <field name="name">Demo: Mobile App Handover</field>
+            <field name="handover_type">compliance</field>
+            <field name="handover_status">complete</field>
+            <field name="compliance_status">verified</field>
+            <field name="handover_notes">This is a demo compliance handover note for mobile application project. It includes compliance requirements, shareholder information, and regulatory documentation.</field>
+        </record>
+
+        <!-- Demo Handover Summary -->
+        <record id="demo_handover_summary_1" model="project.handover.notes">
+            <field name="name">Demo: Project Summary Handover</field>
+            <field name="handover_type">general</field>
+            <field name="handover_status">confirmed</field>
+            <field name="handover_notes">This is a demo summary handover note. It provides an overview of the completed project, key achievements, lessons learned, and recommendations for future projects.</field>
+        </record>
+    </data>
+</odoo>
