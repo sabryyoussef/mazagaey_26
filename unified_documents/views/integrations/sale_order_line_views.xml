@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
         <!-- Extend Sale Order Line Form View -->
         <record id="view_sale_order_line_form_documents" model="ir.ui.view">
             <field name="name">sale.order.line.form.documents</field>
@@ -33,5 +32,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
 </odoo>
