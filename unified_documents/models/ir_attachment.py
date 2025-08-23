@@ -13,9 +13,8 @@ class IrAttachment(models.Model):
 
     # Add folder selection field
     folder_id = fields.Many2one(
-        'documents.document',
+        'documents.folder',
         string='Documents Folder',
-        domain=[('type', '=', 'folder')],
         help='Select a folder to organize this attachment in the Documents module'
     )
     

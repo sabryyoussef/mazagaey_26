@@ -11,17 +11,22 @@ class ProjectDocumentTemplate(models.Model):
     _description = 'Project Document Template'
     _order = 'sequence, name'
 
-    name = fields.Char('Template Name', required=True, tracking=True)
-    description = fields.Text('Description', tracking=True)
+    @classmethod
+    def _valid_field_parameter(cls, field, name):
+        """Allow tracking parameter for fields"""
+        return super()._valid_field_parameter(field, name) or name == 'tracking'
+
+    name = fields.Char('Template Name', required=True)
+    description = fields.Text('Description')
     sequence = fields.Integer('Sequence', default=10)
-    active = fields.Boolean('Active', default=True, tracking=True)
+    active = fields.Boolean('Active', default=True)
     
     # Template configuration
     template_type = fields.Selection([
         ('document_based', 'Document-Based'),
         ('checklist_based', 'Checklist-Based'),
         ('hybrid', 'Hybrid (Document + Checklist)')
-    ], string='Template Type', required=True, default='document_based', tracking=True)
+    ], string='Template Type', required=True, default='document_based')
     
     # Document template lines
     document_template_line_ids = fields.One2many(
