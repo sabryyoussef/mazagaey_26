@@ -43,6 +43,7 @@ class UnifiedDocumentService(models.Model):
         
         # Deduplication sets
         document_keys = set()
+        total_copied = 0
         
         for document in product.document_ids:
             # Create unique key for deduplication
@@ -55,12 +56,18 @@ class UnifiedDocumentService(models.Model):
                     new_document = self._copy_single_document(document, project)
                     if new_document:
                         copied_docs[document.category].append(new_document)
+                        total_copied += 1
                         _logger.info(f"Successfully copied document {document.name} ({document.category})")
                 except Exception as e:
                     _logger.error(f"Failed to copy document {document.name}: {e}")
                     continue
             else:
                 _logger.info(f"Skipping duplicate document {document.name}")
+        
+        # Invalidate cache to ensure project.document_ids is updated
+        if total_copied > 0:
+            project.invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count', 'reference_document_count', 'compliance_document_count'])
+            _logger.info(f"Invalidated cache for project {project.name} after copying {total_copied} documents")
         
         _logger.info(f"Document copy completed. Copied: {sum(len(docs) for docs in copied_docs.values())} documents")
         return copied_docs
@@ -82,20 +89,27 @@ class UnifiedDocumentService(models.Model):
             
             # Create new document
             new_document_vals = {
-                'name': document.name,
-                'category': document.category,
-                'priority': document.priority,
-                'notes': document.notes,
-                'tag_ids': [(6, 0, document.tag_ids.ids)],
+                'name': f"{document.name} - {target_project.name}",
+                'category': document.category or 'reference',
+                'status': document.status or 'draft',
+                'priority': document.priority or '1',
+                'description': document.description or '',
+                'notes': document.notes or '',
+                'tag_ids': [(6, 0, document.tag_ids.ids)] if document.tag_ids else False,
                 'res_model': 'project.project',
                 'res_id': target_project.id,
                 'linked_project_id': target_project.id,
-                'linked_product_id': False,  # Remove product link
+                # Remove linked_product_id to avoid foreign key constraint issues
+                # 'linked_product_id': document.linked_product_id.id if document.linked_product_id else False,
             }
+            
+            # Copy attachment if exists and is valid
+            if document.attachment_id and document.attachment_id.exists():
+                new_document_vals['attachment_id'] = document.attachment_id.id
             
             new_document = self.env['documents.document'].create(new_document_vals)
             
-            # Copy attachments if any
+            # Copy attachments if any (additional attachments)
             if document.attachment_ids:
                 new_document.attachment_ids = [(6, 0, document.attachment_ids.ids)]
                 _logger.info(f"Copied {len(document.attachment_ids)} attachments for document {document.name}")
