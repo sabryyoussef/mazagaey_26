@@ -68,6 +68,37 @@
                                 <field name="company_type"/>
                             </list>
                         </field>
+                        
+                        <!-- Compliance Checkpoints Section -->
+                        <group>
+                            <group>
+                                <button name="action_view_compliance_checkpoints" type="object" string="View Compliance Checkpoints"
+                                        class="btn btn-secondary"
+                                        invisible="compliance_checkpoint_count == 0"/>
+                                <!-- Simple display fields for testing -->
+                                <field name="compliance_checkpoint_count" readonly="1" string="Total Checkpoints"/>
+                                <field name="compliance_checkpoint_reached_count" readonly="1" string="Reached Checkpoints"/>
+                                <field name="compliance_checkpoint_progress" readonly="1" string="Checkpoint Progress (%)"/>
+                            </group>
+                            <group>
+                                <button name="action_create_compliance_checkpoint" type="object" string="Create Checkpoint"
+                                        class="btn btn-primary"/>
+                                <button name="action_auto_create_compliance_checkpoints" type="object" string="Auto Create Checkpoints"
+                                        class="btn btn-info"/>
+                                <button name="action_apply_compliance_checkpoint_templates" type="object" string="Apply Templates"
+                                        class="btn btn-secondary"
+                                        invisible="not compliance_template_id"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Compliance Checkpoint Templates -->
+                        <field name="compliance_template_id" invisible="not compliance_template_id">
+                            <form>
+                                <group>
+                                    <field name="related_checkpoint_templates" widget="many2many_tags"/>
+                                </group>
+                            </form>
+                        </field>
                     </page>
                 </xpath>
             </field>
