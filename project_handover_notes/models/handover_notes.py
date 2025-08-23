@@ -117,6 +117,10 @@ class ProjectHandoverNotes(models.Model):
         ('verified', 'Verified'),
     ], string='Compliance Status', default='pending', tracking=True)
     compliance_notes = fields.Html(string='Compliance Notes', tracking=True)
+    
+    # Compliance Automation
+    auto_update_compliance_project = fields.Boolean(string='Auto Update Compliance Project', default=True, tracking=True)
+    auto_transfer_shareholders = fields.Boolean(string='Auto Transfer Shareholders', default=True, tracking=True)
     visa_eligibility = fields.Float(string='Visa Eligibility', tracking=True)
     
     # Share Information
@@ -315,6 +319,9 @@ class ProjectHandoverNotes(models.Model):
             record.compliance_status = 'complete'
             record.handover_status = 'complete'
             record.message_post(body=_("Compliance Handover Completed"))
+            
+            # Trigger compliance automation
+            record._trigger_compliance_handover_automation('complete')
 
     def action_verify_compliance_handover(self):
         """Verify compliance handover"""
@@ -327,9 +334,45 @@ class ProjectHandoverNotes(models.Model):
             
             record.compliance_status = 'verified'
             record.message_post(body=_("Compliance Handover Verified"))
+            
+            # Trigger compliance automation
+            record._trigger_compliance_handover_automation('verify')
 
     @api.onchange('compliance_project_id')
     def _onchange_compliance_project_id(self):
         """Update compliance shareholders when compliance project changes"""
         if self.compliance_project_id:
             self.compliance_shareholder_ids = self.compliance_project_id.compliance_shareholder_ids
+
+    def _trigger_compliance_handover_automation(self, trigger_type):
+        """Trigger compliance handover automation"""
+        self.ensure_one()
+        
+        try:
+            if trigger_type == 'complete' and self.auto_update_compliance_project:
+                self._update_compliance_project_status()
+            
+            if trigger_type in ['complete', 'verify'] and self.auto_transfer_shareholders:
+                self._transfer_compliance_shareholders()
+                
+        except Exception as e:
+            self.message_post(body=_("Compliance automation error: %s") % str(e))
+
+    def _update_compliance_project_status(self):
+        """Update the linked compliance project status"""
+        self.ensure_one()
+        
+        if self.compliance_project_id:
+            project = self.compliance_project_id
+            if self.compliance_status == 'complete':
+                project.is_complete_compliance = True
+                project.message_post(body=_("Compliance status updated via handover: %s") % self.name)
+
+    def _transfer_compliance_shareholders(self):
+        """Transfer compliance shareholders between projects"""
+        self.ensure_one()
+        
+        if self.compliance_project_id and self.compliance_shareholder_ids:
+            # Update the compliance project with current shareholders
+            self.compliance_project_id.compliance_shareholder_ids = self.compliance_shareholder_ids
+            self.message_post(body=_("Compliance shareholders transferred to project"))
