@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Project Templates User Group -->
+        <record id="group_project_templates_user" model="res.groups">
+            <field name="name">Project Templates User</field>
+            <field name="category_id" ref="base.module_category_project"/>
+            <field name="comment">Users can view and apply templates to tasks and projects.</field>
+        </record>
+
+        <!-- Project Templates Manager Group -->
+        <record id="group_project_templates_manager" model="res.groups">
+            <field name="name">Project Templates Manager</field>
+            <field name="category_id" ref="base.module_category_project"/>
+            <field name="implied_ids" eval="[(4, ref('group_project_templates_user'))]"/>
+            <field name="comment">Managers can create, edit, and manage templates.</field>
+        </record>
+
+        <!-- Project Templates Administrator Group -->
+        <record id="group_project_templates_admin" model="res.groups">
+            <field name="name">Project Templates Administrator</field>
+            <field name="category_id" ref="base.module_category_project"/>
+            <field name="implied_ids" eval="[(4, ref('group_project_templates_manager'))]"/>
+            <field name="comment">Administrators have full access to all template functionality.</field>
+        </record>
+
+    </data>
+</odoo>

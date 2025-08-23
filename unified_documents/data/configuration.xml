@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Configuration Settings for Unified Documents -->
+        
+        <!-- Default Document Categories Configuration -->
+        <record id="default_document_categories_config" model="ir.config_parameter">
+            <field name="key">unified_documents.default_categories</field>
+            <field name="value">required,deliverable,reference,compliance</field>
+        </record>
+        
+        <!-- Default Copy Options Configuration -->
+        <record id="default_copy_options_config" model="ir.config_parameter">
+            <field name="key">unified_documents.default_copy_options</field>
+            <field name="value">{"copy_attachments": true, "copy_tags": true, "copy_notes": true}</field>
+        </record>
+        
+        <!-- Automation Execution Interval Configuration -->
+        <record id="automation_execution_interval_config" model="ir.config_parameter">
+            <field name="key">unified_documents.automation_interval_hours</field>
+            <field name="value">24</field>
+        </record>
+        
+        <!-- Document Copy Service Settings -->
+        <record id="document_copy_service_enabled" model="ir.config_parameter">
+            <field name="key">unified_documents.copy_service_enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- Error Notification Settings -->
+        <record id="error_notification_enabled" model="ir.config_parameter">
+            <field name="key">unified_documents.error_notification_enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+        <!-- Logging Settings -->
+        <record id="execution_logging_enabled" model="ir.config_parameter">
+            <field name="key">unified_documents.execution_logging_enabled</field>
+            <field name="value">True</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Extend Document Search View -->
+    <record id="view_documents_document_search_extended" model="ir.ui.view">
+        <field name="name">documents.document.search.extended</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="category"/>
+                <field name="status"/>
+                <field name="priority"/>
+                <field name="is_expired"/>
+                <field name="is_verified"/>
+                <field name="tag_ids"/>
+            </xpath>
+            
+            <xpath expr="//filter[@name='my_documents_filter']" position="after">
+                <filter string="Required" name="required" 
+                        domain="[('category', '=', 'required')]"/>
+                <filter string="Deliverable" name="deliverable" 
+                        domain="[('category', '=', 'deliverable')]"/>
+                <filter string="Expired" name="expired" 
+                        domain="[('is_expired', '=', True)]"/>
+                <filter string="Pending" name="pending" 
+                        domain="[('status', '=', 'pending')]"/>
+                <filter string="Verified" name="verified" 
+                        domain="[('is_verified', '=', True)]"/>
+            </xpath>
+            
+            <xpath expr="//group" position="inside">
+                <filter string="Category" name="group_category" 
+                        context="{'group_by': 'category'}"/>
+                <filter string="Status" name="group_status" 
+                        context="{'group_by': 'status'}"/>
+                <filter string="Priority" name="group_priority" 
+                        context="{'group_by': 'priority'}"/>
+                <filter string="Tags" name="group_tags" 
+                        context="{'group_by': 'tag_ids'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Document Form View -->
+    <record id="view_documents_document_form_extended" model="ir.ui.view">
+        <field name="name">documents.document.form.extended</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_mark_verified" type="object" 
+                        string="Mark Verified" class="oe_highlight"
+                        invisible="is_verified"/>
+                <button name="action_mark_completed" type="object" 
+                        string="Mark Completed" class="oe_highlight"
+                        invisible="status == 'completed'"/>
+                <button name="action_mark_delivered" type="object" 
+                        string="Mark Delivered" class="oe_highlight"
+                        invisible="category != 'deliverable' or status == 'delivered'"/>
+                <button name="action_reset_to_draft" type="object" 
+                        string="Reset to Draft"
+                        invisible="status == 'draft'"/>
+            </xpath>
+            
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <group>
+                        <field name="category"/>
+                        <field name="status"/>
+                        <field name="priority"/>
+                        <field name="expiry_date"/>
+                        <field name="reminder_days"/>
+                    </group>
+                    <group>
+                        <field name="is_expired"/>
+                        <field name="is_verified"/>
+                        <field name="verification_date"/>
+                        <field name="verified_by"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                
+                <notebook>
+                    <page string="Notes" name="notes">
+                        <field name="notes" placeholder="Add notes about this document..."/>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

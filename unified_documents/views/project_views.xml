@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Document Tree View for Project -->
+    <record id="view_documents_document_tree_project" model="ir.ui.view">
+        <field name="name">documents.document.tree.project</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="status"/>
+                <field name="priority" widget="priority"/>
+                <field name="expiry_date"/>
+                <field name="is_expired" decoration-danger="is_expired"/>
+                <field name="is_verified" decoration-success="is_verified"/>
+                <button name="action_upload_file" type="object" 
+                        string="Upload" icon="fa-upload" 
+                        class="btn-sm btn-primary"/>
+                <button name="action_view_document" type="object" 
+                        string="View" icon="fa-eye" 
+                        class="btn-sm btn-info"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Extend Project Form View -->
+    <record id="view_project_project_form_documents" model="ir.ui.view">
+        <field name="name">project.project.form.documents</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Documents" name="documents">
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Documents Smart Button -->
+                        <button name="action_view_documents" type="object" 
+                                class="oe_stat_button" icon="fa-file-text"
+                                title="View All Documents">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="document_count"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Create/Assign Folder Smart Button -->
+                        <button name="action_create_project_folder" type="object" 
+                                class="oe_stat_button" icon="fa-folder"
+                                invisible="documents_folder_id"
+                                title="Create/Assign Documents Folder">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-folder-o"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- View Folder Smart Button -->
+                        <button name="action_view_project_folder" type="object" 
+                                class="oe_stat_button" icon="fa-folder-open"
+                                invisible="not documents_folder_id"
+                                title="View Documents Folder">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-folder-open"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- View Files Smart Button -->
+                        <button name="action_view_project_files" type="object" 
+                                class="oe_stat_button" icon="fa-files-o"
+                                invisible="not documents_folder_id"
+                                title="View Project Files">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="project_files_count"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        
+                        <!-- Required Documents Smart Button -->
+                        <button name="action_view_required_documents" type="object" 
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="required_document_count == 0"
+                                title="View Required Documents">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="required_document_count"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- No Required Documents Smart Button -->
+                        <button name="action_view_documents" type="object" 
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="required_document_count != 0"
+                                title="Add Required Documents">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-plus"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Deliverable Documents Smart Button -->
+                        <button name="action_view_deliverable_documents" type="object" 
+                                class="oe_stat_button" icon="fa-check-circle"
+                                invisible="deliverable_document_count == 0"
+                                title="View Deliverable Documents">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="deliverable_document_count"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+
+                        
+
+                        
+                        <!-- Copy from Product Smart Button -->
+                        <button name="action_copy_from_product" type="object" 
+                                class="oe_stat_button" icon="fa-copy"
+                                title="Copy Documents from Product">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-copy"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Fix Tags Smart Button -->
+                        <button name="action_fix_document_tags" type="object" 
+                                class="oe_stat_button" icon="fa-tags"
+                                title="Fix Document Tags Display">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-tags"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Test Document Linking Smart Button -->
+                        <button name="action_test_document_linking" type="object" 
+                                class="oe_stat_button" icon="fa-bug"
+                                title="Test Document Linking">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-bug"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <group string="Documents Folder">
+                        <group>
+                            <field name="documents_folder_id" readonly="1"/>
+                            <field name="project_files_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Smart Buttons:</strong> Use the smart buttons above to quickly access documents, folders, and files. Create a documents folder to organize project files automatically.
+                            </div>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group>
+                            <field name="required_document_count" readonly="1"/>
+                            <field name="deliverable_document_count" readonly="1"/>
+                        </group>
+                    </group>
+                    
+
+                    
+                    <!-- Document List Section -->
+                    <group string="Project Documents">
+                        <div class="d-flex justify-content-end mb-2">
+                            <button name="action_refresh_documents" type="object" 
+                                    string="Refresh List" class="btn-secondary"
+                                    icon="fa-refresh"/>
+                        </div>
+                        <field name="document_ids" context="{'default_res_model': 'project.project', 'default_res_id': id, 'default_project_id': id}">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="category"/>
+                                <field name="status"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="expiry_date"/>
+                                <field name="is_expired" decoration-danger="is_expired"/>
+                                <field name="is_verified" decoration-success="is_verified"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <button name="action_upload_file" type="object" 
+                                        string="Upload" icon="fa-upload" 
+                                        class="btn-sm btn-primary"/>
+                                <button name="action_view_document" type="object" 
+                                        string="View" icon="fa-eye" 
+                                        class="btn-sm btn-info"/>
+                            </list>
+                        </field>
+                    </group>
+                    
+                    <!-- Project Folder Files Tree View -->
+                    <group string="Project Folder Files" invisible="not documents_folder_id">
+                        <field name="project_files_count" readonly="1"/>
+                        <div class="d-flex justify-content-end mb-2">
+                            <button name="action_refresh_project_files" type="object" 
+                                    string="Refresh" class="btn-secondary"
+                                    icon="fa-refresh"/>
+                            <button name="action_view_project_files" type="object" 
+                                    string="Open Full List" class="btn-secondary"
+                                    icon="fa-external-link"/>
+                        </div>
+                        <field name="project_folder_files" readonly="1">
+                            <list>
+                                <field name="document_name" string="Document Name"/>
+                                <field name="document_category" string="Category"/>
+                                <field name="name" string="File Name"/>
+                                <field name="mimetype" string="File Type"/>
+                                <field name="file_size" widget="file_size"/>
+                                <field name="create_date"/>
+                            </list>
+                        </field>
+                    </group>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>Document Management:</strong> Create document records above, then upload files using the Upload button in the document list.
+                    </div>
+                </page>
+                
+                <!-- Note: Task Templates functionality has been moved to project_templates_basic module -->
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Project List View -->
+    <record id="view_project_project_list_documents" model="ir.ui.view">
+        <field name="name">project.project.list.documents</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="document_count"/>
+                <field name="required_document_count"/>
+                <field name="deliverable_document_count"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

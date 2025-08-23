@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Simple Documents Action -->
+    <record id="action_unified_documents_browse" model="ir.actions.act_window">
+        <field name="name">Browse Documents</field>
+        <field name="res_model">documents.document</field>
+        <field name="context">{
+            'search_default_required': 1,
+            'search_default_deliverable': 1,
+            'search_default_reference': 1,
+            'search_default_compliance': 1
+        }</field>
+    </record>
+
+    <!-- Settings Action -->
+    <record id="action_unified_documents_settings" model="ir.actions.act_window">
+        <field name="name">Unified Documents Settings</field>
+        <field name="res_model">ir.config_parameter</field>
+        <field name="domain">[('key', 'ilike', 'unified_documents%')]</field>
+        <field name="context">{
+            'search_default_unified_documents': 1
+        }</field>
+    </record>
+</odoo>

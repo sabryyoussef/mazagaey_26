@@ -1,0 +1,1063 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- ========================================
+             TAGS USED BY DOCUMENTS
+             ======================================== -->
+        <record id="unified_documents.documents_tag_application_guide" model="documents.tag">
+            <field name="name">Application Guide</field>
+        </record>
+        <record id="unified_documents.documents_tag_compliance_checklist" model="documents.tag">
+            <field name="name">Compliance Checklist</field>
+        </record>
+        <record id="unified_documents.documents_tag_visa_requirements" model="documents.tag">
+            <field name="name">Visa Requirements</field>
+        </record>
+        <record id="unified_documents.documents_tag_work_permit" model="documents.tag">
+            <field name="name">Work Permit</field>
+        </record>
+        <record id="unified_documents.documents_tag_required_doc" model="documents.tag">
+            <field name="name">Required Document</field>
+        </record>
+        <record id="unified_documents.documents_tag_deliverable_doc" model="documents.tag">
+            <field name="name">Deliverable Document</field>
+        </record>
+        <record id="unified_documents.documents_tag_bank" model="documents.tag">
+            <field name="name">Banking</field>
+        </record>
+        <!-- VAT tag already exists in Odoo enterprise documents module -->
+        <record id="unified_documents.documents_tag_ubo" model="documents.tag">
+            <field name="name">UBO</field>
+        </record>
+        <record id="unified_documents.documents_tag_ejari" model="documents.tag">
+            <field name="name">EJARI</field>
+        </record>
+        <record id="unified_documents.documents_tag_moa" model="documents.tag">
+            <field name="name">MOA</field>
+        </record>
+        <record id="unified_documents.documents_tag_medical" model="documents.tag">
+            <field name="name">Medical</field>
+        </record>
+        <record id="unified_documents.documents_tag_emirates_id" model="documents.tag">
+            <field name="name">Emirates ID</field>
+        </record>
+        <record id="unified_documents.documents_tag_trade_name" model="documents.tag">
+            <field name="name">Trade Name</field>
+        </record>
+        <record id="unified_documents.documents_tag_initial_approval" model="documents.tag">
+            <field name="name">Initial Approval</field>
+        </record>
+        <record id="unified_documents.documents_tag_immigration_card" model="documents.tag">
+            <field name="name">Immigration Card</field>
+        </record>
+
+        <!-- ========================================
+             30 SERVICE PRODUCTS + DOCUMENTS (ONLY)
+             ======================================== -->
+
+        <!-- 1) Company Formation - DMCC -->
+        <record id="demo_product_company_formation_dmcc" model="product.template">
+            <field name="name">Company Formation - DMCC Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">8200.00</field>
+            <field name="standard_price">6500.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">End-to-end DMCC company setup: name reservation, initial approval, license
+                issuance
+            </field>
+        </record>
+        <record id="demo_doc_dmcc_req_passports" model="documents.document">
+            <field name="name">Shareholder Passport Copies</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Color scans of all shareholder passports</field>
+            <field name="notes">Validity &gt; 6 months</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_required_doc'), ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+        <record id="demo_doc_dmcc_req_kyc" model="documents.document">
+            <field name="name">KYC Forms</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Completed KYC forms for each shareholder</field>
+            <field name="notes">Use DMCC templates</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_required_doc'), ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+        <record id="demo_doc_dmcc_del_license" model="documents.document">
+            <field name="name">DMCC Trade License</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Official DMCC trade license</field>
+            <field name="notes">Issued after final approval</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 2) Company Formation - IFZA -->
+        <record id="demo_product_company_formation_ifza" model="product.template">
+            <field name="name">Company Formation - IFZA Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">6800.00</field>
+            <field name="standard_price">5200.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">IFZA company setup with flexible packages</field>
+        </record>
+        <record id="demo_doc_ifza_req_trade_names" model="documents.document">
+            <field name="name">Trade Name Options</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_ifza"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">3–5 proposed names ranked by preference</field>
+            <field name="notes">Avoid restricted words</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_trade_name'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_ifza_req_ubo_inputs" model="documents.document">
+            <field name="name">UBO Declaration Inputs</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_ifza"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Ownership structure and UBO details</field>
+            <field name="notes">Provide org chart if corporate shareholder</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_ubo'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_ifza_del_license" model="documents.document">
+            <field name="name">IFZA License Certificate</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_ifza"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">License issued by IFZA</field>
+            <field name="notes">Digital copy delivered</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 3) Company Formation - RAKEZ -->
+        <record id="demo_product_company_formation_rakez" model="product.template">
+            <field name="name">Company Formation - RAKEZ Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">5600.00</field>
+            <field name="standard_price">4300.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">RAKEZ setup for SMEs and industrial activities</field>
+        </record>
+        <record id="demo_doc_rakez_req_address" model="documents.document">
+            <field name="name">Address Proof (EJARI/Utility)</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_rakez"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Valid UAE address evidence</field>
+            <field name="notes">EJARI or latest bill</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_ejari'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_rakez_del_pack" model="documents.document">
+            <field name="name">RAKEZ Incorporation Pack</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_rakez"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">License, MOA, incorporation docs</field>
+            <field name="notes">Stamped set</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 4) Company Formation - SPC -->
+        <record id="demo_product_company_formation_spc" model="product.template">
+            <field name="name">Company Formation - SPC (Sharjah)</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">5200.00</field>
+            <field name="standard_price">4000.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">SPC setup with quick turnaround</field>
+        </record>
+        <record id="demo_doc_spc_req_passport_photo" model="documents.document">
+            <field name="name">Passport Copy &amp; White-BG Photo</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_spc"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Color passport + recent photo</field>
+            <field name="notes">JPEG/PNG, 300dpi</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_visa_requirements'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_spc_del_license" model="documents.document">
+            <field name="name">SPC Trade License</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_spc"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Official SPC license</field>
+            <field name="notes">E-copy and hard copy</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 5) Company Formation - Meydan -->
+        <record id="demo_product_company_formation_meydan" model="product.template">
+            <field name="name">Company Formation - Meydan Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">5900.00</field>
+            <field name="standard_price">4800.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Meydan FZ setup for service and e-commerce</field>
+        </record>
+        <record id="demo_doc_meydan_req_activity" model="documents.document">
+            <field name="name">Activity Code Selection</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_meydan"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Exact activity groups/codes</field>
+            <field name="notes">Impacts license category</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_meydan_del_incorp" model="documents.document">
+            <field name="name">Incorporation Set (License + MOA)</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_meydan"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">License and MOA pack</field>
+            <field name="notes">Issued post-payment</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide'), ref('unified_documents.documents_tag_moa')])]"/>
+        </record>
+
+        <!-- 6) Company Formation - SHAMS -->
+        <record id="demo_product_company_formation_shams" model="product.template">
+            <field name="name">Company Formation - SHAMS Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">4500.00</field>
+            <field name="standard_price">3600.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">SHAMS setup for media &amp; creative businesses</field>
+        </record>
+        <record id="demo_doc_shams_req_activity" model="documents.document">
+            <field name="name">Business Activity Selection</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_shams"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Select activities and sub-activities</field>
+            <field name="notes">Media category focus</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_shams_del_license" model="documents.document">
+            <field name="name">SHAMS License Certificate</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_shams"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Official SHAMS license</field>
+            <field name="notes">Downloadable PDF</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 7) Company Formation - DAFZA -->
+        <record id="demo_product_company_formation_dafza" model="product.template">
+            <field name="name">Company Formation - DAFZA Free Zone</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">9800.00</field>
+            <field name="standard_price">7800.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">DAFZA setup for logistics &amp; trading</field>
+        </record>
+        <record id="demo_doc_dafza_req_bank_ref" model="documents.document">
+            <field name="name">Bank Reference Letter</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dafza"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">3</field>
+            <field name="description">Letter confirming banking relationship</field>
+            <field name="notes">Issued within last 3 months</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_dafza_del_incorp_cert" model="documents.document">
+            <field name="name">DAFZA Incorporation Certificate</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dafza"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Certificate of incorporation</field>
+            <field name="notes">Provided post-fee settlement</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 8) Mainland LLC - Dubai -->
+        <record id="demo_product_mainland_llc_dubai" model="product.template">
+            <field name="name">Mainland LLC Formation - Dubai</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">11500.00</field>
+            <field name="standard_price">9200.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Dubai Mainland LLC formation with MOA and notarization</field>
+        </record>
+        <record id="demo_doc_dxb_req_moa_inputs" model="documents.document">
+            <field name="name">MOA Inputs</field>
+            <field name="linked_product_id" ref="demo_product_mainland_llc_dubai"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Capital, share split, manager powers</field>
+            <field name="notes">Confirm Arabic/English versions</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_moa'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_dxb_del_license" model="documents.document">
+            <field name="name">Dubai Mainland Trade License</field>
+            <field name="linked_product_id" ref="demo_product_mainland_llc_dubai"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">DED-issued license</field>
+            <field name="notes">Renew annually</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 9) Mainland LLC - Abu Dhabi -->
+        <record id="demo_product_mainland_llc_abu_dhabi" model="product.template">
+            <field name="name">Mainland LLC Formation - Abu Dhabi</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">9800.00</field>
+            <field name="standard_price">7900.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Abu Dhabi Mainland LLC setup with attestations</field>
+        </record>
+        <record id="demo_doc_ad_req_noc" model="documents.document">
+            <field name="name">NOC (If Applicable)</field>
+            <field name="linked_product_id" ref="demo_product_mainland_llc_abu_dhabi"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">3</field>
+            <field name="description">NOC from current sponsor/employer</field>
+            <field name="notes">Required for certain roles</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_ad_del_license" model="documents.document">
+            <field name="name">Abu Dhabi Mainland License</field>
+            <field name="linked_product_id" ref="demo_product_mainland_llc_abu_dhabi"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Official license issuance</field>
+            <field name="notes">E-copy via portal</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 10) Trade Name Reservation -->
+        <record id="demo_product_trade_name_reservation" model="product.template">
+            <field name="name">Trade Name Reservation</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">350.00</field>
+            <field name="standard_price">200.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Reserve company trade name with authority</field>
+        </record>
+        <record id="demo_doc_tnr_req_names" model="documents.document">
+            <field name="name">Proposed Names (Priority List)</field>
+            <field name="linked_product_id" ref="demo_product_trade_name_reservation"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">3–5 name options</field>
+            <field name="notes">No restricted terms</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_trade_name'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_tnr_del_receipt" model="documents.document">
+            <field name="name">Reservation Receipt</field>
+            <field name="linked_product_id" ref="demo_product_trade_name_reservation"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">Official name reservation receipt</field>
+            <field name="notes">Valid for limited period</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- 11) Initial Approval -->
+        <record id="demo_product_initial_approval" model="product.template">
+            <field name="name">Initial Approval Application</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">950.00</field>
+            <field name="standard_price">700.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Apply for initial approval with authority</field>
+        </record>
+        <record id="demo_doc_ia_req_activity_shareholders" model="documents.document">
+            <field name="name">Activity List &amp; Shareholder IDs</field>
+            <field name="linked_product_id" ref="demo_product_initial_approval"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Selected activities and IDs</field>
+            <field name="notes">Match license category</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_initial_approval'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_ia_del_certificate" model="documents.document">
+            <field name="name">Initial Approval Certificate</field>
+            <field name="linked_product_id" ref="demo_product_initial_approval"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">Certificate granting initial approval</field>
+            <field name="notes">Required before MOA</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_initial_approval')])]"/>
+        </record>
+
+        <!-- 12) MOA Drafting & Attestation -->
+        <record id="demo_product_moa_drafting_attestation" model="product.template">
+            <field name="name">MOA Drafting &amp; Notary Attestation</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1400.00</field>
+            <field name="standard_price">1000.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Draft MOA and manage notary attestation</field>
+        </record>
+        <record id="demo_doc_moa_req_inputs" model="documents.document">
+            <field name="name">MOA Draft Inputs</field>
+            <field name="linked_product_id" ref="demo_product_moa_drafting_attestation"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Capital, powers, address</field>
+            <field name="notes">Confirm bilingual version</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_moa'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_moa_del_notarized" model="documents.document">
+            <field name="name">Notarized MOA</field>
+            <field name="linked_product_id" ref="demo_product_moa_drafting_attestation"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">MOA signed &amp; stamped</field>
+            <field name="notes">Scan + hard copy</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_moa'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 13) Establishment Card -->
+        <record id="demo_product_establishment_card" model="product.template">
+            <field name="name">Establishment Card Issuance</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">900.00</field>
+            <field name="standard_price">650.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Apply for company establishment card</field>
+        </record>
+        <record id="demo_doc_estcard_req_company_docs" model="documents.document">
+            <field name="name">License &amp; MOA Copies</field>
+            <field name="linked_product_id" ref="demo_product_establishment_card"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Company license and MOA copies</field>
+            <field name="notes">Recent versions only</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_moa'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_estcard_del_card" model="documents.document">
+            <field name="name">Establishment Card</field>
+            <field name="linked_product_id" ref="demo_product_establishment_card"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">Issued establishment card</field>
+            <field name="notes">Digital copy uploaded</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_immigration_card')])]"/>
+        </record>
+
+        <!-- 14) Immigration Card -->
+        <record id="demo_product_immigration_card" model="product.template">
+            <field name="name">Immigration Card Issuance</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">750.00</field>
+            <field name="standard_price">520.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Company immigration file/card application</field>
+        </record>
+        <record id="demo_doc_imcard_req_signatory_ids" model="documents.document">
+            <field name="name">Signatory Passport &amp; EID</field>
+            <field name="linked_product_id" ref="demo_product_immigration_card"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Authorized signatory IDs</field>
+            <field name="notes">Clear scans only</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_emirates_id'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_imcard_del_card" model="documents.document">
+            <field name="name">Immigration Card</field>
+            <field name="linked_product_id" ref="demo_product_immigration_card"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Company immigration card</field>
+            <field name="notes">Used for visa processing</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_immigration_card'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 15) Employment Visa - New -->
+        <record id="demo_product_employment_visa_new" model="product.template">
+            <field name="name">Employment Visa - New Application</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">2200.00</field>
+            <field name="standard_price">1700.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">End-to-end new employment visa</field>
+        </record>
+        <record id="demo_doc_empnew_req_passport_photo" model="documents.document">
+            <field name="name">Passport Copy &amp; White-BG Photo</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_new"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Color passport + recent photo</field>
+            <field name="notes">JPEG, 300dpi</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_visa_requirements'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_empnew_del_entry_permit" model="documents.document">
+            <field name="name">Entry Permit (E-Visa)</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_new"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">E-visa for UAE entry</field>
+            <field name="notes">Sent via email when issued</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_work_permit'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 16) Employment Visa - Renewal -->
+        <record id="demo_product_employment_visa_renewal" model="product.template">
+            <field name="name">Employment Visa - Renewal</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1900.00</field>
+            <field name="standard_price">1400.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Renew employee residence visa</field>
+        </record>
+        <record id="demo_doc_empren_req_eid" model="documents.document">
+            <field name="name">Emirates ID (Front/Back)</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_renewal"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">EID scans for renewal</field>
+            <field name="notes">Ensure MRZ clarity</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_emirates_id'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_empren_del_residence" model="documents.document">
+            <field name="name">Residence Visa (Renewed)</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_renewal"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Updated residence visa</field>
+            <field name="notes">Attach e-visa confirmation</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_work_permit'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 17) Employment Visa - Cancellation -->
+        <record id="demo_product_employment_visa_cancellation" model="product.template">
+            <field name="name">Employment Visa - Cancellation</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">650.00</field>
+            <field name="standard_price">450.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Cancel employee visa and update records</field>
+        </record>
+        <record id="demo_doc_empcan_req_current_visa" model="documents.document">
+            <field name="name">Passport &amp; Current E-Visa</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_cancellation"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Existing visa evidence</field>
+            <field name="notes">Include UID if available</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_visa_requirements'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_empcan_del_letter" model="documents.document">
+            <field name="name">Visa Cancellation Letter</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa_cancellation"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">Official cancellation confirmation</field>
+            <field name="notes">Portal PDF attached</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_work_permit'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 18) Family Visa - Spouse -->
+        <record id="demo_product_family_visa_spouse" model="product.template">
+            <field name="name">Family Visa - Spouse Sponsorship</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">2100.00</field>
+            <field name="standard_price">1600.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Sponsor spouse residence visa</field>
+        </record>
+        <record id="demo_doc_famsp_req_marriage" model="documents.document">
+            <field name="name">Attested Marriage Certificate</field>
+            <field name="linked_product_id" ref="demo_product_family_visa_spouse"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">MOFA-attested marriage certificate</field>
+            <field name="notes">Translate if not Arabic/English</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_visa_requirements'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_famsp_del_residence" model="documents.document">
+            <field name="name">Spouse Residence Visa</field>
+            <field name="linked_product_id" ref="demo_product_family_visa_spouse"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">Residence visa issuance</field>
+            <field name="notes">E-visa then stamped</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_work_permit')])]"/>
+        </record>
+
+        <!-- 19) Family Visa - Child -->
+        <record id="demo_product_family_visa_child" model="product.template">
+            <field name="name">Family Visa - Child Sponsorship</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1950.00</field>
+            <field name="standard_price">1450.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Sponsor child residence visa</field>
+        </record>
+        <record id="demo_doc_famch_req_birth" model="documents.document">
+            <field name="name">Attested Birth Certificate</field>
+            <field name="linked_product_id" ref="demo_product_family_visa_child"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">MOFA-attested birth certificate</field>
+            <field name="notes">Provide translation if needed</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_visa_requirements'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_famch_del_residence" model="documents.document">
+            <field name="name">Child Residence Visa</field>
+            <field name="linked_product_id" ref="demo_product_family_visa_child"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Residence visa issuance</field>
+            <field name="notes">EID appointment slip attached</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc'), ref('unified_documents.documents_tag_work_permit')])]"/>
+        </record>
+
+        <!-- 20) Golden Visa - Investor -->
+        <record id="demo_product_golden_visa_investor" model="product.template">
+            <field name="name">Golden Visa - Investor Category</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">9800.00</field>
+            <field name="standard_price">8200.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Golden Visa for investors meeting criteria</field>
+        </record>
+        <record id="demo_doc_gvinv_req_investment" model="documents.document">
+            <field name="name">Investment Proof &amp; Bank Statements</field>
+            <field name="linked_product_id" ref="demo_product_golden_visa_investor"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Ownership documents and statements</field>
+            <field name="notes">Minimum thresholds apply</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_gvinv_del_approval" model="documents.document">
+            <field name="name">Golden Visa Approval</field>
+            <field name="linked_product_id" ref="demo_product_golden_visa_investor"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">Long-term residency approval</field>
+            <field name="notes">Subject to background checks</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 21) Golden Visa - Talent -->
+        <record id="demo_product_golden_visa_talent" model="product.template">
+            <field name="name">Golden Visa - Talented Professional</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">9200.00</field>
+            <field name="standard_price">7800.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Golden Visa for outstanding professionals</field>
+        </record>
+        <record id="demo_doc_gvtal_req_awards" model="documents.document">
+            <field name="name">Awards/Portfolio Evidence</field>
+            <field name="linked_product_id" ref="demo_product_golden_visa_talent"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">3</field>
+            <field name="description">Awards, publications, patents</field>
+            <field name="notes">Include official links</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_gvtal_del_approval" model="documents.document">
+            <field name="name">Golden Visa Approval (Talent)</field>
+            <field name="linked_product_id" ref="demo_product_golden_visa_talent"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Long-term residency approval</field>
+            <field name="notes">E-approval when ready</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 22) Freelancer Permit -->
+        <record id="demo_product_freelancer_permit" model="product.template">
+            <field name="name">Freelancer Permit (Various Free Zones)</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">3200.00</field>
+            <field name="standard_price">2500.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Freelancer permit issuance</field>
+        </record>
+        <record id="demo_doc_free_req_cv" model="documents.document">
+            <field name="name">CV &amp; Portfolio</field>
+            <field name="linked_product_id" ref="demo_product_freelancer_permit"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">3</field>
+            <field name="description">Professional resume and samples</field>
+            <field name="notes">PDF preferred</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_free_del_permit" model="documents.document">
+            <field name="name">Freelancer Permit</field>
+            <field name="linked_product_id" ref="demo_product_freelancer_permit"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">Active freelancer permit</field>
+            <field name="notes">Renew annually</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 23) Emirates ID -->
+        <record id="demo_product_emirates_id" model="product.template">
+            <field name="name">Emirates ID Processing</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">450.00</field>
+            <field name="standard_price">300.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">EID application and biometrics scheduling</field>
+        </record>
+        <record id="demo_doc_eid_req_biometrics" model="documents.document">
+            <field name="name">Biometric Appointment Confirmation</field>
+            <field name="linked_product_id" ref="demo_product_emirates_id"/>
+            <field name="category">required</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Date/time of EID biometrics</field>
+            <field name="notes">Reschedule via portal if needed</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_emirates_id'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_eid_del_card" model="documents.document">
+            <field name="name">Emirates ID Card</field>
+            <field name="linked_product_id" ref="demo_product_emirates_id"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Physical EID card issued</field>
+            <field name="notes">Front/back scan uploaded</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_emirates_id'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 24) Medical Fitness -->
+        <record id="demo_product_medical_fitness" model="product.template">
+            <field name="name">Medical Fitness Test Coordination</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">350.00</field>
+            <field name="standard_price">220.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Book and manage medical fitness tests</field>
+        </record>
+        <record id="demo_doc_med_req_appointment" model="documents.document">
+            <field name="name">Medical Appointment Slip</field>
+            <field name="linked_product_id" ref="demo_product_medical_fitness"/>
+            <field name="category">required</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Appointment details</field>
+            <field name="notes">Include reschedule token if any</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_medical'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_med_del_result" model="documents.document">
+            <field name="name">Medical Fitness Result</field>
+            <field name="linked_product_id" ref="demo_product_medical_fitness"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Official test result</field>
+            <field name="notes">Required for visa stamping</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_medical'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 25) Work Permit -->
+        <record id="demo_product_work_permit_pro" model="product.template">
+            <field name="name">Work Permit Application (MOHRE)</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1200.00</field>
+            <field name="standard_price">900.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Apply for new employee work permit</field>
+        </record>
+        <record id="demo_doc_wp_req_contract" model="documents.document">
+            <field name="name">Signed Employment Contract</field>
+            <field name="linked_product_id" ref="demo_product_work_permit_pro"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">Signed contract pages</field>
+            <field name="notes">Include salary &amp; role details</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_work_permit'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_wp_del_approval" model="documents.document">
+            <field name="name">Work Permit Approval</field>
+            <field name="linked_product_id" ref="demo_product_work_permit_pro"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">MOHRE work permit</field>
+            <field name="notes">Reference number included</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_work_permit'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 26) Labour Contract -->
+        <record id="demo_product_labour_contract" model="product.template">
+            <field name="name">Labour Contract Registration</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">650.00</field>
+            <field name="standard_price">480.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Register MOHRE labour contract</field>
+        </record>
+        <record id="demo_doc_lc_req_signed" model="documents.document">
+            <field name="name">Signed Labour Contract</field>
+            <field name="linked_product_id" ref="demo_product_labour_contract"/>
+            <field name="category">required</field>
+            <field name="status">in_progress</field>
+            <field name="priority">1</field>
+            <field name="description">Signed by both parties</field>
+            <field name="notes">Upload PDF</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_lc_del_mohre_copy" model="documents.document">
+            <field name="name">MOHRE Contract Copy</field>
+            <field name="linked_product_id" ref="demo_product_labour_contract"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">Registered contract copy</field>
+            <field name="notes">QR-verified</field>
+            <field name="tag_ids" eval="[(6,0,[ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 27) Bank Account Opening - Emirates NBD -->
+        <record id="demo_product_bank_account_enbd" model="product.template">
+            <field name="name">Corporate Bank Account Opening - Emirates NBD</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">3000.00</field>
+            <field name="standard_price">2400.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Facilitate ENBD corporate account</field>
+        </record>
+        <record id="demo_doc_enbd_req_kyc_board" model="documents.document">
+            <field name="name">Corporate KYC &amp; Board Resolution</field>
+            <field name="linked_product_id" ref="demo_product_bank_account_enbd"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">1</field>
+            <field name="description">KYC forms and board resolution</field>
+            <field name="notes">Template provided</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_enbd_del_iban" model="documents.document">
+            <field name="name">IBAN &amp; Account Opening Letter</field>
+            <field name="linked_product_id" ref="demo_product_bank_account_enbd"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">2</field>
+            <field name="description">Official IBAN confirmation</field>
+            <field name="notes">PDF from bank</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 28) Bank Account Opening - ADCB -->
+        <record id="demo_product_bank_account_adcb" model="product.template">
+            <field name="name">Corporate Bank Account Opening - ADCB</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">3000.00</field>
+            <field name="standard_price">2400.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Facilitate ADCB account opening</field>
+        </record>
+        <record id="demo_doc_adcb_req_company_pack" model="documents.document">
+            <field name="name">Company Pack (License, MOA, EIDs)</field>
+            <field name="linked_product_id" ref="demo_product_bank_account_adcb"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Core company documents</field>
+            <field name="notes">Recent copies required</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_adcb_del_confirmation" model="documents.document">
+            <field name="name">Account Opening Confirmation</field>
+            <field name="linked_product_id" ref="demo_product_bank_account_adcb"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">2</field>
+            <field name="description">ADCB onboarding confirmation</field>
+            <field name="notes">IBAN included</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_bank'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 29) VAT Registration -->
+        <record id="demo_product_vat_registration" model="product.template">
+            <field name="name">VAT Registration (TRN)</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1600.00</field>
+            <field name="standard_price">1200.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">Register for VAT and obtain TRN</field>
+        </record>
+        <record id="demo_doc_vat_req_turnover" model="documents.document">
+            <field name="name">Turnover Evidence &amp; Bank Statements</field>
+            <field name="linked_product_id" ref="demo_product_vat_registration"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Invoices and statements (12 months)</field>
+            <field name="notes">Proof of threshold</field>
+            <field name="tag_ids"
+                                       eval="[(6,0,[ref('documents.documents_tag_vat'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_vat_del_trn" model="documents.document">
+            <field name="name">TRN Certificate</field>
+            <field name="linked_product_id" ref="demo_product_vat_registration"/>
+            <field name="category">deliverable</field>
+            <field name="status">completed</field>
+            <field name="priority">1</field>
+            <field name="description">Tax Registration Number certificate</field>
+            <field name="notes">PDF with TRN</field>
+            <field name="tag_ids"
+                                       eval="[(6,0,[ref('documents.documents_tag_vat'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+        <!-- 30) UBO Declaration -->
+        <record id="demo_product_ubo_declaration" model="product.template">
+            <field name="name">UBO Declaration Filing</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">750.00</field>
+            <field name="standard_price">500.00</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="description">File Ultimate Beneficial Owner declaration</field>
+        </record>
+        <record id="demo_doc_ubo_req_tree" model="documents.document">
+            <field name="name">Shareholding Tree &amp; IDs</field>
+            <field name="linked_product_id" ref="demo_product_ubo_declaration"/>
+            <field name="category">required</field>
+            <field name="status">draft</field>
+            <field name="priority">2</field>
+            <field name="description">Ownership structure and ID copies</field>
+            <field name="notes">Certified docs if corporate owner</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_ubo'), ref('unified_documents.documents_tag_required_doc')])]"/>
+        </record>
+        <record id="demo_doc_ubo_del_receipt" model="documents.document">
+            <field name="name">UBO Submission Receipt</field>
+            <field name="linked_product_id" ref="demo_product_ubo_declaration"/>
+            <field name="category">deliverable</field>
+            <field name="status">in_progress</field>
+            <field name="priority">3</field>
+            <field name="description">Receipt confirming filing</field>
+            <field name="notes">Keep for audits</field>
+            <field name="tag_ids"
+                   eval="[(6,0,[ref('unified_documents.documents_tag_ubo'), ref('unified_documents.documents_tag_deliverable_doc')])]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Create Product from Template Wizard Form View -->
+        <record id="view_create_product_from_template_wizard_form" model="ir.ui.view">
+            <field name="name">create.product.from.template.wizard.form</field>
+            <field name="model">create.product.from.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Product from Template">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="template_id" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Product Information">
+                                <field name="product_name" placeholder="Enter product name..."/>
+                                <field name="description" placeholder="Enter product description..."/>
+                            </group>
+                            
+                            <group string="Template Information">
+                                <field name="template_type" readonly="1"/>
+                                <field name="service_tracking" readonly="1"/>
+                                <field name="document_count" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Creation Options">
+                            <group col="2">
+                                <field name="create_documents"/>
+                                <field name="create_project"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Document Preview" name="preview">
+                                <group>
+                                    <field name="preview_documents" readonly="1" nolabel="1" widget="text"/>
+                                </group>
+                                <group>
+                                    <button name="action_preview_template" 
+                                            string="Preview Template Details" 
+                                            type="object" 
+                                            class="btn-secondary"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <footer>
+                        <button name="action_create_product" 
+                                string="Create Product" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Create Product from Template Wizard Action -->
+        <record id="action_create_product_from_template_wizard" model="ir.actions.act_window">
+            <field name="name">Create Product from Template</field>
+            <field name="res_model">create.product.from.template.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_create_product_from_template_wizard_form"/>
+        </record>
+    </data>
+</odoo>

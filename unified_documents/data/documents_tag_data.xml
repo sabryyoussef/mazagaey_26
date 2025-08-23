@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Document Tags for Unified Documents Module -->
+        
+        <!-- Project-related tags -->
+        <record id="documents_tag_project_planning" model="documents.tag" forcecreate="0">
+            <field name="name">Project Planning</field>
+            <field name="color">1</field>
+        </record>
+        
+        <record id="documents_tag_project_execution" model="documents.tag" forcecreate="0">
+            <field name="name">Project Execution</field>
+            <field name="color">2</field>
+        </record>
+        
+        <record id="documents_tag_project_closure" model="documents.tag" forcecreate="0">
+            <field name="name">Project Closure</field>
+            <field name="color">3</field>
+        </record>
+        
+        <!-- Product-related tags -->
+        <record id="documents_tag_product_specs" model="documents.tag" forcecreate="0">
+            <field name="name">Product Specifications</field>
+            <field name="color">4</field>
+        </record>
+        
+        <record id="documents_tag_product_manual" model="documents.tag" forcecreate="0">
+            <field name="name">Product Manual</field>
+            <field name="color">5</field>
+        </record>
+        
+        <record id="documents_tag_product_certification" model="documents.tag" forcecreate="0">
+            <field name="name">Product Certification</field>
+            <field name="color">6</field>
+        </record>
+        
+        <!-- Compliance tags -->
+        <record id="documents_tag_compliance_legal" model="documents.tag" forcecreate="0">
+            <field name="name">Legal Compliance</field>
+            <field name="color">7</field>
+        </record>
+        
+        <record id="documents_tag_compliance_quality" model="documents.tag" forcecreate="0">
+            <field name="name">Quality Compliance</field>
+            <field name="color">8</field>
+        </record>
+        
+        <record id="documents_tag_compliance_safety" model="documents.tag" forcecreate="0">
+            <field name="name">Safety Compliance</field>
+            <field name="color">9</field>
+        </record>
+        
+        <!-- Status tags -->
+        <record id="documents_tag_urgent" model="documents.tag" forcecreate="0">
+            <field name="name">Urgent</field>
+            <field name="color">10</field>
+        </record>
+        
+        <record id="documents_tag_review_required" model="documents.tag" forcecreate="0">
+            <field name="name">Review Required</field>
+            <field name="color">11</field>
+        </record>
+        
+        <record id="documents_tag_approved" model="documents.tag" forcecreate="0">
+            <field name="name">Approved</field>
+            <field name="color">12</field>
+        </record>
+        
+        <!-- Immigration-specific tags -->
+        <record id="documents_tag_visa_requirements" model="documents.tag" forcecreate="0">
+            <field name="name">Visa Requirements</field>
+            <field name="color">13</field>
+        </record>
+        
+        <record id="documents_tag_application_form" model="documents.tag" forcecreate="0">
+            <field name="name">Application Form</field>
+            <field name="color">14</field>
+        </record>
+        
+        <record id="documents_tag_application_guide" model="documents.tag" forcecreate="0">
+            <field name="name">Application Guide</field>
+            <field name="color">15</field>
+        </record>
+        
+        <record id="documents_tag_work_permit" model="documents.tag" forcecreate="0">
+            <field name="name">Work Permit</field>
+            <field name="color">16</field>
+        </record>
+        
+        <record id="documents_tag_contract_template" model="documents.tag" forcecreate="0">
+            <field name="name">Contract Template</field>
+            <field name="color">17</field>
+        </record>
+        
+        <record id="documents_tag_compliance_checklist" model="documents.tag" forcecreate="0">
+            <field name="name">Compliance Checklist</field>
+            <field name="color">18</field>
+        </record>
+        
+        <record id="documents_tag_student_visa" model="documents.tag" forcecreate="0">
+            <field name="name">Student Visa</field>
+            <field name="color">19</field>
+        </record>
+        
+        <record id="documents_tag_permanent_residence" model="documents.tag" forcecreate="0">
+            <field name="name">Permanent Residence</field>
+            <field name="color">20</field>
+        </record>
+        
+        <record id="documents_tag_legal_guide" model="documents.tag" forcecreate="0">
+            <field name="name">Legal Guide</field>
+            <field name="color">21</field>
+        </record>
+        
+        <record id="documents_tag_business_visa" model="documents.tag" forcecreate="0">
+            <field name="name">Business Visa</field>
+            <field name="color">22</field>
+        </record>
+        
+        <record id="documents_tag_business_plan" model="documents.tag" forcecreate="0">
+            <field name="name">Business Plan</field>
+            <field name="color">23</field>
+        </record>
+        
+    </data>
+</odoo>

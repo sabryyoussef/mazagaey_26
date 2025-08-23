@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo data for Enhanced Checkpoint Management - Visibility Conditions -->
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 1: Project Type-Based Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Software Development Project Checkpoints -->
+        <record id="demo_checkpoint_code_review" model="project.task.checkpoint">
+            <field name="name">Code Review</field>
+            <field name="sequence">30</field>
+            <field name="visibility_condition">project_id.project_type == 'software_development'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Review code quality and adherence to standards</field>
+        </record>
+        
+        <record id="demo_checkpoint_unit_testing" model="project.task.checkpoint">
+            <field name="name">Unit Testing</field>
+            <field name="sequence">35</field>
+            <field name="visibility_condition">project_id.project_type == 'software_development'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Execute unit tests and ensure coverage</field>
+        </record>
+        
+        <!-- Consulting Project Checkpoints -->
+        <record id="demo_checkpoint_client_meeting" model="project.task.checkpoint">
+            <field name="name">Client Meeting</field>
+            <field name="sequence">20</field>
+            <field name="visibility_condition">project_id.project_type == 'consulting'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Meet with client to discuss requirements</field>
+        </record>
+        
+        <record id="demo_checkpoint_documentation" model="project.task.checkpoint">
+            <field name="name">Documentation</field>
+            <field name="sequence">40</field>
+            <field name="visibility_condition">project_id.project_type == 'consulting'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Prepare project documentation</field>
+        </record>
+        
+        <!-- Marketing Project Checkpoints -->
+        <record id="demo_checkpoint_design_approval" model="project.task.checkpoint">
+            <field name="name">Design Approval</field>
+            <field name="sequence">25</field>
+            <field name="visibility_condition">project_id.project_type == 'marketing'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Get design approval from stakeholders</field>
+        </record>
+        
+        <record id="demo_checkpoint_content_review" model="project.task.checkpoint">
+            <field name="name">Content Review</field>
+            <field name="sequence">30</field>
+            <field name="visibility_condition">project_id.project_type == 'marketing'</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Review and approve content</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 2: Task Stage-Dependent Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Planning Stage Checkpoints -->
+        <record id="demo_checkpoint_requirements_gathering" model="project.task.checkpoint">
+            <field name="name">Requirements Gathering</field>
+            <field name="sequence">10</field>
+            <field name="visibility_condition">stage_id.name in ['Planning', 'Analysis']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Gather and document project requirements</field>
+        </record>
+        
+        <record id="demo_checkpoint_scope_definition" model="project.task.checkpoint">
+            <field name="name">Scope Definition</field>
+            <field name="sequence">15</field>
+            <field name="visibility_condition">stage_id.name in ['Planning', 'Analysis']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Define project scope and boundaries</field>
+        </record>
+        
+        <!-- Development Stage Checkpoints -->
+        <record id="demo_checkpoint_coding" model="project.task.checkpoint">
+            <field name="name">Coding</field>
+            <field name="sequence">20</field>
+            <field name="visibility_condition">stage_id.name in ['Development', 'In Progress']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Implement the required functionality</field>
+        </record>
+        
+        <!-- Testing Stage Checkpoints -->
+        <record id="demo_checkpoint_integration_testing" model="project.task.checkpoint">
+            <field name="name">Integration Testing</field>
+            <field name="sequence">40</field>
+            <field name="visibility_condition">stage_id.name in ['Testing', 'QA']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Test integration between components</field>
+        </record>
+        
+        <!-- Deployment Stage Checkpoints -->
+        <record id="demo_checkpoint_deployment" model="project.task.checkpoint">
+            <field name="name">Deployment</field>
+            <field name="sequence">50</field>
+            <field name="visibility_condition">stage_id.name in ['Deployment', 'Release']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Deploy the solution to production</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 3: User Role-Based Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Manager Checkpoints -->
+        <record id="demo_checkpoint_budget_review" model="project.task.checkpoint">
+            <field name="name">Budget Review</field>
+            <field name="sequence">15</field>
+            <field name="visibility_condition">'project_manager' in user_id.groups_id.mapped('name')</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Review project budget and expenses</field>
+        </record>
+        
+        <record id="demo_checkpoint_timeline_approval" model="project.task.checkpoint">
+            <field name="name">Timeline Approval</field>
+            <field name="sequence">20</field>
+            <field name="visibility_condition">'project_manager' in user_id.groups_id.mapped('name')</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Approve project timeline and milestones</field>
+        </record>
+        
+        <!-- Developer Checkpoints -->
+        <record id="demo_checkpoint_technical_review" model="project.task.checkpoint">
+            <field name="name">Technical Review</field>
+            <field name="sequence">25</field>
+            <field name="visibility_condition">'developer' in user_id.groups_id.mapped('name')</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Review technical implementation</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 4: Milestone-Dependent Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Phase 1 Milestone Checkpoints -->
+        <record id="demo_checkpoint_phase1_review" model="project.task.checkpoint">
+            <field name="name">Phase 1 Review</field>
+            <field name="sequence">25</field>
+            <field name="visibility_condition">any(m.name == 'Phase 1 Complete' and m.is_reached for m in project_id.milestone_ids)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Review Phase 1 deliverables</field>
+        </record>
+        
+        <!-- Phase 2 Milestone Checkpoints -->
+        <record id="demo_checkpoint_phase2_review" model="project.task.checkpoint">
+            <field name="name">Phase 2 Review</field>
+            <field name="sequence">45</field>
+            <field name="visibility_condition">any(m.name == 'Phase 2 Complete' and m.is_reached for m in project_id.milestone_ids)</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Review Phase 2 deliverables</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 5: Date-Based Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Weekly Review Checkpoint -->
+        <record id="demo_checkpoint_weekly_review" model="project.task.checkpoint">
+            <field name="name">Weekly Review</field>
+            <field name="sequence">5</field>
+            <field name="visibility_condition">now().weekday() == 0</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Weekly project progress review</field>
+        </record>
+        
+        <!-- Monthly Review Checkpoint -->
+        <record id="demo_checkpoint_monthly_review" model="project.task.checkpoint">
+            <field name="name">Monthly Review</field>
+            <field name="sequence">10</field>
+            <field name="visibility_condition">now().day == 1</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Monthly project status review</field>
+        </record>
+        
+        <!-- Deadline Approaching Checkpoint -->
+        <record id="demo_checkpoint_deadline_approaching" model="project.task.checkpoint">
+            <field name="name">Deadline Approaching</field>
+            <field name="sequence">45</field>
+            <field name="visibility_condition">(date_deadline - today()).days <= 3</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Final review before deadline</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 6: Complex Multi-Condition Visibility -->
+        <!-- ======================================== -->
+        
+        <!-- Critical Bug Fix Checkpoint -->
+        <record id="demo_checkpoint_critical_bug_fix" model="project.task.checkpoint">
+            <field name="name">Critical Bug Fix Review</field>
+            <field name="sequence">50</field>
+            <field name="visibility_condition">priority == 'high' and 'bug' in name.lower()</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Review critical bug fixes before deployment</field>
+        </record>
+        
+        <!-- High Priority Project Checkpoint -->
+        <record id="demo_checkpoint_executive_review" model="project.task.checkpoint">
+            <field name="name">Executive Review</field>
+            <field name="sequence">40</field>
+            <field name="visibility_condition">project_id.priority == 'high' and stage_id.name in ['Review', 'Testing']</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Executive review for high priority projects</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- SCENARIO 7: Dependency Management Examples -->
+        <!-- ======================================== -->
+        
+        <!-- Prerequisite Checkpoints -->
+        <record id="demo_checkpoint_planning_complete" model="project.task.checkpoint">
+            <field name="name">Planning Complete</field>
+            <field name="sequence">10</field>
+            <field name="dependency_type">none</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Planning phase is complete</field>
+        </record>
+        
+        <record id="demo_checkpoint_requirements_approved" model="project.task.checkpoint">
+            <field name="name">Requirements Approved</field>
+            <field name="sequence">15</field>
+            <field name="dependency_type">none</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_required')])]"/>
+            <field name="notes">Requirements have been approved</field>
+        </record>
+        
+        <!-- Dependent Checkpoint (requires both prerequisites) -->
+        <record id="demo_checkpoint_development_start" model="project.task.checkpoint">
+            <field name="name">Development Start</field>
+            <field name="sequence">20</field>
+            <field name="dependency_type">all</field>
+            <field name="prerequisite_ids" eval="[(6, 0, [ref('demo_checkpoint_planning_complete'), ref('demo_checkpoint_requirements_approved')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Development can start after planning and requirements are complete</field>
+        </record>
+        
+        <!-- Alternative Prerequisites (requires any one) -->
+        <record id="demo_checkpoint_testing_start" model="project.task.checkpoint">
+            <field name="name">Testing Start</field>
+            <field name="sequence">35</field>
+            <field name="dependency_type">any</field>
+            <field name="prerequisite_ids" eval="[(6, 0, [ref('demo_checkpoint_coding'), ref('demo_checkpoint_code_review')])]"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_deliverable')])]"/>
+            <field name="notes">Testing can start after coding OR code review is complete</field>
+        </record>
+        
+    </data>
+</odoo>

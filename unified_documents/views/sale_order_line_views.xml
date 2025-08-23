@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend Sale Order Line Form View -->
+        <record id="view_sale_order_line_form_documents" model="ir.ui.view">
+            <field name="name">sale.order.line.form.documents</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.sale_order_line_view_form_readonly"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="documents_copied" invisible="1"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <button name="copy_documents_to_project" 
+                            type="object" 
+                            string="Copy Documents to Project"
+                            class="btn-secondary"
+                            invisible="not project_id or documents_copied or not product_id.document_ids"
+                            title="Copy documents from product to project"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Sale Order Line Tree View -->
+        <record id="view_sale_order_line_tree_documents" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.documents</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_id']" position="after">
+                    <field name="documents_copied" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- ========================================
+             30 DEMO SERVICE PRODUCTS WITH DOCUMENTS
+             FOR PROJECT TASKS
+             ======================================== -->
+        
+        <!-- 1. Company Formation Services -->
+        <record id="demo_product_company_formation_dmcc" model="product.template">
+            <field name="name">Company Formation - DMCC Free Zone</field>
+            <field name="description">Complete company formation service in DMCC Free Zone including license, visa, and office setup</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">15000.00</field>
+            <field name="standard_price">12000.00</field>
+        </record>
+
+        <record id="demo_product_company_formation_dafza" model="product.template">
+            <field name="name">Company Formation - DAFZA Free Zone</field>
+            <field name="description">Complete company formation service in DAFZA Free Zone with trade license and visa support</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">14000.00</field>
+            <field name="standard_price">11000.00</field>
+        </record>
+
+        <record id="demo_product_company_formation_ifza" model="product.template">
+            <field name="name">Company Formation - IFZA Free Zone</field>
+            <field name="description">Complete company formation service in IFZA Free Zone with modern business solutions</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">13000.00</field>
+            <field name="standard_price">10000.00</field>
+        </record>
+
+        <!-- 2. Visa Services -->
+        <record id="demo_product_employment_visa" model="product.template">
+            <field name="name">Employment Visa Processing</field>
+            <field name="description">Complete employment visa processing including application, medical, and Emirates ID</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">8000.00</field>
+            <field name="standard_price">6000.00</field>
+        </record>
+
+        <record id="demo_product_investor_visa" model="product.template">
+            <field name="name">Investor Visa Processing</field>
+            <field name="description">Investor visa processing for business owners and investors in UAE</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">12000.00</field>
+            <field name="standard_price">9000.00</field>
+        </record>
+
+        <record id="demo_product_tourist_visa" model="product.template">
+            <field name="name">Tourist Visa Processing</field>
+            <field name="description">Tourist visa processing for short-term visits to UAE</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">2000.00</field>
+            <field name="standard_price">1500.00</field>
+        </record>
+
+        <!-- 3. Business Services -->
+        <record id="demo_product_trade_license" model="product.template">
+            <field name="name">Trade License Application</field>
+            <field name="description">Trade license application and renewal services for various business activities</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">5000.00</field>
+            <field name="standard_price">4000.00</field>
+        </record>
+
+        <record id="demo_product_business_consulting" model="product.template">
+            <field name="name">Business Consulting Services</field>
+            <field name="description">Comprehensive business consulting for UAE market entry and operations</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">10000.00</field>
+            <field name="standard_price">8000.00</field>
+        </record>
+
+        <record id="demo_product_accounting_services" model="product.template">
+            <field name="name">Accounting and Bookkeeping Services</field>
+            <field name="description">Professional accounting and bookkeeping services for UAE companies</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">6000.00</field>
+            <field name="standard_price">5000.00</field>
+        </record>
+
+        <!-- 4. Legal Services -->
+        <record id="demo_product_legal_consultation" model="product.template">
+            <field name="name">Legal Consultation Services</field>
+            <field name="description">Legal consultation for business setup, contracts, and compliance</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">8000.00</field>
+            <field name="standard_price">6000.00</field>
+        </record>
+
+        <record id="demo_product_contract_review" model="product.template">
+            <field name="name">Contract Review and Drafting</field>
+            <field name="description">Professional contract review, drafting, and negotiation services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">5000.00</field>
+            <field name="standard_price">4000.00</field>
+        </record>
+
+        <record id="demo_product_compliance_audit" model="product.template">
+            <field name="name">Compliance Audit Services</field>
+            <field name="description">Comprehensive compliance audit for UAE business regulations</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">7000.00</field>
+            <field name="standard_price">5500.00</field>
+        </record>
+
+        <!-- 5. Office Services -->
+        <record id="demo_product_virtual_office" model="product.template">
+            <field name="name">Virtual Office Setup</field>
+            <field name="description">Virtual office setup with mail handling and business address services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">3000.00</field>
+            <field name="standard_price">2500.00</field>
+        </record>
+
+        <record id="demo_product_office_setup" model="product.template">
+            <field name="name">Physical Office Setup</field>
+            <field name="description">Complete physical office setup including furniture, utilities, and registration</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">15000.00</field>
+            <field name="standard_price">12000.00</field>
+        </record>
+
+        <record id="demo_product_warehouse_setup" model="product.template">
+            <field name="name">Warehouse Setup Services</field>
+            <field name="description">Warehouse setup and licensing for import/export businesses</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">20000.00</field>
+            <field name="standard_price">16000.00</field>
+        </record>
+
+        <!-- 6. Banking Services -->
+        <record id="demo_product_bank_account_opening" model="product.template">
+            <field name="name">Corporate Bank Account Opening</field>
+            <field name="description">Corporate bank account opening services for UAE companies</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">4000.00</field>
+            <field name="standard_price">3000.00</field>
+        </record>
+
+        <record id="demo_product_credit_card_setup" model="product.template">
+            <field name="name">Corporate Credit Card Setup</field>
+            <field name="description">Corporate credit card setup and management services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">2000.00</field>
+            <field name="standard_price">1500.00</field>
+        </record>
+
+        <record id="demo_product_merchant_account" model="product.template">
+            <field name="name">Merchant Account Setup</field>
+            <field name="description">Payment gateway and merchant account setup for online businesses</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">6000.00</field>
+            <field name="standard_price">5000.00</field>
+        </record>
+
+        <!-- 7. IT Services -->
+        <record id="demo_product_website_development" model="product.template">
+            <field name="name">Website Development Services</field>
+            <field name="description">Professional website development for UAE businesses</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">12000.00</field>
+            <field name="standard_price">10000.00</field>
+        </record>
+
+        <record id="demo_product_digital_marketing" model="product.template">
+            <field name="name">Digital Marketing Services</field>
+            <field name="description">Comprehensive digital marketing services for UAE market</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">8000.00</field>
+            <field name="standard_price">6000.00</field>
+        </record>
+
+        <record id="demo_product_software_development" model="product.template">
+            <field name="name">Custom Software Development</field>
+            <field name="description">Custom software development for business automation</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">25000.00</field>
+            <field name="standard_price">20000.00</field>
+        </record>
+
+        <!-- 8. HR Services -->
+        <record id="demo_product_hr_consulting" model="product.template">
+            <field name="name">HR Consulting Services</field>
+            <field name="description">HR consulting for UAE labor law compliance and best practices</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">7000.00</field>
+            <field name="standard_price">5500.00</field>
+        </record>
+
+        <record id="demo_product_payroll_services" model="product.template">
+            <field name="name">Payroll Processing Services</field>
+            <field name="description">Professional payroll processing and management services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">4000.00</field>
+            <field name="standard_price">3000.00</field>
+        </record>
+
+        <record id="demo_product_recruitment_services" model="product.template">
+            <field name="name">Recruitment Services</field>
+            <field name="description">Professional recruitment and talent acquisition services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">6000.00</field>
+            <field name="standard_price">5000.00</field>
+        </record>
+
+        <!-- 9. Logistics Services -->
+        <record id="demo_product_logistics_consulting" model="product.template">
+            <field name="name">Logistics Consulting Services</field>
+            <field name="description">Logistics and supply chain consulting for UAE operations</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">9000.00</field>
+            <field name="standard_price">7000.00</field>
+        </record>
+
+        <record id="demo_product_customs_clearance" model="product.template">
+            <field name="name">Customs Clearance Services</field>
+            <field name="description">Professional customs clearance and import/export services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">5000.00</field>
+            <field name="standard_price">4000.00</field>
+        </record>
+
+        <record id="demo_product_freight_forwarding" model="product.template">
+            <field name="name">Freight Forwarding Services</field>
+            <field name="description">International freight forwarding and shipping services</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">8000.00</field>
+            <field name="standard_price">6000.00</field>
+        </record>
+
+        <!-- 10. Real Estate Services -->
+        <record id="demo_product_property_consulting" model="product.template">
+            <field name="name">Property Consulting Services</field>
+            <field name="description">Real estate consulting for commercial and residential properties</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">6000.00</field>
+            <field name="standard_price">5000.00</field>
+        </record>
+
+        <record id="demo_product_property_management" model="product.template">
+            <field name="name">Property Management Services</field>
+            <field name="description">Complete property management services for landlords and investors</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">10000.00</field>
+            <field name="standard_price">8000.00</field>
+        </record>
+
+        <record id="demo_product_tenant_services" model="product.template">
+            <field name="name">Tenant Services</field>
+            <field name="description">Tenant services including lease management and maintenance</field>
+            <field name="type">service</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">4000.00</field>
+            <field name="standard_price">3000.00</field>
+        </record>
+
+        <!-- ========================================
+             DEMO DOCUMENTS FOR SERVICE PRODUCTS
+             ======================================== -->
+
+        <!-- Company Formation Documents -->
+        <record id="demo_doc_company_formation_application" model="documents.document">
+            <field name="name">Company Formation Application Form</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Complete application form for company formation</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_company_formation_checklist" model="documents.document">
+            <field name="name">Company Formation Checklist</field>
+            <field name="category">compliance</field>
+            <field name="priority">2</field>
+            <field name="notes">Required documents and steps checklist</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+
+        <record id="demo_doc_company_formation_guide" model="documents.document">
+            <field name="name">Company Formation Process Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Step-by-step process guide</field>
+            <field name="linked_product_id" ref="demo_product_company_formation_dmcc"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- Visa Processing Documents -->
+        <record id="demo_doc_visa_application_form" model="documents.document">
+            <field name="name">Visa Application Form</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Official visa application form</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_medical_test_requirements" model="documents.document">
+            <field name="name">Medical Test Requirements</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Medical test requirements and procedures</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+
+        <record id="demo_doc_emirates_id_application" model="documents.document">
+            <field name="name">Emirates ID Application</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Emirates ID application process</field>
+            <field name="linked_product_id" ref="demo_product_employment_visa"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- Business Services Documents -->
+        <record id="demo_doc_trade_license_application" model="documents.document">
+            <field name="name">Trade License Application</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Trade license application form and requirements</field>
+            <field name="linked_product_id" ref="demo_product_trade_license"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_business_plan_template" model="documents.document">
+            <field name="name">Business Plan Template</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Business plan template for UAE market</field>
+            <field name="linked_product_id" ref="demo_product_business_consulting"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_accounting_standards" model="documents.document">
+            <field name="name">UAE Accounting Standards</field>
+            <field name="category">compliance</field>
+            <field name="priority">1</field>
+            <field name="notes">UAE accounting standards and requirements</field>
+            <field name="linked_product_id" ref="demo_product_accounting_services"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+
+        <!-- Legal Services Documents -->
+        <record id="demo_doc_legal_consultation_form" model="documents.document">
+            <field name="name">Legal Consultation Form</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Initial legal consultation form</field>
+            <field name="linked_product_id" ref="demo_product_legal_consultation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_contract_template" model="documents.document">
+            <field name="name">Standard Contract Template</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Standard contract template for UAE businesses</field>
+            <field name="linked_product_id" ref="demo_product_contract_review"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_compliance_checklist" model="documents.document">
+            <field name="name">Compliance Audit Checklist</field>
+            <field name="category">compliance</field>
+            <field name="priority">2</field>
+            <field name="notes">Comprehensive compliance audit checklist</field>
+            <field name="linked_product_id" ref="demo_product_compliance_audit"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+
+        <!-- Office Services Documents -->
+        <record id="demo_doc_virtual_office_agreement" model="documents.document">
+            <field name="name">Virtual Office Agreement</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Virtual office service agreement</field>
+            <field name="linked_product_id" ref="demo_product_virtual_office"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_office_setup_plan" model="documents.document">
+            <field name="name">Office Setup Plan</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Detailed office setup plan and timeline</field>
+            <field name="linked_product_id" ref="demo_product_office_setup"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_warehouse_requirements" model="documents.document">
+            <field name="name">Warehouse Requirements Checklist</field>
+            <field name="category">compliance</field>
+            <field name="priority">2</field>
+            <field name="notes">Warehouse setup requirements and compliance checklist</field>
+            <field name="linked_product_id" ref="demo_product_warehouse_setup"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+
+        <!-- Banking Services Documents -->
+        <record id="demo_doc_bank_account_application" model="documents.document">
+            <field name="name">Bank Account Application Form</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Corporate bank account application form</field>
+            <field name="linked_product_id" ref="demo_product_bank_account_opening"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_credit_card_application" model="documents.document">
+            <field name="name">Corporate Credit Card Application</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Corporate credit card application form</field>
+            <field name="linked_product_id" ref="demo_product_credit_card_setup"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_merchant_setup_guide" model="documents.document">
+            <field name="name">Merchant Account Setup Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Step-by-step merchant account setup guide</field>
+            <field name="linked_product_id" ref="demo_product_merchant_account"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- IT Services Documents -->
+        <record id="demo_doc_website_requirements" model="documents.document">
+            <field name="name">Website Requirements Document</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Website development requirements and specifications</field>
+            <field name="linked_product_id" ref="demo_product_website_development"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_digital_marketing_plan" model="documents.document">
+            <field name="name">Digital Marketing Strategy Plan</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Comprehensive digital marketing strategy plan</field>
+            <field name="linked_product_id" ref="demo_product_digital_marketing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_software_requirements" model="documents.document">
+            <field name="name">Software Requirements Specification</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Detailed software requirements specification</field>
+            <field name="linked_product_id" ref="demo_product_software_development"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- HR Services Documents -->
+        <record id="demo_doc_hr_policy_template" model="documents.document">
+            <field name="name">HR Policy Template</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">UAE-compliant HR policy template</field>
+            <field name="linked_product_id" ref="demo_product_hr_consulting"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_payroll_setup_guide" model="documents.document">
+            <field name="name">Payroll Setup Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Payroll system setup and configuration guide</field>
+            <field name="linked_product_id" ref="demo_product_payroll_services"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_recruitment_process" model="documents.document">
+            <field name="name">Recruitment Process Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Complete recruitment process guide</field>
+            <field name="linked_product_id" ref="demo_product_recruitment_services"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- Logistics Services Documents -->
+        <record id="demo_doc_logistics_assessment" model="documents.document">
+            <field name="name">Logistics Assessment Report</field>
+            <field name="category">deliverable</field>
+            <field name="priority">1</field>
+            <field name="notes">Logistics assessment and recommendations report</field>
+            <field name="linked_product_id" ref="demo_product_logistics_consulting"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_customs_documentation" model="documents.document">
+            <field name="name">Customs Documentation Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Complete customs documentation guide</field>
+            <field name="linked_product_id" ref="demo_product_customs_clearance"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_freight_quotation" model="documents.document">
+            <field name="name">Freight Quotation Template</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Freight quotation template and guidelines</field>
+            <field name="linked_product_id" ref="demo_product_freight_forwarding"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <!-- Real Estate Services Documents -->
+        <record id="demo_doc_property_consultation_form" model="documents.document">
+            <field name="name">Property Consultation Form</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Initial property consultation form</field>
+            <field name="linked_product_id" ref="demo_product_property_consulting"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_property_management_agreement" model="documents.document">
+            <field name="name">Property Management Agreement</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Property management service agreement</field>
+            <field name="linked_product_id" ref="demo_product_property_management"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+        <record id="demo_doc_tenant_services_guide" model="documents.document">
+            <field name="name">Tenant Services Guide</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Complete tenant services guide</field>
+            <field name="linked_product_id" ref="demo_product_tenant_services"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+
+    </data>
+</odoo>
