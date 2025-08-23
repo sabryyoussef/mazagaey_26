@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Checkpoint Tags -->
+        <record id="checkpoint_tag_legal" model="project.task.checkpoint.tag">
+            <field name="name">Legal</field>
+            <field name="color">1</field>
+        </record>
+        
+        <record id="checkpoint_tag_kyc" model="project.task.checkpoint.tag">
+            <field name="name">KYC</field>
+            <field name="color">2</field>
+        </record>
+        
+        <record id="checkpoint_tag_payment" model="project.task.checkpoint.tag">
+            <field name="name">Payment</field>
+            <field name="color">3</field>
+        </record>
+        
+        <record id="checkpoint_tag_documentation" model="project.task.checkpoint.tag">
+            <field name="name">Documentation</field>
+            <field name="color">4</field>
+        </record>
+        
+        <record id="checkpoint_tag_approval" model="project.task.checkpoint.tag">
+            <field name="name">Approval</field>
+            <field name="color">5</field>
+        </record>
+        
+        <!-- Demo Task Stages (safe local stages for rules) -->
+        <record id="demo_stage_documentation" model="project.task.type">
+            <field name="name">Documentation</field>
+            <field name="sequence">10</field>
+            <field name="fold">False</field>
+        </record>
+        <record id="demo_stage_verification" model="project.task.type">
+            <field name="name">Verification</field>
+            <field name="sequence">20</field>
+            <field name="fold">False</field>
+        </record>
+        <record id="demo_stage_approval" model="project.task.type">
+            <field name="name">Approval</field>
+            <field name="sequence">30</field>
+            <field name="fold">False</field>
+        </record>
+        
+        <!-- Checkpoint Template 1: Company Formation -->
+        <record id="checkpoint_template_company_formation" model="project.task.checkpoint.template">
+            <field name="name">Company Formation – Base</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+            <field name="notes">Standard company formation process for UAE businesses</field>
+        </record>
+        
+        <!-- Template Lines for Company Formation -->
+        <record id="checkpoint_line_passport" model="project.task.checkpoint.template.line">
+            <field name="name">Collect Passport Copy</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_legal')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Valid passport copy of all shareholders</field>
+        </record>
+        
+        <record id="checkpoint_line_trade_name" model="project.task.checkpoint.template.line">
+            <field name="name">Collect Trade Name Options</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_legal')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">3 preferred trade names for approval</field>
+        </record>
+        
+        <record id="checkpoint_line_payment" model="project.task.checkpoint.template.line">
+            <field name="name">Receive Initial Payment</field>
+            <field name="sequence">30</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_payment')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">50% upfront payment received</field>
+        </record>
+        
+        <record id="checkpoint_line_kyc" model="project.task.checkpoint.template.line">
+            <field name="name">Submit KYC Form</field>
+            <field name="sequence">40</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_kyc')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Completed KYC form with all required information</field>
+        </record>
+        
+        <record id="checkpoint_line_approval" model="project.task.checkpoint.template.line">
+            <field name="name">Legal Approval</field>
+            <field name="sequence">50</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_approval')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Legal department approval received</field>
+        </record>
+        
+        <!-- Template Rules for Company Formation -->
+        <record id="checkpoint_rule_company_formation_legal" model="project.task.checkpoint.rule">
+            <field name="name">Legal Documents Complete</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="condition_type">by_tag_count</field>
+            <field name="min_count">2</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_legal')])]"/>
+            <field name="target_stage_id" ref="demo_stage_documentation"/>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="checkpoint_rule_company_formation_progress" model="project.task.checkpoint.rule">
+            <field name="name">75% Complete</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="condition_type">percentage</field>
+            <field name="percentage">75.0</field>
+            <field name="target_stage_id" ref="demo_stage_verification"/>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Checkpoint Template 2: Visa Processing -->
+        <record id="checkpoint_template_visa_processing" model="project.task.checkpoint.template">
+            <field name="name">Visa Processing – Standard</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            <field name="notes">Standard visa processing workflow</field>
+        </record>
+        
+        <!-- Template Lines for Visa Processing -->
+        <record id="checkpoint_line_application" model="project.task.checkpoint.template.line">
+            <field name="name">Submit Visa Application</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_documentation')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Complete visa application form submitted</field>
+        </record>
+        
+        <record id="checkpoint_line_medical" model="project.task.checkpoint.template.line">
+            <field name="name">Medical Examination</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_approval')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Medical examination completed and passed</field>
+        </record>
+        
+        <record id="checkpoint_line_biometric" model="project.task.checkpoint.template.line">
+            <field name="name">Biometric Data Collection</field>
+            <field name="sequence">30</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_documentation')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Fingerprints and photo captured</field>
+        </record>
+        
+        <record id="checkpoint_line_approval_visa" model="project.task.checkpoint.template.line">
+            <field name="name">Visa Approval</field>
+            <field name="sequence">40</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_approval')])]"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Visa approved by immigration authorities</field>
+        </record>
+        
+        <!-- Template Rules for Visa Processing -->
+        <record id="checkpoint_rule_visa_docs" model="project.task.checkpoint.rule">
+            <field name="name">Documentation Complete</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="condition_type">by_tag_count</field>
+            <field name="min_count">2</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('checkpoint_tag_documentation')])]"/>
+            <field name="target_stage_id" ref="demo_stage_documentation"/>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="checkpoint_rule_visa_complete" model="project.task.checkpoint.rule">
+            <field name="name">All Steps Approved</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="condition_type">percentage</field>
+            <field name="percentage">100.0</field>
+            <field name="target_stage_id" ref="demo_stage_approval"/>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Demo Service Products - Removed for demo compatibility -->
+        
+        <!-- Product templates removed for demo compatibility -->
+    </data>
+</odoo>
