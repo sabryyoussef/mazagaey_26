@@ -12,18 +12,19 @@
         "product",
     ],
     "data": [
-        # Core views
+        # Security (load first)
+        "security/ir.model.access.csv",
+        # Core views (actions first)
         "views/core/checkpoint_views.xml",
         "views/core/checkpoint_tag_views.xml",
-        "views/core/menu_views.xml",
-        # Extension views
+        # Extension views (actions first)
         "views/extensions/task_views.xml",
         "views/extensions/product_views.xml",
         "views/extensions/milestone_views.xml",
         # Template views
         "views/templates/milestone_template_views.xml",
-        # Security
-        "security/ir.model.access.csv",
+        # Menu views (load last after all actions are defined)
+        "views/core/menu_views.xml",
     ],
     "demo": [
         "data/demo_data_consolidated.xml",
