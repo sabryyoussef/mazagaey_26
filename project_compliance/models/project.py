@@ -31,6 +31,21 @@ class Project(models.Model):
     is_current_user_project_admin = fields.Boolean(compute='_compute_user_permissions', store=False)
     is_current_user_project_task_assignee = fields.Boolean(compute='_compute_user_permissions', store=False)
     
+    # Workflow State
+    compliance_workflow_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('complete', 'Complete'),
+        ('confirmed', 'Confirmed'),
+        ('returned', 'Returned'),
+        ('updated', 'Updated'),
+    ], compute='_compute_compliance_workflow_state', store=True, string='Compliance Workflow State')
+    
+    # Automation Settings
+    auto_create_handover = fields.Boolean(string='Auto Create Handover', default=True, tracking=True)
+    auto_copy_documents = fields.Boolean(string='Auto Copy Documents', default=True, tracking=True)
+    auto_notify_stakeholders = fields.Boolean(string='Auto Notify Stakeholders', default=True, tracking=True)
+    
     # Shareholding total
     shareholding_total = fields.Float(compute='_compute_shareholding_total', string='Total Shareholding (%)')
     
@@ -85,6 +100,26 @@ class Project(models.Model):
                     record.is_update_compliance_check = False
             except Exception:
                 record.is_update_compliance_check = False
+
+    @api.depends('is_complete_return_compliance', 'is_complete_compliance', 'is_confirm_compliance', 'is_update_compliance')
+    def _compute_compliance_workflow_state(self):
+        """Compute the current workflow state based on compliance flags"""
+        for record in self:
+            try:
+                if record.is_complete_return_compliance and not record.is_complete_compliance:
+                    record.compliance_workflow_state = 'returned'
+                elif record.is_complete_compliance and record.is_confirm_compliance:
+                    record.compliance_workflow_state = 'confirmed'
+                elif record.is_complete_compliance:
+                    record.compliance_workflow_state = 'complete'
+                elif record.is_update_compliance:
+                    record.compliance_workflow_state = 'updated'
+                elif record.compliance_shareholder_ids:
+                    record.compliance_workflow_state = 'in_progress'
+                else:
+                    record.compliance_workflow_state = 'draft'
+            except Exception:
+                record.compliance_workflow_state = 'draft'
 
     def _compute_user_permissions(self):
         current_user = self.env.user
@@ -146,6 +181,9 @@ class Project(models.Model):
             record.is_complete_compliance = True
             record.message_post(body=_("Compliance Completed"))
             
+            # Trigger automation
+            record._trigger_compliance_automation('complete')
+            
         return True
 
     def action_confirm_compliance(self):
@@ -156,6 +194,9 @@ class Project(models.Model):
             
             record.is_confirm_compliance = True
             record.message_post(body=_("Compliance Confirmed"))
+            
+            # Trigger automation
+            record._trigger_compliance_automation('confirm')
             
         return True
 
@@ -188,6 +229,9 @@ class Project(models.Model):
             record._check_compliance_shareholder_ids()
             record.message_post(body=_("Compliance Updated"))
             
+            # Trigger automation
+            record._trigger_compliance_automation('update')
+            
         return True
 
     def action_repeat_compliance(self):
@@ -203,6 +247,215 @@ class Project(models.Model):
             record.is_second_complete_compliance_check = 0
             record.message_post(body=_("Compliance Process Repeated"))
             
+            # Trigger automation
+            record._trigger_compliance_automation('repeat')
+            
+        return True
+
+    def _trigger_compliance_automation(self, trigger_type):
+        """Trigger compliance automation based on workflow state changes"""
+        self.ensure_one()
+        
+        try:
+            if trigger_type == 'complete' and self.auto_create_handover:
+                self._create_compliance_handover()
+            
+            if trigger_type in ['complete', 'confirm'] and self.auto_copy_documents:
+                self._copy_compliance_documents()
+            
+            if trigger_type in ['complete', 'confirm', 'return'] and self.auto_notify_stakeholders:
+                self._notify_compliance_stakeholders(trigger_type)
+                
+        except Exception as e:
+            self.message_post(body=_("Automation error: %s") % str(e))
+
+    def _create_compliance_handover(self):
+        """Create compliance handover automatically"""
+        self.ensure_one()
+        
+        if not self.handover_compliance_ids.filtered(lambda h: h.handover_type == 'compliance'):
+            handover_vals = {
+                'name': f'Compliance Handover - {self.name}',
+                'project_id': self.id,
+                'compliance_project_id': self.id,
+                'hand_partner_id': self.partner_id.id if self.partner_id else False,
+                'handover_type': 'compliance',
+                'compliance_status': 'pending',
+                'handover_notes': f'Automatic compliance handover created for project {self.name}',
+                'compliance_shareholder_ids': [(6, 0, self.compliance_shareholder_ids.ids)],
+            }
+            
+            handover = self.env['project.handover.notes'].create(handover_vals)
+            self.message_post(body=_("Compliance handover created: %s") % handover.name)
+
+    def _copy_compliance_documents(self):
+        """Copy compliance documents using automation rules"""
+        self.ensure_one()
+        
+        if self.compliance_document_automation_ids:
+            for automation in self.compliance_document_automation_ids:
+                try:
+                    automation.copy_documents_to_target(self)
+                    self.message_post(body=_("Documents copied using automation: %s") % automation.name)
+                except Exception as e:
+                    self.message_post(body=_("Document automation failed: %s") % str(e))
+
+    def _notify_compliance_stakeholders(self, trigger_type):
+        """Notify stakeholders about compliance status changes"""
+        self.ensure_one()
+        
+        # Get stakeholders to notify
+        stakeholders = []
+        if self.user_id:
+            stakeholders.append(self.user_id)
+        if self.partner_id:
+            stakeholders.append(self.partner_id)
+        
+        # Add compliance shareholders
+        for shareholder in self.compliance_shareholder_ids:
+            if shareholder.contact_id:
+                stakeholders.append(shareholder.contact_id)
+        
+        # Create notification message
+        status_messages = {
+            'complete': 'Compliance has been completed',
+            'confirm': 'Compliance has been confirmed',
+            'return': 'Compliance has been returned for revision',
+            'update': 'Compliance has been updated',
+            'repeat': 'Compliance process has been repeated'
+        }
+        
+        message = status_messages.get(trigger_type, f'Compliance status changed to {trigger_type}')
+        
+        # Post message to project
+        self.message_post(
+            body=_(message),
+            partner_ids=[(6, 0, [s.id for s in stakeholders if hasattr(s, 'id')])]
+        )
+        
+        # Send email notifications if enabled
+        if self.auto_notify_stakeholders:
+            self._send_compliance_email_notification(trigger_type, stakeholders)
+
+    def _send_compliance_email_notification(self, trigger_type, stakeholders):
+        """Send email notifications to stakeholders"""
+        self.ensure_one()
+        
+        try:
+            # Get email template
+            template = self._get_compliance_email_template(trigger_type)
+            if not template:
+                return
+            
+            # Prepare email context
+            email_context = {
+                'project_name': self.name,
+                'compliance_status': trigger_type,
+                'shareholder_count': len(self.compliance_shareholder_ids),
+                'total_shareholding': self.shareholding_total,
+                'project_url': f'/web#id={self.id}&model=project.project&view_type=form',
+            }
+            
+            # Send emails to stakeholders
+            for stakeholder in stakeholders:
+                if hasattr(stakeholder, 'email') and stakeholder.email:
+                    try:
+                        template.with_context(email_context).send_mail(
+                            stakeholder.id, 
+                            force_send=True,
+                            email_values={'email_to': stakeholder.email}
+                        )
+                        self.message_post(body=_("Email notification sent to %s") % stakeholder.name)
+                    except Exception as e:
+                        self.message_post(body=_("Failed to send email to %s: %s") % (stakeholder.name, str(e)))
+                        
+        except Exception as e:
+            self.message_post(body=_("Email notification error: %s") % str(e))
+
+    def _get_compliance_email_template(self, trigger_type):
+        """Get appropriate email template for compliance notifications"""
+        template_refs = {
+            'complete': 'project_compliance.email_template_compliance_complete',
+            'confirm': 'project_compliance.email_template_compliance_confirm',
+            'return': 'project_compliance.email_template_compliance_return',
+            'update': 'project_compliance.email_template_compliance_update',
+        }
+        
+        template_ref = template_refs.get(trigger_type)
+        if template_ref:
+            return self.env.ref(template_ref, raise_if_not_found=False)
+        
+        return None
+
+    def _create_compliance_activity(self, activity_type, summary, note=None):
+        """Create compliance activity for tracking"""
+        self.ensure_one()
+        
+        try:
+            activity_vals = {
+                'activity_type_id': self._get_compliance_activity_type(activity_type),
+                'summary': summary,
+                'note': note or summary,
+                'res_id': self.id,
+                'res_model_id': self.env['ir.model']._get('project.project').id,
+                'user_id': self.env.user.id,
+            }
+            
+            activity = self.env['mail.activity'].create(activity_vals)
+            self.message_post(body=_("Compliance activity created: %s") % summary)
+            return activity
+            
+        except Exception as e:
+            self.message_post(body=_("Failed to create compliance activity: %s") % str(e))
+            return None
+
+    def _get_compliance_activity_type(self, activity_type):
+        """Get compliance activity type ID"""
+        activity_types = {
+            'compliance_review': 'Compliance Review',
+            'shareholder_validation': 'Shareholder Validation',
+            'document_verification': 'Document Verification',
+            'compliance_approval': 'Compliance Approval',
+            'handover_preparation': 'Handover Preparation',
+        }
+        
+        activity_name = activity_types.get(activity_type, 'Compliance Task')
+        
+        # Find or create activity type
+        activity_type_record = self.env['mail.activity.type'].search([
+            ('name', '=', activity_name)
+        ], limit=1)
+        
+        if not activity_type_record:
+            activity_type_record = self.env['mail.activity.type'].create({
+                'name': activity_name,
+                'category': 'default',
+            })
+        
+        return activity_type_record.id
+
+    def action_schedule_compliance_review(self):
+        """Schedule compliance review activity"""
+        self.ensure_one()
+        
+        if not self.compliance_shareholder_ids:
+            raise UserError(_("Please add compliance shareholders before scheduling review"))
+        
+        activity = self._create_compliance_activity(
+            'compliance_review',
+            f'Compliance Review for {self.name}',
+            f'Review compliance shareholders and documents for project {self.name}'
+        )
+        
+        if activity:
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mail.activity',
+                'res_id': activity.id,
+                'target': 'current',
+            }
+        
         return True
 
     def action_view_compliance_shareholders(self):
