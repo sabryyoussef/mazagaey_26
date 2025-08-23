@@ -230,5 +230,106 @@
             <field name="customer_id" ref="demo_partner_2"/>
             <field name="contact_id" ref="demo_contact_1"/>
         </record>
+
+        <!-- Compliance Checkpoint Templates -->
+        <record id="demo_compliance_checkpoint_template_1" model="project.checkpoint.template">
+            <field name="name">Initial Compliance Review</field>
+            <field name="sequence">10</field>
+            <field name="notes">Initial review of compliance requirements and documentation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_template_2" model="project.checkpoint.template">
+            <field name="name">Shareholder Verification</field>
+            <field name="sequence">20</field>
+            <field name="notes">Verify all shareholder information and documentation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_template_3" model="project.checkpoint.template">
+            <field name="name">UBO Identification</field>
+            <field name="sequence">30</field>
+            <field name="notes">Identify and verify Ultimate Beneficial Owners</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_template_4" model="project.checkpoint.template">
+            <field name="name">Document Collection</field>
+            <field name="sequence">40</field>
+            <field name="notes">Collect all required compliance documents</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_template_5" model="project.checkpoint.template">
+            <field name="name">Compliance Assessment</field>
+            <field name="sequence">50</field>
+            <field name="notes">Complete compliance assessment and validation</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_template_6" model="project.checkpoint.template">
+            <field name="name">Final Approval</field>
+            <field name="sequence">60</field>
+            <field name="notes">Final compliance approval and sign-off</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Compliance Checkpoints for Software Company Project -->
+        <record id="demo_compliance_checkpoint_1" model="project.task.checkpoint">
+            <field name="name">Initial Compliance Review</field>
+            <field name="sequence">10</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Initial review of compliance requirements and documentation for software company</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">True</field>
+            <field name="reached_on">2025-08-23</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_2" model="project.task.checkpoint">
+            <field name="name">Shareholder Verification</field>
+            <field name="sequence">20</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Verify all shareholder information and documentation</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">True</field>
+            <field name="reached_on">2025-08-23</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_3" model="project.task.checkpoint">
+            <field name="name">UBO Identification</field>
+            <field name="sequence">30</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Identify and verify Ultimate Beneficial Owners</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">False</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_4" model="project.task.checkpoint">
+            <field name="name">Document Collection</field>
+            <field name="sequence">40</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Collect all required compliance documents</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">False</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_5" model="project.task.checkpoint">
+            <field name="name">Compliance Assessment</field>
+            <field name="sequence">50</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Complete compliance assessment and validation</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">False</field>
+        </record>
+
+        <record id="demo_compliance_checkpoint_6" model="project.task.checkpoint">
+            <field name="name">Final Approval</field>
+            <field name="sequence">60</field>
+            <field name="compliance_project_id" ref="demo_compliance_project_1"/>
+            <field name="notes">Final compliance approval and sign-off</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="is_reached">False</field>
+        </record>
+
     </data>
 </odoo>
