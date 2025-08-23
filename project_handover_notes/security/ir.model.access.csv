@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_handover_notes_user,project.handover.notes.user,model_project_handover_notes,group_project_handover_user,1,0,0,0
+access_project_handover_notes_manager,project.handover.notes.manager,model_project_handover_notes,group_project_handover_manager,1,1,1,0
+access_project_handover_notes_admin,project.handover.notes.admin,model_project_handover_notes,group_project_handover_admin,1,1,1,1
+access_license_activity_user,license.activity.user,model_license_activity,group_project_handover_user,1,0,0,0
+access_license_activity_manager,license.activity.manager,model_license_activity,group_project_handover_manager,1,1,1,0
+access_license_activity_admin,license.activity.admin,model_license_activity,group_project_handover_admin,1,1,1,1

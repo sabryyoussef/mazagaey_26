@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend Required Document Form View -->
+        <record id="view_project_required_document_form_compliance" model="ir.ui.view">
+            <field name="name">project.required.document.form.compliance</field>
+            <field name="model">project.required.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_required_document_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id" 
+                           domain="[('project_id', '=', project_id)]"
+                           context="{'default_project_id': project_id, 'default_partner_id': partner_id}"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='is_required']" position="after">
+                    <field name="is_compliance_document" widget="boolean_toggle"/>
+                    <field name="compliance_state" invisible="not is_compliance_document"/>
+                    <field name="compliance_notes" invisible="not is_compliance_document"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='verified_by']" position="after">
+                    <field name="verification_date" invisible="not is_compliance_document"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Required Document List View -->
+        <record id="view_project_required_document_list_compliance" model="ir.ui.view">
+            <field name="name">project.required.document.list.compliance</field>
+            <field name="model">project.required.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_required_document_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id" optional="show"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='is_required']" position="after">
+                    <field name="is_compliance_document" optional="show"/>
+                    <field name="compliance_state" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Deliverable Document Form View -->
+        <record id="view_project_deliverable_document_form_compliance" model="ir.ui.view">
+            <field name="name">project.deliverable.document.form.compliance</field>
+            <field name="model">project.deliverable.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_deliverable_document_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id" 
+                           domain="[('project_id', '=', project_id)]"
+                           context="{'default_project_id': project_id, 'default_partner_id': partner_id}"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='is_required']" position="after">
+                    <field name="is_compliance_document" widget="boolean_toggle"/>
+                    <field name="compliance_state" invisible="not is_compliance_document"/>
+                    <field name="compliance_notes" invisible="not is_compliance_document"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='verified_by']" position="after">
+                    <field name="verification_date" invisible="not is_compliance_document"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Deliverable Document List View -->
+        <record id="view_project_deliverable_document_list_compliance" model="ir.ui.view">
+            <field name="name">project.deliverable.document.list.compliance</field>
+            <field name="model">project.deliverable.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_deliverable_document_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id" optional="show"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='is_required']" position="after">
+                    <field name="is_compliance_document" optional="show"/>
+                    <field name="compliance_state" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Document Type Form View -->
+        <record id="view_project_document_type_form_compliance" model="ir.ui.view">
+            <field name="name">project.document.type.form.compliance</field>
+            <field name="model">project.document.type</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_document_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                    <group string="Compliance Settings">
+                        <field name="is_compliance_document" widget="boolean_toggle"/>
+                        <field name="compliance_category" invisible="not is_compliance_document"/>
+                        <field name="is_required_for_compliance" invisible="not is_compliance_document"/>
+                        <field name="compliance_priority" invisible="not is_compliance_document"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend Document Type List View -->
+        <record id="view_project_document_type_list_compliance" model="ir.ui.view">
+            <field name="name">project.document.type.list.compliance</field>
+            <field name="model">project.document.type</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_document_type_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                    <field name="is_compliance_document" optional="show"/>
+                    <field name="compliance_category" optional="show"/>
+                    <field name="compliance_priority" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Compliance Document Filters -->
+        <record id="view_project_required_document_search_compliance" model="ir.ui.view">
+            <field name="name">project.required.document.search.compliance</field>
+            <field name="model">project.required.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_required_document_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id"/>
+                </xpath>
+                
+                <xpath expr="//filter[@name='verified']" position="after">
+                    <filter string="Compliance Documents" name="compliance_documents" domain="[('is_compliance_document', '=', True)]"/>
+                    <filter string="Non-Compliance Documents" name="non_compliance_documents" domain="[('is_compliance_document', '=', False)]"/>
+                </xpath>
+                
+                <xpath expr="//group[@string='Group By']" position="inside">
+                    <filter string="Compliance State" name="group_compliance_state" context="{'group_by': 'compliance_state'}"/>
+                    <filter string="Compliance Shareholder" name="group_compliance_shareholder" context="{'group_by': 'compliance_shareholder_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_deliverable_document_search_compliance" model="ir.ui.view">
+            <field name="name">project.deliverable.document.search.compliance</field>
+            <field name="model">project.deliverable.document</field>
+            <field name="inherit_id" ref="project_documents_extension.view_project_deliverable_document_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="compliance_shareholder_id"/>
+                </xpath>
+                
+                <xpath expr="//filter[@name='verified']" position="after">
+                    <filter string="Compliance Documents" name="compliance_documents" domain="[('is_compliance_document', '=', True)]"/>
+                    <filter string="Non-Compliance Documents" name="non_compliance_documents" domain="[('is_compliance_document', '=', False)]"/>
+                </xpath>
+                
+                <xpath expr="//group[@string='Group By']" position="inside">
+                    <filter string="Compliance State" name="group_compliance_state" context="{'group_by': 'compliance_state'}"/>
+                    <filter string="Compliance Shareholder" name="group_compliance_shareholder" context="{'group_by': 'compliance_shareholder_id'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

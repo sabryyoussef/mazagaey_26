@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Handover Notes Form View -->
+        <record id="view_project_handover_notes_form" model="ir.ui.view">
+            <field name="name">project.handover.notes.form</field>
+            <field name="model">project.handover.notes</field>
+            <field name="arch" type="xml">
+                <form string="Handover Notes">
+                    <header>
+                        <button name="action_complete_hand" type="object" string="Complete"
+                                confirm="Please ensure handover notes is complete to avoid future setbacks."
+                                invisible="is_complete_hand or is_confirm_hand or is_complete_return_hand or (not is_current_user_project_manager and not is_current_user_project_admin)"
+                                class="btn btn-success"/>
+                        <button name="action_confirm_hand" type="object" string="Confirm"
+                                confirm="Please double check before you Confirm"
+                                invisible="not is_complete_hand or is_confirm_hand or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                        <button name="action_return_hand" type="object" string="Return"
+                                invisible="not is_complete_hand or is_confirm_hand or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                        <button name="action_update_hand" type="object" string="Update"
+                                confirm="Please ensure handover notes is updated to avoid future setbacks."
+                                class="btn btn-warning"
+                                invisible="not is_update_hand_check"/>
+                        <button name="action_repeat_hand" type="object" string="Repeat"
+                                class="btn btn-danger"
+                                invisible="not is_complete_hand or not is_confirm_hand or not is_current_user_project_admin"/>
+                        <field name="handover_status" widget="statusbar" statusbar_visible="draft,complete,confirmed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="hand_partner_company_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="hand_partner_id" string="Company Name" 
+                                       invisible="hand_partner_company_type == 'person'"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_create': True}"/>
+                                <field name="hand_partner_id" string="Individual Name" 
+                                       invisible="hand_partner_company_type == 'company'"
+                                       options="{'no_quick_create': True, 'no_create_edit': True, 'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="handover_date"/>
+                                <field name="handover_by"/>
+                                <field name="is_complete_hand" invisible="1"/>
+                                <field name="is_confirm_hand" invisible="1"/>
+                                <field name="is_complete_return_hand" invisible="1"/>
+                                <field name="is_update_hand" invisible="1"/>
+                                <field name="is_second_complete_hand_check" invisible="1"/>
+                                <field name="is_update_hand_check" invisible="1"/>
+                                <field name="is_current_user_project_manager" invisible="1"/>
+                                <field name="is_current_user_project_admin" invisible="1"/>
+                                <field name="is_current_user_project_task_assignee" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General Information">
+                                <group>
+                                    <group string="GENERAL INFORMATION">
+                                        <field name="is_visa_application"/>
+                                        <field name="apply_visa" widget="boolean_toggle"
+                                               invisible="hand_partner_company_type != 'person' or not is_visa_application"/>
+                                        <field name="correspondence_email_address"/>
+                                        <field name="preferred_mobile_number"/>
+                                    </group>
+                                    <group string="GENERAL INFORMATION">
+                                        <field name="channel_plan_id"/>
+                                        <field name="visa_eligibility"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Company Details" invisible="hand_partner_company_type == 'person'">
+                                <group>
+                                    <group string="COMPANY DETAILS">
+                                        <field name="initial_company_info"/>
+                                        <field name="proposed_name1"/>
+                                        <field name="proposed_name2"/>
+                                        <field name="proposed_name3"/>
+                                        <field name="full_name"/>
+                                        <field name="price_per_share"/>
+                                        <field name="total_number_shares"/>
+                                        <field name="total_share_value"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </group>
+                                    <group string="COMPANY DETAILS">
+                                        <field name="license_authority_id"/>
+                                        <field name="hand_legal_type"/>
+                                        <field name="license_validity"/>
+                                        <field name="hand_country_ids" widget="many2many_tags"/>
+                                    </group>
+                                </group>
+                                <group string="License Activities">
+                                    <field name="license_activity_ids" widget="many2many_tags" placeholder="Select license activities..."/>
+                                </group>
+                            </page>
+                            <page string="Personal Information" invisible="hand_partner_company_type == 'company'">
+                                <group>
+                                    <group string="PERSONAL INFORMATION">
+                                        <field name="hand_partner_first_name"/>
+                                        <field name="hand_partner_middle_name"/>
+                                        <field name="hand_partner_last_name"/>
+                                        <field name="hand_partner_gender"/>
+                                    </group>
+                                    <group string="PERSONAL INFORMATION">
+                                        <field name="hand_partner_nationality_id"/>
+                                        <field name="hand_partner_place_of_birth"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Handover Notes">
+                                <field name="handover_notes" placeholder="Enter detailed handover notes here..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Handover Notes List View -->
+        <record id="view_project_handover_notes_list" model="ir.ui.view">
+            <field name="name">project.handover.notes.list</field>
+            <field name="model">project.handover.notes</field>
+            <field name="arch" type="xml">
+                <list string="Handover Notes">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="hand_partner_id"/>
+                    <field name="handover_status"/>
+                    <field name="handover_date"/>
+                    <field name="handover_by"/>
+                    <field name="create_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Handover Notes Search View -->
+        <record id="view_project_handover_notes_search" model="ir.ui.view">
+            <field name="name">project.handover.notes.search</field>
+            <field name="model">project.handover.notes</field>
+            <field name="arch" type="xml">
+                <search string="Search Handover Notes">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="hand_partner_id"/>
+                    <field name="handover_status"/>
+                    <field name="handover_by"/>
+                    <filter string="Draft" name="draft" domain="[('handover_status', '=', 'draft')]"/>
+                    <filter string="Complete" name="complete" domain="[('handover_status', '=', 'complete')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('handover_status', '=', 'confirmed')]"/>
+                    <filter string="Returned" name="returned" domain="[('handover_status', '=', 'returned')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'handover_status'}"/>
+                        <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'hand_partner_id'}"/>
+                        <filter string="Handover By" name="group_handover_by" context="{'group_by': 'handover_by'}"/>
+                        <filter string="Month" name="group_month" context="{'group_by': 'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Handover Notes Action -->
+        <record id="action_project_handover_notes" model="ir.actions.act_window">
+            <field name="name">Handover Notes</field>
+            <field name="res_model">project.handover.notes</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first handover notes!
+                </p>
+                <p>
+                    Handover notes help track project handovers with detailed documentation and approval workflows.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_project_handover_notes"
+                  name="Handover Notes"
+                  parent="project.menu_main_pm"
+                  action="action_project_handover_notes"
+                  sequence="50"/>
+
+        <!-- License Activity Views -->
+        <record id="view_license_activity_form" model="ir.ui.view">
+            <field name="name">license.activity.form</field>
+            <field name="model">license.activity</field>
+            <field name="arch" type="xml">
+                <form string="License Activity">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_license_activity_list" model="ir.ui.view">
+            <field name="name">license.activity.list</field>
+            <field name="model">license.activity</field>
+            <field name="arch" type="xml">
+                <list string="License Activities">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_license_activity" model="ir.actions.act_window">
+            <field name="name">License Activities</field>
+            <field name="res_model">license.activity</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first license activity!
+                </p>
+                <p>
+                    License activities define the types of business activities that can be licensed.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_license_activity"
+                  name="License Activities"
+                  parent="project.menu_main_pm"
+                  action="action_license_activity"
+                  sequence="51"/>
+    </data>
+</odoo>

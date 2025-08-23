@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Form Integration -->
+        <record id="view_project_form_handover_integration" model="ir.ui.view">
+            <field name="name">project.project.form.handover.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='settings']" position="after">
+                    <page string="Handover Management" name="handover_management">
+                        <group>
+                            <group>
+                                <field name="handover_template_id"/>
+                                <field name="handover_status"/>
+                                <field name="pending_handovers"/>
+                            </group>
+                            <group>
+                                <field name="handover_checkpoint_ids" widget="many2many_tags"/>
+                                <button name="action_create_handover_notes" type="object" string="Create Handover Notes"
+                                        class="btn btn-primary"/>
+                                <button name="action_view_handover_notes" type="object" string="View Handover Notes"
+                                        class="btn btn-secondary"
+                                        invisible="handover_notes_count == 0"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Handover Notes List -->
+                        <field name="handover_notes_ids">
+                            <list>
+                                <field name="name"/>
+                                <field name="handover_status"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Project List View Integration -->
+        <record id="view_project_list_handover_integration" model="ir.ui.view">
+            <field name="name">project.project.list.handover.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="handover_notes_count" widget="statinfo" string="Handover Notes"/>
+                    <field name="pending_handovers" widget="statinfo" string="Pending Handovers"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Return Handover Wizard Form View -->
+        <record id="view_return_handover_wizard_form" model="ir.ui.view">
+            <field name="name">return.handover.wizard.form</field>
+            <field name="model">return.handover.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Return Handover">
+                    <group>
+                        <field name="handover_id" readonly="1"/>
+                        <field name="return_reason" placeholder="Please provide a reason for returning the handover..."/>
+                    </group>
+                    <footer>
+                        <button name="action_return_handover" type="object" string="Return Handover" class="btn btn-primary"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Return Handover Wizard Action -->
+        <record id="action_return_handover_wizard" model="ir.actions.act_window">
+            <field name="name">Return Handover</field>
+            <field name="res_model">return.handover.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

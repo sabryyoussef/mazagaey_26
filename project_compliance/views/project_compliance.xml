@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Form Integration -->
+        <record id="view_project_form_compliance_integration" model="ir.ui.view">
+            <field name="name">project.project.form.compliance.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='settings']" position="after">
+                    <page string="Compliance">
+                        <group>
+                            <group>
+                                <button name="action_view_compliance_shareholders" type="object" string="View Compliance Shareholders"
+                                        class="btn btn-secondary"
+                                        invisible="compliance_shareholder_count == 0"/>
+                                <field name="compliance_shareholder_count" widget="statinfo" string="Compliance Shareholders"/>
+                                <field name="shareholding_total" widget="statinfo" string="Total Shareholding"/>
+                            </group>
+                            <group>
+                                <div class="o_row" style="position: absolute; right: 10px;">
+                                    <field name="is_complete_compliance" readonly="1" class="oe_inline"/>
+                                    <field name="is_confirm_compliance" readonly="1" class="oe_inline"/>
+                                    <field name="is_complete_return_compliance" readonly="1" class="oe_inline"/>
+                                    <field name="is_update_compliance" invisible="1" class="oe_inline"/>
+                                    <field name="is_second_complete_compliance_check" invisible="1" class="oe_inline"/>
+                                </div>
+                            </group>
+                        </group>
+                        
+                        <!-- Compliance Action Buttons -->
+                        <group>
+                            <group>
+                                <button name="action_complete_compliance" type="object" string="Complete"
+                                        confirm="Please ensure compliance is complete to avoid future setbacks."
+                                        invisible="is_complete_compliance or is_confirm_compliance or is_complete_return_compliance or (not is_current_user_project_manager and not is_current_user_project_admin)"
+                                        class="btn btn-success"/>
+                                <button name="action_confirm_compliance" type="object" string="Confirm"
+                                        confirm="Please double check before you Confirm"
+                                        invisible="not is_complete_compliance or is_confirm_compliance or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                                <button name="action_return_compliance" type="object" string="Return"
+                                        invisible="not is_complete_compliance or is_confirm_compliance or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                                <button name="action_update_compliance" type="object" string="Update"
+                                        confirm="Please ensure compliance is updated to avoid future setbacks."
+                                        class="btn btn-warning"
+                                        invisible="not is_update_compliance_check"/>
+                                <button name="action_repeat_compliance" type="object" string="Repeat"
+                                        class="btn btn-danger"
+                                        invisible="not is_complete_compliance or not is_confirm_compliance or not is_current_user_project_admin"/>
+                            </group>
+                            <group>
+                                <field name="is_update_compliance_check" invisible="1"/>
+                                <field name="is_current_user_project_manager" invisible="1"/>
+                                <field name="is_current_user_project_admin" invisible="1"/>
+                                <field name="is_current_user_project_task_assignee" invisible="1"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Compliance Shareholders List -->
+                        <field name="compliance_shareholder_ids">
+                            <list>
+                                <field name="name"/>
+                                <field name="contact_id"/>
+                                <field name="ubo_id"/>
+                                <field name="shareholding"/>
+                                <field name="relationship_ids" widget="many2many_tags"/>
+                                <field name="address_count" widget="statinfo" string="Addresses"/>
+                                <field name="company_type"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Project List View Integration -->
+        <record id="view_project_list_compliance_integration" model="ir.ui.view">
+            <field name="name">project.project.list.compliance.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="compliance_shareholder_count" widget="statinfo" string="Compliance"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

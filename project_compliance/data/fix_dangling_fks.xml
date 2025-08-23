@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fix dangling foreign keys in business shareholders -->
+        <function model="res.partner.business.shareholder" name="_fix_dangling_foreign_keys"/>
+    </data>
+</odoo>

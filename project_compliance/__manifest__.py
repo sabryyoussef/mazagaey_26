@@ -1,0 +1,34 @@
+{
+    'name': "Project Compliance",
+    'summary': "Compliance functionality for Odoo projects with shareholder management",
+    'description': """
+        This module provides comprehensive compliance functionality for Odoo projects,
+        including shareholder management, UBO tracking, and compliance workflows.
+        Integrates with project_handover_notes and project_documents_extension.
+    """,
+    'author': "BeshoyWageh",
+    'version': '18.0.1.0.0',
+    'category': 'Project Management',
+    'depends': [
+        'base',
+        'project',
+        'mail',
+        'project_documents_extension',
+        'project_handover_notes',
+    ],
+                    'data': [
+                    'security/security.xml',
+                    'security/ir.model.access.csv',
+                    'data/compliance_data.xml',
+                    'data/fix_dangling_fks.xml',
+                    'views/business_shareholder.xml',
+                    'views/project_compliance.xml',
+                    'views/partner_compliance.xml',
+                    'wizard/return_compliance_wizard.xml',
+                ],
+    'demo': [],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+    'license': 'LGPL-3',
+}

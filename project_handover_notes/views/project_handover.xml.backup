@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Form Integration -->
+        <record id="view_project_form_handover_integration" model="ir.ui.view">
+            <field name="name">project.project.form.handover.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='settings']" position="after">
+                    <page string="Handover Notes">
+                        <group>
+                            <group>
+                                <button name="action_create_handover_notes" type="object" string="Create Handover Notes"
+                                        class="btn btn-primary"/>
+                                <button name="action_view_handover_notes" type="object" string="View Handover Notes"
+                                        class="btn btn-secondary"
+                                        invisible="handover_notes_count == 0"/>
+                                <field name="handover_notes_count" widget="statinfo" string="Handover Notes"/>
+                            </group>
+                            <group>
+                                <div class="o_row" style="position: absolute; right: 10px;">
+                                    <field name="is_complete_hand" readonly="1" class="oe_inline"/>
+                                    <field name="is_confirm_hand" readonly="1" class="oe_inline"/>
+                                    <field name="is_complete_return_hand" readonly="1" class="oe_inline"/>
+                                    <field name="is_update_hand" invisible="1" class="oe_inline"/>
+                                    <field name="is_second_complete_hand_check" invisible="1" class="oe_inline"/>
+                                </div>
+                            </group>
+                        </group>
+                        
+                        <!-- Legacy Handover Buttons for Backward Compatibility -->
+                        <group>
+                            <group>
+                                <button name="action_complete_hand" type="object" string="Complete"
+                                        confirm="Please ensure handover notes is complete to avoid future setbacks."
+                                        invisible="is_complete_hand or is_confirm_hand or is_complete_return_hand or (not is_current_user_project_manager and not is_current_user_project_admin)"
+                                        class="btn btn-success"/>
+                                <button name="action_confirm_hand" type="object" string="Confirm"
+                                        confirm="Please double check before you Confirm"
+                                        invisible="not is_complete_hand or is_confirm_hand or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                                <button name="action_return_hand" type="object" string="Return"
+                                        invisible="not is_complete_hand or is_confirm_hand or (not is_current_user_project_task_assignee and not is_current_user_project_admin)"/>
+                                <button name="action_update_hand" type="object" string="Update"
+                                        confirm="Please ensure handover notes is updated to avoid future setbacks."
+                                        class="btn btn-warning"
+                                        invisible="not is_update_hand_check"/>
+                                <button name="action_repeat_hand" type="object" string="Repeat"
+                                        class="btn btn-danger"
+                                        invisible="not is_complete_hand or not is_confirm_hand or not is_current_user_project_admin"/>
+                            </group>
+                            <group>
+                                <field name="is_update_hand_check" invisible="1"/>
+                                <field name="is_current_user_project_manager" invisible="1"/>
+                                <field name="is_current_user_project_admin" invisible="1"/>
+                                <field name="is_current_user_project_task_assignee" invisible="1"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Handover Notes List -->
+                        <field name="handover_notes_ids">
+                            <list>
+                                <field name="name"/>
+                                <field name="hand_partner_id"/>
+                                <field name="handover_status"/>
+                                <field name="handover_date"/>
+                                <field name="handover_by"/>
+                                <field name="create_date"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Project List View Integration -->
+        <record id="view_project_list_handover_integration" model="ir.ui.view">
+            <field name="name">project.project.list.handover.integration</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="handover_notes_count" widget="statinfo" string="Handover Notes"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
