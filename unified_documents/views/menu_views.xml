@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu for Unified Documents -->
+    <menuitem id="menu_unified_documents_root"
+              name="Unified Documents"
+              parent="project.menu_main_pm"
+              sequence="90"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Alternative Root Menu for Unified Documents (Main Menu) -->
+    <menuitem id="menu_unified_documents_root_main"
+              name="Unified Documents"
+              parent="base.menu_custom"
+              sequence="10"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Submenu for Document Copy Automations -->
+    <menuitem id="menu_unified_documents_automation"
+              name="Document Copy Automations"
+              parent="menu_unified_documents_root"
+              action="action_unified_document_copy_automation"
+              sequence="10"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Submenu for Document Management -->
+    <menuitem id="menu_unified_documents_management"
+              name="Document Management"
+              parent="menu_unified_documents_root"
+              sequence="20"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Document Management Submenu Items -->
+    <menuitem id="menu_unified_documents_copy_wizard"
+              name="Copy Documents Wizard"
+              parent="menu_unified_documents_management"
+              action="action_copy_documents_wizard"
+              sequence="10"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <menuitem id="menu_unified_documents_browse_documents"
+              name="Browse Documents"
+              parent="menu_unified_documents_management"
+              action="action_unified_documents_browse"
+              sequence="20"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Submenu for Product Templates -->
+    <menuitem id="menu_unified_product_template"
+              name="Product Templates"
+              parent="menu_unified_documents_root"
+              action="action_unified_product_template"
+              sequence="20"
+              groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+
+    <!-- Submenu for Settings -->
+    <menuitem id="menu_unified_documents_settings"
+              name="Settings"
+              parent="menu_unified_documents_root"
+              action="action_unified_documents_settings"
+              sequence="100"
+              groups="unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
+</odoo>

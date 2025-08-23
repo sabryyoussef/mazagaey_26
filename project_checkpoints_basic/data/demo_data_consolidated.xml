@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ========================================
+             PROJECT CHECKPOINTS BASIC - CONSOLIDATED DEMO DATA
+             ======================================== -->
+        
+        <!-- ========================================
+             SECTION 1: BASIC DEMO DATA
+             ======================================== -->
+        
+        <!-- ========================================
+             DEMO TASK STAGES FOR INTEGRATION TESTING
+             ======================================== -->
+        
+        <!-- Standard Project Development Stages -->
+        <record id="demo_stage_planning" model="project.task.type">
+            <field name="name">Planning</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_stage_development" model="project.task.type">
+            <field name="name">Development</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_stage_review" model="project.task.type">
+            <field name="name">Review</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="demo_stage_testing" model="project.task.type">
+            <field name="name">Testing</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="demo_stage_deployment" model="project.task.type">
+            <field name="name">Deployment</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="demo_stage_completed" model="project.task.type">
+            <field name="name">Completed</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <!-- ========================================
+             DEMO CHECKPOINT TAGS FOR INTEGRATION TESTING
+             ======================================== -->
+        
+        <!-- Company Formation Tags -->
+        <record id="demo_tag_consultation" model="project.task.checkpoint.tag">
+            <field name="name">Consultation</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="demo_tag_documentation" model="project.task.checkpoint.tag">
+            <field name="name">Documentation</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="demo_tag_submission" model="project.task.checkpoint.tag">
+            <field name="name">Submission</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="demo_tag_approval" model="project.task.checkpoint.tag">
+            <field name="name">Approval</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="demo_tag_completion" model="project.task.checkpoint.tag">
+            <field name="name">Completion</field>
+            <field name="color">5</field>
+        </record>
+
+        <!-- Visa Processing Tags -->
+        <record id="demo_tag_verification" model="project.task.checkpoint.tag">
+            <field name="name">Verification</field>
+            <field name="color">6</field>
+        </record>
+
+        <record id="demo_tag_medical" model="project.task.checkpoint.tag">
+            <field name="name">Medical</field>
+            <field name="color">7</field>
+        </record>
+
+        <record id="demo_tag_biometric" model="project.task.checkpoint.tag">
+            <field name="name">Biometric</field>
+            <field name="color">8</field>
+        </record>
+
+        <!-- Office Setup Tags -->
+        <record id="demo_tag_selection" model="project.task.checkpoint.tag">
+            <field name="name">Selection</field>
+            <field name="color">9</field>
+        </record>
+
+        <record id="demo_tag_negotiation" model="project.task.checkpoint.tag">
+            <field name="name">Negotiation</field>
+            <field name="color">10</field>
+        </record>
+
+        <record id="demo_tag_setup" model="project.task.checkpoint.tag">
+            <field name="name">Setup</field>
+            <field name="color">11</field>
+        </record>
+
+        <!-- ========================================
+             DEMO CHECKPOINTS FOR INTEGRATION TESTING
+             ======================================== -->
+        
+        <!-- Company Formation Checkpoints -->
+        <record id="demo_checkpoint_consultation" model="project.task.checkpoint">
+            <field name="name">Initial Consultation</field>
+            <field name="sequence">10</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_consultation')])]"/>
+        </record>
+
+        <record id="demo_checkpoint_documentation" model="project.task.checkpoint">
+            <field name="name">Document Collection</field>
+            <field name="sequence">20</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_documentation')])]"/>
+        </record>
+
+        <record id="demo_checkpoint_submission" model="project.task.checkpoint">
+            <field name="name">Government Submission</field>
+            <field name="sequence">30</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_submission')])]"/>
+        </record>
+
+        <record id="demo_checkpoint_approval" model="project.task.checkpoint">
+            <field name="name">Government Approval</field>
+            <field name="sequence">40</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_approval')])]"/>
+        </record>
+
+        <record id="demo_checkpoint_completion" model="project.task.checkpoint">
+            <field name="name">Final Completion</field>
+            <field name="sequence">50</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_completion')])]"/>
+        </record>
+
+        <!-- ========================================
+             SECTION 2: BUSINESS SCENARIOS
+             ======================================== -->
+        
+        <!-- ========================================
+             DEMO MILESTONE TEMPLATES
+             ======================================== -->
+        
+        <!-- Company Formation Milestone Template -->
+        <record id="demo_milestone_template_company_formation" model="project.milestone.template">
+            <field name="name">Company Formation Milestone Template</field>
+            <field name="description">Standard milestone template for UAE company formation process</field>
+            <field name="active" eval="True"/>
+            <field name="sequence">10</field>
+        </record>
+        
+        <!-- Visa Processing Milestone Template -->
+        <record id="demo_milestone_template_visa_processing" model="project.milestone.template">
+            <field name="name">Visa Processing Milestone Template</field>
+            <field name="description">Standard milestone template for employee visa processing</field>
+            <field name="active" eval="True"/>
+            <field name="sequence">20</field>
+        </record>
+        
+        <!-- Office Setup Milestone Template -->
+        <record id="demo_milestone_template_office_setup" model="project.milestone.template">
+            <field name="name">Office Setup Milestone Template</field>
+            <field name="description">Standard milestone template for office setup process</field>
+            <field name="active" eval="True"/>
+            <field name="sequence">30</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO MILESTONE TEMPLATE CHECKPOINTS
+             ======================================== -->
+        
+        <!-- Company Formation Milestone Template Checkpoints -->
+        <record id="demo_milestone_template_checkpoint_consultation" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">Initial Consultation</field>
+            <field name="sequence">10</field>
+            <field name="description">Complete initial consultation and requirements gathering</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_documentation" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">Document Collection</field>
+            <field name="sequence">20</field>
+            <field name="description">Collect and verify all required documents</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_submission" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">Government Submission</field>
+            <field name="sequence">30</field>
+            <field name="description">Submit application to government authorities</field>
+        </record>
+        
+        <!-- Visa Processing Milestone Template Checkpoints -->
+        <record id="demo_milestone_template_checkpoint_verification" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Document Verification</field>
+            <field name="sequence">10</field>
+            <field name="description">Verify all required documents are complete and valid</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_medical" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Medical Examination</field>
+            <field name="sequence">20</field>
+            <field name="description">Complete medical examination at approved center</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_approval" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Visa Approval</field>
+            <field name="sequence">30</field>
+            <field name="description">Receive visa approval and collect documents</field>
+        </record>
+        
+        <!-- Office Setup Milestone Template Checkpoints -->
+        <record id="demo_milestone_template_checkpoint_selection" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_office_setup"/>
+            <field name="name">Office Selection</field>
+            <field name="sequence">10</field>
+            <field name="description">Select and finalize office location</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_setup" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_office_setup"/>
+            <field name="name">Utilities Setup</field>
+            <field name="sequence">20</field>
+            <field name="description">Setup electricity, water, and internet services</field>
+        </record>
+        
+        <record id="demo_milestone_template_checkpoint_completion" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_office_setup"/>
+            <field name="name">Office Handover</field>
+            <field name="sequence">30</field>
+            <field name="description">Complete office handover and compliance verification</field>
+        </record>
+
+        <!-- ========================================
+             SECTION 3: ADDITIONAL SCENARIOS
+             ======================================== -->
+        
+        <!-- ========================================
+             ADDITIONAL UAE BUSINESS SCENARIOS
+             ======================================== -->
+        
+        <!-- Corporate Tax Registration Project -->
+        <record id="demo_project_corporate_tax" model="project.project">
+            <field name="name">Corporate Tax Registration - ABC Trading LLC</field>
+            <field name="description">Register company for UAE Corporate Tax including compliance setup and documentation.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- VAT Registration Project -->
+        <record id="demo_project_vat_registration" model="project.project">
+            <field name="name">VAT Registration - ABC Trading LLC</field>
+            <field name="description">Register company for UAE VAT including system setup and compliance training.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- Office Setup Project -->
+        <record id="demo_project_office_setup" model="project.project">
+            <field name="name">Office Setup &amp; Ejari Registration - ABC Trading LLC</field>
+            <field name="description">Complete office setup including Ejari registration, utilities, and compliance requirements.</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="(DateTime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- ========================================
+             ADDITIONAL MILESTONES
+             ======================================== -->
+        
+        <!-- Corporate Tax Milestones -->
+        <record id="demo_milestone_tax_assessment" model="project.milestone">
+            <field name="name">Tax Assessment &amp; Planning</field>
+            <field name="project_id" ref="demo_project_corporate_tax"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <record id="demo_milestone_tax_registration" model="project.milestone">
+            <field name="name">FTA Registration &amp; Compliance</field>
+            <field name="project_id" ref="demo_project_corporate_tax"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <!-- VAT Registration Milestones -->
+        <record id="demo_milestone_vat_assessment" model="project.milestone">
+            <field name="name">VAT Assessment &amp; System Setup</field>
+            <field name="project_id" ref="demo_project_vat_registration"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <record id="demo_milestone_vat_compliance" model="project.milestone">
+            <field name="name">VAT Compliance &amp; Training</field>
+            <field name="project_id" ref="demo_project_vat_registration"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <!-- Office Setup Milestones -->
+        <record id="demo_milestone_office_selection" model="project.milestone">
+            <field name="name">Office Selection &amp; Contract</field>
+            <field name="project_id" ref="demo_project_office_setup"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <record id="demo_milestone_ejari_registration" model="project.milestone">
+            <field name="name">Ejari Registration &amp; Utilities</field>
+            <field name="project_id" ref="demo_project_office_setup"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <record id="demo_milestone_office_handover" model="project.milestone">
+            <field name="name">Office Handover &amp; Compliance</field>
+            <field name="project_id" ref="demo_project_office_setup"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
+            <field name="is_reached" eval="False"/>
+        </record>
+        
+        <!-- ========================================
+             ADDITIONAL CHECKPOINT TAGS
+             ======================================== -->
+        
+        <record id="demo_tag_tax_related" model="project.task.checkpoint.tag">
+            <field name="name">Tax Related</field>
+            <field name="color">8</field>
+        </record>
+        
+        <record id="demo_tag_vat_related" model="project.task.checkpoint.tag">
+            <field name="name">VAT Related</field>
+            <field name="color">9</field>
+        </record>
+        
+        <record id="demo_tag_compliance" model="project.task.checkpoint.tag">
+            <field name="name">Compliance</field>
+            <field name="color">10</field>
+        </record>
+        
+        <record id="demo_tag_utilities" model="project.task.checkpoint.tag">
+            <field name="name">Utilities</field>
+            <field name="color">11</field>
+        </record>
+        
+        <record id="demo_tag_ejari" model="project.task.checkpoint.tag">
+            <field name="name">Ejari</field>
+            <field name="color">12</field>
+        </record>
+
+        <!-- ========================================
+             ADDITIONAL CHECKPOINTS FOR TAX PROJECTS
+             ======================================== -->
+        
+        <!-- Corporate Tax Checkpoints -->
+        <record id="demo_checkpoint_tax_assessment" model="project.task.checkpoint">
+            <field name="name">Conduct Tax Assessment Meeting</field>
+            <field name="sequence">10</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_financial_docs" model="project.task.checkpoint">
+            <field name="name">Collect Financial Documents</field>
+            <field name="sequence">20</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related'), ref('demo_tag_documentation')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_tax_planning" model="project.task.checkpoint">
+            <field name="name">Develop Tax Planning Strategy</field>
+            <field name="sequence">30</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_fta_registration" model="project.task.checkpoint">
+            <field name="name">Register with Federal Tax Authority</field>
+            <field name="sequence">40</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related'), ref('demo_tag_submission')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_tax_system" model="project.task.checkpoint">
+            <field name="name">Setup Tax Accounting System</field>
+            <field name="sequence">50</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related'), ref('demo_tag_setup')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_tax_training" model="project.task.checkpoint">
+            <field name="name">Conduct Tax Compliance Training</field>
+            <field name="sequence">60</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_tax_related'), ref('demo_tag_compliance')])]"/>
+        </record>
+
+        <!-- VAT Registration Checkpoints -->
+        <record id="demo_checkpoint_vat_assessment" model="project.task.checkpoint">
+            <field name="name">Conduct VAT Assessment</field>
+            <field name="sequence">10</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_vat_related')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_vat_docs" model="project.task.checkpoint">
+            <field name="name">Collect VAT Registration Documents</field>
+            <field name="sequence">20</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_vat_related'), ref('demo_tag_documentation')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_vat_system" model="project.task.checkpoint">
+            <field name="name">Setup VAT Accounting System</field>
+            <field name="sequence">30</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_vat_related'), ref('demo_tag_setup')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_vat_submission" model="project.task.checkpoint">
+            <field name="name">Submit VAT Registration</field>
+            <field name="sequence">40</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_vat_related'), ref('demo_tag_submission')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_vat_training" model="project.task.checkpoint">
+            <field name="name">Conduct VAT Training</field>
+            <field name="sequence">50</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_vat_related'), ref('demo_tag_compliance')])]"/>
+        </record>
+
+        <!-- Office Setup Checkpoints -->
+        <record id="demo_checkpoint_office_requirements" model="project.task.checkpoint">
+            <field name="name">Define Office Requirements</field>
+            <field name="sequence">10</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_selection')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_office_viewings" model="project.task.checkpoint">
+            <field name="name">Arrange Office Viewings</field>
+            <field name="sequence">20</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=6)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_selection')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_office_contract" model="project.task.checkpoint">
+            <field name="name">Negotiate &amp; Sign Office Contract</field>
+            <field name="sequence">30</field>
+            <field name="is_reached" eval="True"/>
+            <field name="reached_on" eval="(DateTime.now() - timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_negotiation')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_ejari_docs" model="project.task.checkpoint">
+            <field name="name">Collect Ejari Registration Documents</field>
+            <field name="sequence">40</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_ejari'), ref('demo_tag_documentation')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_ejari_registration" model="project.task.checkpoint">
+            <field name="name">Complete Ejari Registration</field>
+            <field name="sequence">50</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_ejari'), ref('demo_tag_submission')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_utilities_setup" model="project.task.checkpoint">
+            <field name="name">Setup Utilities &amp; Services</field>
+            <field name="sequence">60</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_utilities'), ref('demo_tag_setup')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_office_inspection" model="project.task.checkpoint">
+            <field name="name">Conduct Final Office Inspection</field>
+            <field name="sequence">70</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_completion')])]"/>
+        </record>
+        
+        <record id="demo_checkpoint_office_handover" model="project.task.checkpoint">
+            <field name="name">Complete Office Handover</field>
+            <field name="sequence">80</field>
+            <field name="is_reached" eval="False"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('demo_tag_completion')])]"/>
+        </record>
+
+    </data>
+</odoo>

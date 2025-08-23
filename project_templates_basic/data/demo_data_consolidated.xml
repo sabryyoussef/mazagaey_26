@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ========================================
+             PROJECT TEMPLATES BASIC - CONSOLIDATED DEMO DATA
+             ======================================== -->
+        
+        <!-- ========================================
+             SECTION 1: PROJECT TEMPLATES
+             ======================================== -->
+        
+        <!-- 1. Company Formation - DMCC Template -->
+        <record id="demo_project_template_dmcc" model="project.project">
+            <field name="name">DMCC Company Formation Template</field>
+            <field name="description">Standard template for DMCC company formation projects</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">company_formation</field>
+            <field name="template_description">Complete template for DMCC company formation including all required documents, approvals, and deliverables.</field>
+            <field name="estimated_duration">15</field>
+            <field name="complexity_level">medium</field>
+        </record>
+        
+        <!-- 2. Company Formation - IFZA Template -->
+        <record id="demo_project_template_ifza" model="project.project">
+            <field name="name">IFZA Company Formation Template</field>
+            <field name="description">Standard template for IFZA company formation projects</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">company_formation</field>
+            <field name="template_description">Complete template for IFZA company formation with flexible packages and quick setup.</field>
+            <field name="estimated_duration">12</field>
+            <field name="complexity_level">medium</field>
+        </record>
+        
+        <!-- 3. Employment Visa Template -->
+        <record id="demo_project_template_employment_visa" model="project.project">
+            <field name="name">Employment Visa Processing Template</field>
+            <field name="description">Standard template for employment visa processing</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">visa_services</field>
+            <field name="template_description">End-to-end employment visa processing including medical, EID, and work permit.</field>
+            <field name="estimated_duration">25</field>
+            <field name="complexity_level">complex</field>
+        </record>
+        
+        <!-- 4. Family Visa Template -->
+        <record id="demo_project_template_family_visa" model="project.project">
+            <field name="name">Family Visa Processing Template</field>
+            <field name="description">Standard template for family visa processing</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">visa_services</field>
+            <field name="template_description">Family visa processing for spouse and children including all required documents.</field>
+            <field name="estimated_duration">20</field>
+            <field name="complexity_level">medium</field>
+        </record>
+        
+        <!-- 5. Golden Visa Template -->
+        <record id="demo_project_template_golden_visa" model="project.project">
+            <field name="name">Golden Visa Processing Template</field>
+            <field name="description">Standard template for golden visa processing</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">visa_services</field>
+            <field name="template_description">Golden visa processing for investors and outstanding professionals.</field>
+            <field name="estimated_duration">45</field>
+            <field name="complexity_level">very_complex</field>
+        </record>
+        
+        <!-- 6. Bank Account Opening Template -->
+        <record id="demo_project_template_bank_account" model="project.project">
+            <field name="name">Corporate Bank Account Opening Template</field>
+            <field name="description">Standard template for corporate bank account opening</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">financial_services</field>
+            <field name="template_description">Corporate bank account opening process including document preparation and bank coordination.</field>
+            <field name="estimated_duration">10</field>
+            <field name="complexity_level">simple</field>
+        </record>
+        
+        <!-- 7. VAT Registration Template -->
+        <record id="demo_project_template_vat_registration" model="project.project">
+            <field name="name">VAT Registration Template</field>
+            <field name="description">Standard template for VAT registration</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">financial_services</field>
+            <field name="template_description">VAT registration process including TRN application and compliance setup.</field>
+            <field name="estimated_duration">8</field>
+            <field name="complexity_level">simple</field>
+        </record>
+        
+        <!-- 8. Government Services Template -->
+        <record id="demo_project_template_government_services" model="project.project">
+            <field name="name">Government Services Template</field>
+            <field name="description">Standard template for government services</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">government_services</field>
+            <field name="template_description">General template for government services including EID, medical fitness, and work permits.</field>
+            <field name="estimated_duration">15</field>
+            <field name="complexity_level">medium</field>
+        </record>
+        
+        <!-- 9. General Business Services Template -->
+        <record id="demo_project_template_general_business" model="project.project">
+            <field name="name">General Business Services Template</field>
+            <field name="description">Standard template for general business services</field>
+            <field name="is_template">True</field>
+            <field name="use_documents">False</field>
+            <field name="template_category">general</field>
+            <field name="template_description">General template for business services including trade name reservation and initial approvals.</field>
+            <field name="estimated_duration">5</field>
+            <field name="complexity_level">simple</field>
+        </record>
+        
+        <!-- ========================================
+             SECTION 2: CHECKPOINT TEMPLATES
+             ======================================== -->
+        
+        <!-- Checkpoint Template 1: Company Formation -->
+        <record id="checkpoint_template_company_formation" model="project.checkpoint.template">
+            <field name="name">Company Formation – Base</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+            <field name="notes">Standard company formation process for UAE businesses</field>
+        </record>
+        
+        <!-- Template Lines for Company Formation -->
+        <record id="checkpoint_line_passport" model="project.checkpoint.template.line">
+            <field name="name">Collect Passport Copy</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Valid passport copy collected</field>
+        </record>
+        
+        <record id="checkpoint_line_trade_name" model="project.checkpoint.template.line">
+            <field name="name">Reserve Trade Name</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Trade name reserved with authorities</field>
+        </record>
+        
+        <record id="checkpoint_line_payment" model="project.checkpoint.template.line">
+            <field name="name">Process Initial Payment</field>
+            <field name="sequence">30</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Government fees and initial deposits processed</field>
+        </record>
+        
+        <record id="checkpoint_line_kyc" model="project.checkpoint.template.line">
+            <field name="name">Complete KYC Process</field>
+            <field name="sequence">40</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Know Your Customer documentation completed</field>
+        </record>
+        
+        <record id="checkpoint_line_approval" model="project.checkpoint.template.line">
+            <field name="name">Final Approval</field>
+            <field name="sequence">50</field>
+            <field name="template_id" ref="checkpoint_template_company_formation"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Final approval received from authorities</field>
+        </record>
+        
+        <!-- Checkpoint Template 2: Visa Processing -->
+        <record id="checkpoint_template_visa_processing" model="project.checkpoint.template">
+            <field name="name">Visa Processing – Standard</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            <field name="notes">Standard visa processing workflow</field>
+        </record>
+        
+        <!-- Template Lines for Visa Processing -->
+        <record id="checkpoint_line_application" model="project.checkpoint.template.line">
+            <field name="name">Submit Visa Application</field>
+            <field name="sequence">10</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Complete visa application form submitted</field>
+        </record>
+        
+        <record id="checkpoint_line_medical" model="project.checkpoint.template.line">
+            <field name="name">Medical Examination</field>
+            <field name="sequence">20</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Medical examination completed and passed</field>
+        </record>
+        
+        <record id="checkpoint_line_biometric" model="project.checkpoint.template.line">
+            <field name="name">Biometric Data Collection</field>
+            <field name="sequence">30</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Fingerprints and photo captured</field>
+        </record>
+        
+        <record id="checkpoint_line_approval_visa" model="project.checkpoint.template.line">
+            <field name="name">Visa Approval</field>
+            <field name="sequence">40</field>
+            <field name="template_id" ref="checkpoint_template_visa_processing"/>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Visa approved by immigration authorities</field>
+        </record>
+        
+        <!-- ========================================
+             SECTION 3: DOCUMENT TEMPLATES
+             ======================================== -->
+        
+        <!-- Company Formation Document Template -->
+        <record id="demo_task_template_company_formation" model="project.document.template">
+            <field name="name">Company Formation - UAE</field>
+            <field name="description">Complete document template for UAE company formation services including all required documents and deliverables</field>
+            <field name="template_type">hybrid</field>
+            <field name="auto_apply">False</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+            <field name="active">True</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Visa Services Template -->
+        <record id="demo_task_template_visa_services" model="project.document.template">
+            <field name="name">Visa Services - UAE</field>
+            <field name="description">Document template for UAE visa processing services including employee visas and family visas</field>
+            <field name="template_type">hybrid</field>
+            <field name="auto_apply">False</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+            <field name="active">True</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Tax Services Template -->
+        <record id="demo_task_template_tax_services" model="project.document.template">
+            <field name="name">Tax Services - UAE</field>
+            <field name="description">Document template for UAE tax services including VAT registration and compliance</field>
+            <field name="template_type">document_based</field>
+            <field name="auto_apply">False</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+            <field name="active">True</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Document Template Lines for Company Formation -->
+        <record id="demo_doc_line_passport" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Client Passport Copy</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Valid passport copy with minimum 6 months validity</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_doc_line_emirates_id" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Client Emirates ID</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Valid Emirates ID copy</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_doc_line_business_plan" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Business Plan</field>
+            <field name="category">required</field>
+            <field name="priority">3</field>
+            <field name="notes">Detailed business plan with financial projections</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="demo_doc_line_office_lease" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Office Lease Agreement</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Valid office lease agreement or Ejari certificate</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="demo_doc_line_bank_reference" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Bank Reference Letter</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Bank reference letter showing good standing</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="demo_doc_line_trade_license" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Trade License</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Official trade license from DED</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <record id="demo_doc_line_establishment_card" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_company_formation"/>
+            <field name="name">Establishment Card</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Official establishment card</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <!-- Document Template Lines for Visa Services -->
+        <record id="demo_doc_line_visa_passport" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_visa_services"/>
+            <field name="name">Employee Passport</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Valid passport with minimum 6 months validity</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_doc_line_visa_photos" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_visa_services"/>
+            <field name="name">Employee Photos</field>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Recent passport-size photos (white background)</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_doc_line_visa_medical" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_visa_services"/>
+            <field name="name">Medical Fitness Certificate</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Medical fitness certificate from approved center</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="demo_doc_line_visa_approval" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_visa_services"/>
+            <field name="name">Visa Approval</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Official visa approval from immigration</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- Document Template Lines for Tax Services -->
+        <record id="demo_doc_line_tax_trn" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_tax_services"/>
+            <field name="name">TRN Certificate</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Tax Registration Number certificate</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_doc_line_tax_compliance" model="project.document.template.line">
+            <field name="template_id" ref="demo_task_template_tax_services"/>
+            <field name="name">VAT Compliance Report</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">VAT compliance and reporting documentation</field>
+            <field name="sequence">20</field>
+        </record>
+        
+    </data>
+</odoo>

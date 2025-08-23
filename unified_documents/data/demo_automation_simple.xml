@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- ========================================
+             DEMO DOCUMENT AUTOMATION FOR INTEGRATION TESTING
+             ======================================== -->
+        
+        <!-- Company Formation Document Automation -->
+        <record id="demo_automation_company_formation_docs" model="unified.document.copy.automation">
+            <field name="name">Company Formation Document Copy</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">product.template</field>
+            <field name="source_fallback" ref="demo_product_company_formation_dmcc"/>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">all</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+        <!-- Visa Processing Document Automation -->
+        <record id="demo_automation_visa_processing_docs" model="unified.document.copy.automation">
+            <field name="name">Visa Processing Document Copy</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">product.template</field>
+            <field name="source_fallback" ref="demo_product_employment_visa_new"/>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">all</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+        <!-- Office Setup Document Automation -->
+        <record id="demo_automation_office_setup_docs" model="unified.document.copy.automation">
+            <field name="name">Office Setup Document Copy</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">product.template</field>
+            <field name="source_fallback" ref="demo_product_establishment_card"/>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">all</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+        <!-- Cross-Project Document Copy Automation -->
+        <record id="demo_automation_cross_project_docs" model="unified.document.copy.automation">
+            <field name="name">Cross-Project Document Copy</field>
+            <field name="sequence">40</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">project.project</field>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">reference</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+        <!-- Tourist Visa Document Automation -->
+        <record id="demo_automation_tourist_visa_docs" model="unified.document.copy.automation">
+            <field name="name">Tourist Visa Document Copy</field>
+            <field name="sequence">50</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">product.template</field>
+            <field name="source_fallback" ref="demo_product_family_visa_spouse"/>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">all</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+        <!-- Work Permit Document Automation -->
+        <record id="demo_automation_work_permit_docs" model="unified.document.copy.automation">
+            <field name="name">Work Permit Document Copy</field>
+            <field name="sequence">60</field>
+            <field name="active">True</field>
+            <field name="trigger_model">project.project</field>
+            <field name="source_model">product.template</field>
+            <field name="source_fallback" ref="demo_product_work_permit_pro"/>
+            <field name="target_model">project.project</field>
+            <field name="copy_categories">all</field>
+            <field name="copy_attachments">True</field>
+            <field name="copy_tags">True</field>
+            <field name="copy_notes">True</field>
+            <field name="execution_type">on_create</field>
+            <field name="error_notification">True</field>
+            <field name="log_executions">True</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu for Project Templates -->
+    <menuitem id="menu_project_templates_root"
+              name="Project Templates"
+              parent="project.menu_main_pm"
+              sequence="90"
+              groups="base.group_user"/>
+
+    <!-- Task Templates Submenu -->
+    <menuitem id="menu_project_templates_task_templates"
+              name="Task Templates"
+              parent="menu_project_templates_root"
+              action="action_project_document_template"
+              sequence="10"
+              groups="base.group_user"/>
+
+    <!-- Project Templates Submenu -->
+    <menuitem id="menu_project_templates_project_templates"
+              name="Project Templates"
+              parent="menu_project_templates_root"
+              action="action_project_template"
+              sequence="15"
+              groups="base.group_user"/>
+
+    <!-- Checkpoint Templates Submenu -->
+    <menuitem id="menu_project_templates_checkpoint_templates"
+              name="Checkpoint Templates"
+              parent="menu_project_templates_root"
+              action="action_project_checkpoint_template"
+              sequence="20"
+              groups="base.group_user"/>
+</odoo>

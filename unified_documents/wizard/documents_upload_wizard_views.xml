@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Upload Wizard Form View -->
+    <record id="view_documents_upload_wizard_form" model="ir.ui.view">
+        <field name="name">documents.upload.wizard.form</field>
+        <field name="model">documents.upload.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload File">
+                <group>
+                    <field name="document_id" readonly="1"/>
+                    <field name="folder_id" readonly="1"/>
+                    <field name="filename" placeholder="Enter filename..."/>
+                    <field name="attachment_file" widget="binary" filename="filename"/>
+                </group>
+                <footer>
+                    <button name="action_upload" type="object" string="Upload" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

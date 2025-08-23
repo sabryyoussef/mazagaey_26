@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Example: Assign admin user to Unified Documents Administrator group -->
+        <!-- Uncomment and modify the user ID as needed -->
+        <!--
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('unified_documents.group_unified_documents_admin'))]"/>
+        </record>
+        -->
+        
+        <!-- Example: Assign a specific user to Unified Documents Manager group -->
+        <!-- Uncomment and modify the user ID as needed -->
+        <!--
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('unified_documents.group_unified_documents_manager'))]"/>
+        </record>
+        -->
+        
+        <!-- Example: Assign a specific user to Unified Documents User group -->
+        <!-- Uncomment and modify the user ID as needed -->
+        <!--
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('unified_documents.group_unified_documents_user'))]"/>
+        </record>
+        -->
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Extend Ir Attachment Form View -->
+    <record id="view_ir_attachment_form_with_folder" model="ir.ui.view">
+        <field name="name">ir.attachment.form.with.folder</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_model']" position="after">
+                <field name="folder_id" 
+                       domain="[('type', '=', 'folder')]"
+                       options="{'no_create': True}"
+                       placeholder="Select a folder (optional)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Custom Tree View for Project Files -->
+    <record id="view_ir_attachment_tree_project_files" model="ir.ui.view">
+        <field name="name">ir.attachment.tree.project.files</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="mimetype"/>
+                <field name="file_size" widget="file_size"/>
+                <field name="create_date"/>
+                <field name="res_name"/>
+                <field name="folder_id"/>
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Template List View -->
+    <record id="view_project_template_list" model="ir.ui.view">
+        <field name="name">project.project.template.list</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="template_category"/>
+                <field name="complexity_level"/>
+                <field name="estimated_duration"/>
+                <field name="usage_count"/>
+                <field name="last_used_date"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <button name="action_create_from_template" type="object" 
+                        string="Create from Template" icon="fa-copy" 
+                        class="btn-sm btn-primary"/>
+                <button name="action_apply_task_templates" type="object" 
+                        string="Apply Tasks" icon="fa-tasks" 
+                        class="btn-sm btn-secondary"/>
+                <button name="action_apply_checkpoint_templates" type="object" 
+                        string="Apply Checkpoints" icon="fa-flag" 
+                        class="btn-sm btn-info"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Project Template Form View -->
+    <record id="view_project_template_form" model="ir.ui.view">
+        <field name="name">project.project.template.form</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_from_template" type="object" 
+                            string="Create from Template" class="btn-primary"
+                            icon="fa-copy"/>
+                    <button name="action_apply_task_templates" type="object" 
+                            string="Apply Task Templates" class="btn-secondary"
+                            icon="fa-tasks"/>
+                    <button name="action_apply_checkpoint_templates" type="object" 
+                            string="Apply Checkpoint Templates" class="btn-info"
+                            icon="fa-flag"/>
+                    <button name="action_view_usage_history" type="object" 
+                            string="Usage History" class="btn-default"
+                            icon="fa-history"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Usage Count Smart Button -->
+                        <button name="action_view_usage_history" type="object" 
+                                class="oe_stat_button" icon="fa-copy"
+                                title="View Usage History">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="usage_count"/>
+                                </span>
+                                <span class="o_stat_text">Times Used</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Task Templates Smart Button -->
+                        <button name="action_apply_task_templates" type="object" 
+                                class="oe_stat_button" icon="fa-tasks"
+                                title="Apply Task Templates">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="related_task_templates" widget="many2many_tags"/>
+                                </span>
+                                <span class="o_stat_text">Task Templates</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Checkpoint Templates Smart Button -->
+                        <button name="action_apply_checkpoint_templates" type="object" 
+                                class="oe_stat_button" icon="fa-flag"
+                                title="Apply Checkpoint Templates">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="related_checkpoint_templates" widget="many2many_tags"/>
+                                </span>
+                                <span class="o_stat_text">Checkpoint Templates</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Template Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="is_template" invisible="1"/>
+                            <field name="template_category"/>
+                            <field name="complexity_level"/>
+                            <field name="estimated_duration"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="partner_id"/>
+                            <field name="last_used_date" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Template Description" name="template_description">
+                            <field name="template_description" placeholder="Describe what this template is used for..."/>
+                        </page>
+                        
+                        <page string="Related Templates" name="related_templates">
+                            <group>
+                                <group string="Task Templates">
+                                    <field name="related_task_templates" widget="many2many_tags"/>
+                                </group>
+                                <group string="Checkpoint Templates">
+                                    <field name="related_checkpoint_templates" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="user_ids"/>
+                                    <field name="priority"/>
+                                    <field name="sequence"/>
+                                    <field name="stage_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Project description..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Project Template Search View -->
+    <record id="view_project_template_search" model="ir.ui.view">
+        <field name="name">project.project.template.search</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="template_category"/>
+                <field name="complexity_level"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                
+                <filter string="Company Formation" name="company_formation" 
+                        domain="[('template_category', '=', 'company_formation')]"/>
+                <filter string="Visa Services" name="visa_services" 
+                        domain="[('template_category', '=', 'visa_services')]"/>
+                <filter string="Government Services" name="government_services" 
+                        domain="[('template_category', '=', 'government_services')]"/>
+                <filter string="Financial Services" name="financial_services" 
+                        domain="[('template_category', '=', 'financial_services')]"/>
+                <filter string="General" name="general" 
+                        domain="[('template_category', '=', 'general')]"/>
+                
+                <separator/>
+                <filter string="Simple" name="simple" 
+                        domain="[('complexity_level', '=', 'simple')]"/>
+                <filter string="Medium" name="medium" 
+                        domain="[('complexity_level', '=', 'medium')]"/>
+                <filter string="Complex" name="complex" 
+                        domain="[('complexity_level', '=', 'complex')]"/>
+                <filter string="Very Complex" name="very_complex" 
+                        domain="[('complexity_level', '=', 'very_complex')]"/>
+                
+                <separator/>
+                <filter string="Most Used" name="most_used" 
+                        domain="[('usage_count', '>', 0)]" 
+                        context="{'orderby': 'usage_count desc'}"/>
+                <filter string="Recently Used" name="recently_used" 
+                        domain="[('last_used_date', '!=', False)]" 
+                        context="{'orderby': 'last_used_date desc'}"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" 
+                            context="{'group_by': 'template_category'}"/>
+                    <filter string="Complexity" name="group_complexity" 
+                            context="{'group_by': 'complexity_level'}"/>
+                    <filter string="User" name="group_user" 
+                            context="{'group_by': 'user_id'}"/>
+                    <filter string="Partner" name="group_partner" 
+                            context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Project Template Action -->
+    <record id="action_project_template" model="ir.actions.act_window">
+        <field name="name">Project Templates</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_project_template_list"/>
+        <field name="search_view_id" ref="view_project_template_search"/>
+        <field name="domain">[('is_template', '=', True)]</field>
+        <field name="context">{'default_is_template': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first project template!
+            </p>
+            <p>
+                Project templates help you standardize your project creation process.
+                Mark any project as a template and reuse it to create new projects quickly.
+            </p>
+        </field>
+    </record>
+</odoo>

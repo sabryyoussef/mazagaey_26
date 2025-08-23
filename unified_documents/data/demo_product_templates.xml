@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- ========================================
+             DEMO PRODUCT TEMPLATES FOR INTEGRATION TESTING
+             ======================================== -->
+        
+        <!-- Company Formation Product Template -->
+        <record id="demo_product_template_company_formation" model="unified.product.template">
+            <field name="name">Company Formation Template</field>
+            <field name="description">Standard template for company formation services with required documents and processes</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+            <field name="template_type">document_based</field>
+            <field name="service_tracking">task_in_project</field>
+        </record>
+        
+        <!-- Visa Processing Product Template -->
+        <record id="demo_product_template_visa_processing" model="unified.product.template">
+            <field name="name">Visa Processing Template</field>
+            <field name="description">Standard template for visa processing services with required documents and compliance checks</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            <field name="template_type">document_based</field>
+            <field name="service_tracking">task_in_project</field>
+        </record>
+        
+        <!-- Office Setup Product Template -->
+        <record id="demo_product_template_office_setup" model="unified.product.template">
+            <field name="name">Office Setup Template</field>
+            <field name="description">Standard template for office setup services with required documents and setup processes</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+            <field name="template_type">hybrid</field>
+            <field name="service_tracking">task_in_project</field>
+        </record>
+        
+        <!-- Tourist Visa Product Template -->
+        <record id="demo_product_template_tourist_visa" model="unified.product.template">
+            <field name="name">Tourist Visa Template</field>
+            <field name="description">Standard template for tourist visa services with required documents and application processes</field>
+            <field name="sequence">40</field>
+            <field name="active">True</field>
+            <field name="template_type">document_based</field>
+            <field name="service_tracking">task_in_project</field>
+        </record>
+        
+        <!-- Work Permit Product Template -->
+        <record id="demo_product_template_work_permit" model="unified.product.template">
+            <field name="name">Work Permit Template</field>
+            <field name="description">Standard template for work permit services with required documents and legal processes</field>
+            <field name="sequence">50</field>
+            <field name="active">True</field>
+            <field name="template_type">document_based</field>
+            <field name="service_tracking">task_in_project</field>
+        </record>
+        
+        <!-- ========================================
+             DEMO PRODUCT DOCUMENT TEMPLATE LINES
+             ======================================== -->
+        
+        <!-- Company Formation Document Template Lines -->
+        <record id="demo_doc_line_company_formation_guide" model="unified.product.document.template.line">
+            <field name="name">Company Formation Process Guide</field>
+            <field name="description">Complete guide for UAE company formation process</field>
+            <field name="sequence">10</field>
+            <field name="product_template_id" ref="demo_product_template_company_formation"/>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Step-by-step process guide for clients</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+        
+        <record id="demo_doc_line_company_formation_checklist" model="unified.product.document.template.line">
+            <field name="name">Company Formation Checklist</field>
+            <field name="description">Comprehensive checklist for company formation requirements</field>
+            <field name="sequence">20</field>
+            <field name="product_template_id" ref="demo_product_template_company_formation"/>
+            <field name="category">compliance</field>
+            <field name="priority">1</field>
+            <field name="notes">Must be completed before starting the process</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+        
+        <!-- Visa Processing Document Template Lines -->
+        <record id="demo_doc_line_visa_processing_guide" model="unified.product.document.template.line">
+            <field name="name">Visa Processing Guide</field>
+            <field name="description">Complete guide for employee visa processing</field>
+            <field name="sequence">10</field>
+            <field name="product_template_id" ref="demo_product_template_visa_processing"/>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Includes all required steps and documents</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+        
+        <record id="demo_doc_line_visa_requirements" model="unified.product.document.template.line">
+            <field name="name">Visa Requirements Checklist</field>
+            <field name="description">Complete checklist of visa requirements</field>
+            <field name="sequence">20</field>
+            <field name="product_template_id" ref="demo_product_template_visa_processing"/>
+            <field name="category">compliance</field>
+            <field name="priority">1</field>
+            <field name="notes">Employee must complete all requirements</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+        
+        <!-- Office Setup Document Template Lines -->
+        <record id="demo_doc_line_office_setup_guide" model="unified.product.document.template.line">
+            <field name="name">Office Setup Guide</field>
+            <field name="description">Complete guide for office setup process</field>
+            <field name="sequence">10</field>
+            <field name="product_template_id" ref="demo_product_template_office_setup"/>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Includes location selection to final setup</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_application_guide')])]"/>
+        </record>
+        
+        <record id="demo_doc_line_office_requirements" model="unified.product.document.template.line">
+            <field name="name">Office Requirements Checklist</field>
+            <field name="description">Complete checklist for office setup requirements</field>
+            <field name="sequence">20</field>
+            <field name="product_template_id" ref="demo_product_template_office_setup"/>
+            <field name="category">compliance</field>
+            <field name="priority">1</field>
+            <field name="notes">Must be completed before starting setup</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_compliance_checklist')])]"/>
+        </record>
+        
+        <!-- Tourist Visa Document Template Lines -->
+        <record id="demo_doc_line_tourist_visa_requirements" model="unified.product.document.template.line">
+            <field name="name">Tourist Visa Requirements Checklist</field>
+            <field name="description">Complete checklist of required documents for tourist visa application</field>
+            <field name="sequence">10</field>
+            <field name="product_template_id" ref="demo_product_template_tourist_visa"/>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Must be completed before application submission</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_visa_requirements')])]"/>
+        </record>
+        
+        <!-- Work Permit Document Template Lines -->
+        <record id="demo_doc_line_work_permit_requirements" model="unified.product.document.template.line">
+            <field name="name">Work Permit Requirements</field>
+            <field name="description">Complete list of required documents for work permit application</field>
+            <field name="sequence">10</field>
+            <field name="product_template_id" ref="demo_product_template_work_permit"/>
+            <field name="category">required</field>
+            <field name="priority">1</field>
+            <field name="notes">Includes employer and employee requirements</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('unified_documents.documents_tag_work_permit')])]"/>
+        </record>
+        
+    </data>
+</odoo>

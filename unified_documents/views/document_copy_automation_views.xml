@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Unified Document Copy Automation Tree View -->
+    <record id="view_unified_document_copy_automation_tree" model="ir.ui.view">
+        <field name="name">unified.document.copy.automation.tree</field>
+        <field name="model">unified.document.copy.automation</field>
+        <field name="arch" type="xml">
+            <list string="Document Copy Automations">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="trigger_model"/>
+                <field name="source_model"/>
+                <field name="target_model"/>
+                <field name="execution_type"/>
+                <field name="active"/>
+                <field name="last_execution"/>
+                <field name="execution_count"/>
+                <field name="success_count"/>
+                <field name="error_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Unified Document Copy Automation Form View -->
+    <record id="view_unified_document_copy_automation_form" model="ir.ui.view">
+        <field name="name">unified.document.copy.automation.form</field>
+        <field name="model">unified.document.copy.automation</field>
+        <field name="arch" type="xml">
+            <form string="Document Copy Automation">
+                <header>
+                    <button name="action_test_automation" 
+                            string="Test Automation" 
+                            type="object" 
+                            class="btn-secondary"
+                            groups="unified_documents.group_unified_documents_manager"/>
+                    <button name="action_reset_statistics" 
+                            string="Reset Statistics" 
+                            type="object" 
+                            class="btn-secondary"
+                            groups="unified_documents.group_unified_documents_manager"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Automation Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Basic Information" col="2">
+                            <field name="sequence"/>
+                            <field name="execution_type"/>
+                            <field name="scheduled_interval" invisible="execution_type != 'scheduled'"/>
+                        </group>
+                        
+                        <group string="Statistics" col="4">
+                            <field name="execution_count" readonly="1"/>
+                            <field name="success_count" readonly="1"/>
+                            <field name="error_count" readonly="1"/>
+                            <field name="last_execution" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Trigger Configuration" name="trigger">
+                            <group>
+                                <group string="Trigger Model" col="2">
+                                    <field name="trigger_model"/>
+                                    <field name="trigger_field"/>
+                                    <field name="trigger_value"/>
+                                </group>
+                                
+                                <group string="Advanced Conditions">
+                                    <field name="condition_domain" widget="ace" options="{'mode': 'python'}"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Source Configuration" name="source">
+                            <group>
+                                <group string="Source Model" col="2">
+                                    <field name="source_model"/>
+                                    <field name="source_field"/>
+                                    <field name="source_fallback"/>
+                                </group>
+                                
+                                <group string="Source Help">
+                                    <p class="text-muted">
+                                        <strong>Source Field:</strong> Field name that contains the source record (e.g., product_id, parent_id)<br/>
+                                        <strong>Source Fallback:</strong> Record ID to use if source field is empty
+                                    </p>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Target Configuration" name="target">
+                            <group>
+                                <group string="Target Model" col="2">
+                                    <field name="target_model"/>
+                                    <field name="target_field"/>
+                                    <field name="target_fallback"/>
+                                </group>
+                                
+                                <group string="Target Help">
+                                    <p class="text-muted">
+                                        <strong>Target Field:</strong> Field name that contains the target record (e.g., project_id, parent_id)<br/>
+                                        <strong>Target Fallback:</strong> Record ID to use if target field is empty
+                                    </p>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Copy Options" name="options">
+                            <group>
+                                <group string="Document Categories" col="2">
+                                    <field name="copy_categories"/>
+                                </group>
+                                
+                                <group string="Copy Settings" col="3">
+                                    <field name="copy_attachments"/>
+                                    <field name="copy_tags"/>
+                                    <field name="copy_notes"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Advanced Options" name="advanced">
+                            <group>
+                                <group string="Notifications" col="2">
+                                    <field name="error_notification"/>
+                                    <field name="log_executions"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Unified Document Copy Automation Search View -->
+    <record id="view_unified_document_copy_automation_search" model="ir.ui.view">
+        <field name="name">unified.document.copy.automation.search</field>
+        <field name="model">unified.document.copy.automation</field>
+        <field name="arch" type="xml">
+            <search string="Document Copy Automations">
+                <field name="name"/>
+                <field name="trigger_model"/>
+                <field name="source_model"/>
+                <field name="target_model"/>
+                <field name="execution_type"/>
+                
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <filter string="On Write" name="on_write" domain="[('execution_type', '=', 'on_write')]"/>
+                <filter string="On Create" name="on_create" domain="[('execution_type', '=', 'on_create')]"/>
+                <filter string="Scheduled" name="scheduled" domain="[('execution_type', '=', 'scheduled')]"/>
+                
+                <filter string="Has Errors" name="has_errors" domain="[('error_count', '>', 0)]"/>
+                <filter string="No Errors" name="no_errors" domain="[('error_count', '=', 0)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Trigger Model" name="group_trigger_model" context="{'group_by': 'trigger_model'}"/>
+                    <filter string="Source Model" name="group_source_model" context="{'group_by': 'source_model'}"/>
+                    <filter string="Target Model" name="group_target_model" context="{'group_by': 'target_model'}"/>
+                    <filter string="Execution Type" name="group_execution_type" context="{'group_by': 'execution_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Unified Document Copy Automation Action -->
+    <record id="action_unified_document_copy_automation" model="ir.actions.act_window">
+        <field name="name">Document Copy Automations</field>
+        <field name="res_model">unified.document.copy.automation</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first document copy automation!
+            </p>
+            <p>
+                Configure automatic document copying between different models based on triggers.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item for Document Copy Automation -->
+    <!-- Moved to menu_views.xml for better organization -->
+
+    <!-- Scheduled Action for Document Copy Automation -->
+    <record id="ir_cron_unified_document_copy_automation" model="ir.cron">
+        <field name="name">Unified Document Copy Automation: Execute Scheduled</field>
+        <field name="model_id" ref="model_unified_document_copy_automation"/>
+        <field name="state">code</field>
+        <field name="code">model.execute_scheduled_automations()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="priority">5</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

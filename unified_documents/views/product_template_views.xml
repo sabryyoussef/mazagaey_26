@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Product Template Tree View -->
+    <record id="view_unified_product_template_tree" model="ir.ui.view">
+        <field name="name">unified.product.template.tree</field>
+        <field name="model">unified.product.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="service_tracking"/>
+                <field name="document_count"/>
+                <field name="usage_count"/>
+                <field name="sequence" widget="handle"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Product Template Form View -->
+    <record id="view_unified_product_template_form" model="ir.ui.view">
+        <field name="name">unified.product.template.form</field>
+        <field name="model">unified.product.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_product_from_template" type="object" 
+                            string="Create Product" class="btn-primary"/>
+                    <button name="action_create_project_template" type="object" 
+                            string="Create Project Template" class="btn-primary"
+                            invisible="project_template_id != False"/>
+                    <button name="action_view_project_template" type="object" 
+                            string="View Project Template" class="btn-secondary"
+                            invisible="project_template_id == False"/>
+                    <button name="action_auto_link_templates" type="object" 
+                            string="Auto-Link Templates" class="btn-secondary"
+                            invisible="project_template_id != False"/>
+                    <button name="action_view_relationships" type="object" 
+                            string="View Relationships" class="btn-info"
+                            invisible="project_template_id == False"/>
+                    <button name="action_copy_documents_to_project_template" type="object" 
+                            string="Copy Documents to Project Template" class="btn-warning"
+                            invisible="project_template_id == False"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Document Count Smart Button -->
+                        <button name="action_view_document_lines" type="object" 
+                                class="oe_stat_button" icon="fa-file-text"
+                                title="View Document Template Lines">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="document_count"/>
+                                </span>
+                                <span class="o_stat_text">Documents</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Usage Count Smart Button -->
+                        <button name="action_view_usage" type="object" 
+                                class="oe_stat_button" icon="fa-chart-line"
+                                title="View Template Usage">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="usage_count"/>
+                                </span>
+                                <span class="o_stat_text">Usage</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Created Products Smart Button -->
+                        <button name="action_view_created_products" type="object" 
+                                class="oe_stat_button" icon="fa-cube"
+                                title="View Products Created from Template">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="usage_count"/>
+                                </span>
+                                <span class="o_stat_text">Products</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Project Template Smart Button -->
+                        <button name="action_view_project_template" type="object" 
+                                class="oe_stat_button" icon="fa-project-diagram"
+                                title="View Project Template"
+                                invisible="project_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="project_template_id" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text">Project Template</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="template_type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="service_tracking"/>
+                            <field name="project_template_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Describe this product template..."/>
+                        </page>
+                        
+                        <page string="Document Template Lines" name="document_lines">
+                            <field name="document_template_line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="category"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Product Template Search View -->
+    <record id="view_unified_product_template_search" model="ir.ui.view">
+        <field name="name">unified.product.template.search</field>
+        <field name="model">unified.product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="service_tracking"/>
+                <filter string="Document-Based" name="document_based" domain="[('template_type', '=', 'document_based')]"/>
+                <filter string="Service-Based" name="service_based" domain="[('template_type', '=', 'service_based')]"/>
+                <filter string="Hybrid" name="hybrid" domain="[('template_type', '=', 'hybrid')]"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Template Type" name="group_template_type" context="{'group_by': 'template_type'}"/>
+                    <filter string="Service Tracking" name="group_service_tracking" context="{'group_by': 'service_tracking'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Product Template Action -->
+    <record id="action_unified_product_template" model="ir.actions.act_window">
+        <field name="name">Product Templates</field>
+        <field name="res_model">unified.product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first product template!
+            </p>
+            <p>
+                Product templates help you standardize document requirements for similar products.
+                Create templates with document lines that can be applied to products automatically.
+            </p>
+        </field>
+    </record>
+
+    <!-- Product Document Template Line Form View -->
+    <record id="view_unified_product_document_template_line_form" model="ir.ui.view">
+        <field name="name">unified.product.document.template.line.form</field>
+        <field name="model">unified.product.document.template.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="product_template_id"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="description" placeholder="Describe this document template line..."/>
+                        <field name="notes" placeholder="Additional notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

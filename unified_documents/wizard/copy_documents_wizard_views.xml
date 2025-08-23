@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Copy Documents Wizard Form View -->
+    <record id="view_copy_documents_wizard_form" model="ir.ui.view">
+        <field name="name">copy.documents.wizard.form</field>
+        <field name="model">copy.documents.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Copy Documents">
+                <header>
+                    <button name="action_copy_documents" 
+                            string="Copy Documents" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button name="action_reset_form" 
+                            string="Reset Form" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <field name="copy_success" invisible="1"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span>Copy Documents from Product to Project</span>
+                        </h1>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>Copy Method Guide:</strong>
+                        <ul>
+                            <li><strong>Direct Copy:</strong> Fast and simple copying with duplicate prevention</li>
+                            <li><strong>Category-Based:</strong> Copy documents filtered by specific categories</li>
+                            <li><strong>Template-Based:</strong> Bulk creation approach for large document sets</li>
+                            <li><strong>Batch Copy:</strong> Progress tracking for large operations</li>
+                            <li><strong>Smart Copy:</strong> Intelligent copying with validation and optimization</li>
+                            <li><strong>Smart Template Linking:</strong> Advanced linking with intelligent categorization and priority mapping</li>
+                            <li><strong>Optimized Copy:</strong> Performance-optimized copying with bulk operations and progress caching</li>
+                        </ul>
+                    </div>
+                    
+                    <group>
+                        <field name="source_model" invisible="1"/>
+                        <field name="source_id" invisible="1"/>
+                        <field name="target_model" invisible="1"/>
+                        <field name="target_id" invisible="1"/>
+                        <field name="source_product_id" string="Source Product?"/>
+                        <field name="target_project_id" string="Target Project?"/>
+                    </group>
+                    
+                    <group string="Copy Options">
+                        <group col="2">
+                            <field name="copy_categories"/>
+                            <field name="copy_method"/>
+                            <field name="copy_attachments"/>
+                            <field name="copy_tags"/>
+                            <field name="copy_notes"/>
+                            <field name="auto_categorize"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Method Configuration" invisible="copy_method != 'batch'">
+                        <group col="2">
+                            <field name="batch_size"/>
+                            <field name="enable_recovery"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Progress Tracking" invisible="not is_processing">
+                        <group col="2">
+                            <field name="progress_percentage" widget="progressbar"/>
+                            <field name="progress_message" readonly="1"/>
+                        </group>
+                        <group col="4">
+                            <field name="total_documents" readonly="1"/>
+                            <field name="copied_count" readonly="1"/>
+                            <field name="failed_count" readonly="1"/>
+                            <field name="skipped_count" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Preview" name="preview">
+                            <group>
+                                <field name="preview_count" readonly="1"/>
+                                <field name="available_documents" readonly="1" nolabel="1" widget="text"/>
+                            </group>
+                            <group>
+                                <button name="action_preview_documents" 
+                                        string="Preview" 
+                                        type="object" 
+                                        class="btn-secondary"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Document Selection" name="selection">
+                            <field name="document_ids" widget="many2many_tags">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="category"/>
+                                    <field name="status"/>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Results" name="results" invisible="not copy_success">
+                            <group string="Copy Statistics">
+                                <group col="4">
+                                    <field name="method_used" readonly="1"/>
+                                    <field name="processing_time" readonly="1"/>
+                                    <field name="total_documents" readonly="1"/>
+                                    <field name="copied_count" readonly="1"/>
+                                </group>
+                                <group col="3">
+                                    <field name="failed_count" readonly="1"/>
+                                    <field name="skipped_count" readonly="1"/>
+                                    <field name="recovered_count" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Copied Documents">
+                                <field name="copied_documents" readonly="1" nolabel="1" widget="text"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Errors" name="errors" invisible="not copy_error">
+                            <group>
+                                <field name="copy_error" readonly="1" nolabel="1" widget="text"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <footer>
+                    <button name="action_test_basic_functionality" 
+                            string="Test Basic" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <button name="action_test_service" 
+                            string="Test Service" 
+                            type="object" 
+                            class="btn-secondary"/>
+                    <button name="action_copy_documents" 
+                            string="Copy Selected Documents" 
+                            type="object" 
+                            class="btn-primary"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Copy Documents Wizard Action -->
+    <record id="action_copy_documents_wizard" model="ir.actions.act_window">
+        <field name="name">Copy Documents</field>
+        <field name="res_model">copy.documents.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_copy_documents_wizard_form"/>
+        <field name="context">{'default_source_model': 'product.template', 'default_target_model': 'project.project'}</field>
+    </record>
+</odoo>
