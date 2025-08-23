@@ -17,3 +17,5 @@ access_project_template_usage_user,project.template.usage.user,model_project_tem
 access_project_template_usage_manager,project.template.usage.manager,model_project_template_usage,base.group_system,1,1,1,1
 access_project_checklist_item_user,project.checklist.item.user,model_project_checklist_item,base.group_user,1,1,1,0
 access_project_checklist_item_manager,project.checklist.item.manager,model_project_checklist_item,base.group_system,1,1,1,1
+access_task_template_selection_wizard_user,task.template.selection.wizard.user,model_task_template_selection_wizard,base.group_user,1,1,1,0
+access_task_template_selection_wizard_manager,task.template.selection.wizard.manager,model_task_template_selection_wizard,base.group_system,1,1,1,1
