@@ -22,7 +22,7 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <!-- Record Rules -->
+        <!-- Record Rules for Business Shareholder -->
         <record id="rule_business_shareholder_user" model="ir.rule">
             <field name="name">Business Shareholder: User Access</field>
             <field name="model_id" ref="model_res_partner_business_shareholder"/>
@@ -48,6 +48,108 @@
         <record id="rule_business_shareholder_admin" model="ir.rule">
             <field name="name">Business Shareholder: Admin Access</field>
             <field name="model_id" ref="model_res_partner_business_shareholder"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Record Rules for Business Relationships -->
+        <record id="rule_business_relationships_user" model="ir.rule">
+            <field name="name">Business Relationships: User Access</field>
+            <field name="model_id" ref="model_business_relationships"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_business_relationships_manager" model="ir.rule">
+            <field name="name">Business Relationships: Manager Access</field>
+            <field name="model_id" ref="model_business_relationships"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_business_relationships_admin" model="ir.rule">
+            <field name="name">Business Relationships: Admin Access</field>
+            <field name="model_id" ref="model_business_relationships"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Record Rules for UBO -->
+        <record id="rule_res_partner_ubo_user" model="ir.rule">
+            <field name="name">UBO: User Access</field>
+            <field name="model_id" ref="model_res_partner_ubo"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_res_partner_ubo_manager" model="ir.rule">
+            <field name="name">UBO: Manager Access</field>
+            <field name="model_id" ref="model_res_partner_ubo"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_res_partner_ubo_admin" model="ir.rule">
+            <field name="name">UBO: Admin Access</field>
+            <field name="model_id" ref="model_res_partner_ubo"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_admin'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Record Rules for Business Shareholder Address -->
+        <record id="rule_business_shareholder_address_user" model="ir.rule">
+            <field name="name">Business Shareholder Address: User Access</field>
+            <field name="model_id" ref="model_business_shareholder_address"/>
+            <field name="domain_force">[('shareholder_id.project_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_business_shareholder_address_manager" model="ir.rule">
+            <field name="name">Business Shareholder Address: Manager Access</field>
+            <field name="model_id" ref="model_business_shareholder_address"/>
+            <field name="domain_force">[('shareholder_id.project_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_project_compliance_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_business_shareholder_address_admin" model="ir.rule">
+            <field name="name">Business Shareholder Address: Admin Access</field>
+            <field name="model_id" ref="model_business_shareholder_address"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_project_compliance_admin'))]"/>
             <field name="perm_read" eval="True"/>

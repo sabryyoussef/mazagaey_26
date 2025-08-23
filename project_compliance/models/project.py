@@ -33,6 +33,23 @@ class Project(models.Model):
     
     # Shareholding total
     shareholding_total = fields.Float(compute='_compute_shareholding_total', string='Total Shareholding (%)')
+    
+    # Handover Integration
+    handover_compliance_ids = fields.One2many('project.handover.notes', 'compliance_project_id', string='Compliance Handovers')
+    handover_compliance_count = fields.Integer(compute='_compute_handover_compliance_count', string='Compliance Handovers Count')
+    
+    # Document Integration
+    compliance_document_ids = fields.Many2many('ir.attachment', string='Compliance Documents', tracking=True)
+    compliance_document_count = fields.Integer(compute='_compute_compliance_document_count', string='Compliance Documents Count')
+    
+    # Document Automation Integration
+    compliance_document_automation_ids = fields.Many2many('unified.document.copy.automation', string='Compliance Document Automations', tracking=True)
+    auto_copy_compliance_documents = fields.Boolean(string='Auto Copy Compliance Documents', default=True, tracking=True)
+    
+    # Template Integration
+    compliance_template_id = fields.Many2one('unified.product.template', string='Compliance Template', tracking=True)
+    compliance_template_type = fields.Selection(related='compliance_template_id.template_type', readonly=True, store=True)
+    compliance_template_description = fields.Text(related='compliance_template_id.description', readonly=True)
 
     @api.depends('compliance_shareholder_ids')
     def _compute_compliance_shareholder_count(self):
@@ -44,6 +61,16 @@ class Project(models.Model):
         for record in self:
             total = sum(record.compliance_shareholder_ids.mapped('shareholding'))
             record.shareholding_total = total
+
+    @api.depends('handover_compliance_ids')
+    def _compute_handover_compliance_count(self):
+        for record in self:
+            record.handover_compliance_count = len(record.handover_compliance_ids)
+
+    @api.depends('compliance_document_ids')
+    def _compute_compliance_document_count(self):
+        for record in self:
+            record.compliance_document_count = len(record.compliance_document_ids)
 
     @api.depends('is_complete_return_compliance', 'is_complete_compliance', 'is_confirm_compliance')
     def _compute_is_update_compliance_check(self):
@@ -188,3 +215,94 @@ class Project(models.Model):
             'default_partner_id': self.partner_id.id if self.partner_id else False,
         }
         return action
+
+    def action_view_compliance_handovers(self):
+        """Smart button to view compliance handovers"""
+        self.ensure_one()
+        action = self.env.ref('project_handover_notes.action_project_handover_notes').read()[0]
+        action['domain'] = [('compliance_project_id', '=', self.id)]
+        action['context'] = {
+            'default_compliance_project_id': self.id,
+            'default_handover_type': 'compliance',
+        }
+        return action
+
+    def action_view_compliance_documents(self):
+        """Smart button to view compliance documents"""
+        self.ensure_one()
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['domain'] = [('id', 'in', self.compliance_document_ids.ids)]
+        action['context'] = {
+            'default_res_model': 'project.project',
+            'default_res_id': self.id,
+        }
+        return action
+
+    def action_apply_compliance_template(self):
+        """Apply compliance template to project"""
+        self.ensure_one()
+        if self.compliance_template_id:
+            template = self.compliance_template_id
+            
+            # Apply template structure and settings
+            if template.description:
+                # Create a compliance note with template description
+                self.message_post(body=_("Compliance template applied: %s") % template.description)
+            
+            # Apply template document automations if any
+            if hasattr(template, 'document_automation_ids') and template.document_automation_ids:
+                self.compliance_document_automation_ids = template.document_automation_ids
+                self.message_post(body=_("Template document automations applied"))
+            
+            # Apply template settings
+            if template.template_type:
+                self.message_post(body=_("Template type applied: %s") % template.template_type)
+            
+            self.message_post(body=_("Compliance template '%s' successfully applied to project") % template.name)
+        else:
+            raise UserError(_("Please select a compliance template to apply"))
+        return True
+
+    def action_create_compliance_template(self):
+        """Create compliance template from project"""
+        self.ensure_one()
+        return {
+            'name': _('Create Compliance Template'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'unified.product.template',
+            'context': {
+                'default_name': f'Compliance Template - {self.name}',
+                'default_template_type': 'document_based',
+                'default_description': f'Compliance template created from project {self.name}',
+            },
+            'target': 'new',
+        }
+
+    def action_copy_compliance_documents(self):
+        """Copy compliance documents using automation rules"""
+        self.ensure_one()
+        if self.auto_copy_compliance_documents and self.compliance_document_automation_ids:
+            for automation in self.compliance_document_automation_ids:
+                try:
+                    automation.copy_documents_to_target(self)
+                    self.message_post(body=_("Compliance documents copied using automation '%s'") % automation.name)
+                except Exception as e:
+                    self.message_post(body=_("Failed to copy compliance documents: %s") % str(e))
+        return True
+
+    def action_create_compliance_document_automation(self):
+        """Create compliance document automation rule"""
+        self.ensure_one()
+        return {
+            'name': _('Create Compliance Document Automation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'unified.document.copy.automation',
+            'context': {
+                'default_name': f'Compliance Automation - {self.name}',
+                'default_target_model': 'project.project',
+                'default_target_domain': f"[('id', '=', {self.id})]",
+            },
+            'target': 'new',
+        }

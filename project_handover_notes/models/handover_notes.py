@@ -98,6 +98,25 @@ class ProjectHandoverNotes(models.Model):
     license_activity_ids = fields.Many2many('license.activity', string='License Activities', tracking=True)
     hand_country_ids = fields.Many2many('res.country', string='Top 5 Countries of Operation', tracking=True)
     channel_plan_id = fields.Char(string='Channel Partner Plan', tracking=True)
+    
+    # Compliance Integration
+    compliance_project_id = fields.Many2one('project.project', string='Compliance Project', tracking=True)
+    handover_type = fields.Selection([
+        ('general', 'General'),
+        ('compliance', 'Compliance'),
+        ('technical', 'Technical'),
+        ('financial', 'Financial'),
+    ], string='Handover Type', default='general', tracking=True)
+    
+    # Compliance-specific fields
+    compliance_shareholder_ids = fields.Many2many('res.partner.business.shareholder', string='Compliance Shareholders', tracking=True)
+    compliance_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('complete', 'Complete'),
+        ('verified', 'Verified'),
+    ], string='Compliance Status', default='pending', tracking=True)
+    compliance_notes = fields.Html(string='Compliance Notes', tracking=True)
     visa_eligibility = fields.Float(string='Visa Eligibility', tracking=True)
     
     # Share Information
@@ -282,3 +301,35 @@ class ProjectHandoverNotes(models.Model):
             # Apply template description as default notes
             if self.template_id.template_description:
                 self.handover_notes = self.template_id.template_description
+
+    # Compliance Integration Methods
+    def action_complete_compliance_handover(self):
+        """Complete compliance handover"""
+        for record in self:
+            if record.handover_type != 'compliance':
+                raise UserError(_("This action is only available for compliance handovers."))
+            
+            if not (record.is_current_user_project_manager or record.is_current_user_project_admin):
+                raise UserError(_("Only project managers or admins can complete compliance handover."))
+            
+            record.compliance_status = 'complete'
+            record.handover_status = 'complete'
+            record.message_post(body=_("Compliance Handover Completed"))
+
+    def action_verify_compliance_handover(self):
+        """Verify compliance handover"""
+        for record in self:
+            if record.handover_type != 'compliance':
+                raise UserError(_("This action is only available for compliance handovers."))
+            
+            if not (record.is_current_user_project_task_assignee or record.is_current_user_project_admin):
+                raise UserError(_("Only task assignees or admins can verify compliance handover."))
+            
+            record.compliance_status = 'verified'
+            record.message_post(body=_("Compliance Handover Verified"))
+
+    @api.onchange('compliance_project_id')
+    def _onchange_compliance_project_id(self):
+        """Update compliance shareholders when compliance project changes"""
+        if self.compliance_project_id:
+            self.compliance_shareholder_ids = self.compliance_project_id.compliance_shareholder_ids

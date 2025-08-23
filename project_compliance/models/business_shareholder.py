@@ -137,6 +137,10 @@ class BusinessShareholder(models.Model):
     trade_license = fields.Char(string='Trade License Reference', tracking=True)
     memorandum_association = fields.Char(string='Memorandum of Association Reference', tracking=True)
     apply_visa = fields.Boolean(string='Apply Visa', tracking=True)
+    
+    # Document Integration
+    compliance_document_ids = fields.Many2many('ir.attachment', string='Compliance Documents', tracking=True)
+    compliance_document_count = fields.Integer(compute='_compute_compliance_document_count', string='Compliance Documents Count')
 
     # Additional fields
 
@@ -145,6 +149,34 @@ class BusinessShareholder(models.Model):
     address_count = fields.Integer(compute="_compute_address_count", string="Address Count")
 
     notes = fields.Text(string='Notes', tracking=True)
+
+    # Action Methods
+    def action_view_compliance_documents(self):
+        """Smart button to view compliance documents"""
+        self.ensure_one()
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['domain'] = [('id', 'in', self.compliance_document_ids.ids)]
+        action['context'] = {
+            'default_res_model': 'res.partner.business.shareholder',
+            'default_res_id': self.id,
+        }
+        return action
+
+    def action_attach_compliance_document(self):
+        """Attach compliance document to shareholder"""
+        self.ensure_one()
+        return {
+            'name': _('Attach Compliance Document'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'ir.attachment',
+            'context': {
+                'default_res_model': 'res.partner.business.shareholder',
+                'default_res_id': self.id,
+                'default_name': f'Compliance Document - {self.name}',
+            },
+            'target': 'new',
+        }
 
     @api.constrains('shareholding')
     def _check_shareholding(self):
@@ -156,6 +188,11 @@ class BusinessShareholder(models.Model):
     def _compute_address_count(self):
         for record in self:
             record.address_count = len(record.address_ids)
+
+    @api.depends("compliance_document_ids")
+    def _compute_compliance_document_count(self):
+        for record in self:
+            record.compliance_document_count = len(record.compliance_document_ids)
 
     @api.onchange('company_type')
     def _onchange_company_type(self):
