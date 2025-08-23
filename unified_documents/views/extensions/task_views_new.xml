@@ -1,36 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Extend Project Task Form View -->
-        <record id="view_unified_project_task_form_documents" model="ir.ui.view">
-            <field name="name">unified.project.task.form.documents</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="arch" type="xml">
-                <!-- Add document smart button -->
-                <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="action_view_documents" 
-                            type="object" 
-                            class="oe_stat_button" 
-                            icon="fa-file-text"
-                            title="View Documents">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_value">
-                                <i class="fa fa-file-text"/>
-                            </span>
-                            <span class="o_stat_text">Documents</span>
-                        </div>
-                    </button>
-                </xpath>
-            </field>
-        </record>
-
-        <!-- Extend Project Task List View -->
-        <record id="view_unified_project_task_list_documents" model="ir.ui.view">
-            <field name="name">unified.project.task.list.documents</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_tree2"/>
-            <field name="arch" type="xml">
-                <!-- Note: Document integration fields can be added here if needed -->
-            </field>
-        </record>
+    <record id="view_unified_project_task_form_documents" model="ir.ui.view">
+        <field name="name">unified.project.task.form.documents</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-file-text" title="View Documents">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-file-text"/>
+                        </span>
+                        <span class="o_stat_text">Documents</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
 </odoo>

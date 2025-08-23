@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Extend Sale Order Form View -->
-        <record id="view_sale_order_form_documents" model="ir.ui.view">
-            <field name="name">sale.order.form.documents</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_project_ids']" position="after">
-                    <button name="action_copy_documents_to_projects" 
-                            type="object" 
-                            string="Copy Documents to Projects"
-                            class="btn-secondary"
-                            invisible="not order_line"
-                            title="Copy documents from products to their respective projects"/>
-                </xpath>
-            </field>
-        </record>
+    <!-- Extend Sale Order Form View -->
+    <record id="view_sale_order_form_documents" model="ir.ui.view">
+        <field name="name">sale.order.form.documents</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_project_ids']" position="after">
+                <button name="action_copy_documents_to_projects" 
+                        type="object" 
+                        string="Copy Documents to Projects"
+                        class="btn-secondary"
+                        invisible="not order_line"
+                        title="Copy documents from products to their respective projects"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
