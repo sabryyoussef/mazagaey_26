@@ -40,6 +40,15 @@ class ProjectTaskCheckpoint(models.Model):
         help='Milestone this checkpoint belongs to'
     )
     
+    # Compliance Integration
+    compliance_project_id = fields.Many2one(
+        'project.project',
+        string='Compliance Project',
+        required=False,
+        ondelete='cascade',
+        help='Compliance project this checkpoint belongs to'
+    )
+    
     tag_ids = fields.Many2many(
         'project.task.checkpoint.tag',
         'checkpoint_tag_rel',

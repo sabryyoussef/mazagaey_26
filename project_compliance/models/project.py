@@ -68,6 +68,26 @@ class Project(models.Model):
     compliance_template_type = fields.Selection(related='compliance_template_id.template_category', readonly=True, store=True)
     compliance_template_description = fields.Text(related='compliance_template_id.template_description', readonly=True)
 
+    # Checkpoint Integration
+    compliance_checkpoint_ids = fields.One2many(
+        'project.task.checkpoint',
+        'compliance_project_id',
+        string='Compliance Checkpoints',
+        help='Compliance-specific checkpoints for this project'
+    )
+    compliance_checkpoint_count = fields.Integer(
+        compute='_compute_compliance_checkpoint_count',
+        string='Compliance Checkpoints Count'
+    )
+    compliance_checkpoint_reached_count = fields.Integer(
+        compute='_compute_compliance_checkpoint_count',
+        string='Reached Compliance Checkpoints Count'
+    )
+    compliance_checkpoint_progress = fields.Float(
+        compute='_compute_compliance_checkpoint_count',
+        string='Compliance Checkpoint Progress (%)'
+    )
+
     @api.depends('compliance_shareholder_ids')
     def _compute_compliance_shareholder_count(self):
         for record in self:
@@ -88,6 +108,21 @@ class Project(models.Model):
     def _compute_compliance_document_count(self):
         for record in self:
             record.compliance_document_count = len(record.compliance_document_ids)
+
+    @api.depends('compliance_checkpoint_ids', 'compliance_checkpoint_ids.is_reached')
+    def _compute_compliance_checkpoint_count(self):
+        """Compute compliance checkpoint counts and progress"""
+        for record in self:
+            total_checkpoints = len(record.compliance_checkpoint_ids)
+            reached_checkpoints = len(record.compliance_checkpoint_ids.filtered(lambda c: c.is_reached))
+            
+            record.compliance_checkpoint_count = total_checkpoints
+            record.compliance_checkpoint_reached_count = reached_checkpoints
+            
+            if total_checkpoints > 0:
+                record.compliance_checkpoint_progress = (reached_checkpoints / total_checkpoints) * 100
+            else:
+                record.compliance_checkpoint_progress = 0.0
 
     @api.depends('is_complete_return_compliance', 'is_complete_compliance', 'is_confirm_compliance')
     def _compute_is_update_compliance_check(self):
@@ -517,7 +552,17 @@ class Project(models.Model):
             
             # Apply related checkpoint templates if available
             if template.related_checkpoint_templates:
-                self.compliance_checkpoint_template_ids = template.related_checkpoint_templates
+                # Create checkpoints from template
+                for checkpoint_template in template.related_checkpoint_templates:
+                    checkpoint_vals = {
+                        'name': checkpoint_template.name,
+                        'compliance_project_id': self.id,
+                        'sequence': checkpoint_template.sequence,
+                        'notes': checkpoint_template.notes,
+                        'auto_advance_stage': True,  # Default value for compliance checkpoints
+                    }
+                    
+                    self.env['project.task.checkpoint'].create(checkpoint_vals)
             
             self.message_post(body=_("Compliance template '%s' successfully applied to project") % template.name)
         else:
@@ -581,3 +626,109 @@ class Project(models.Model):
             },
             'target': 'new',
         }
+
+    # Checkpoint Management Methods
+    def action_view_compliance_checkpoints(self):
+        """Smart button to view compliance checkpoints"""
+        self.ensure_one()
+        action = self.env.ref('project_checkpoints_basic.action_project_task_checkpoint').read()[0]
+        action['domain'] = [('compliance_project_id', '=', self.id)]
+        action['context'] = {
+            'default_compliance_project_id': self.id,
+            'default_name': f'Compliance Checkpoint - {self.name}',
+        }
+        return action
+
+    def action_apply_compliance_checkpoint_templates(self):
+        """Apply compliance checkpoint templates to project"""
+        self.ensure_one()
+        if self.compliance_template_id and self.compliance_template_id.related_checkpoint_templates:
+            for template in self.compliance_template_id.related_checkpoint_templates:
+                # Create checkpoint from template
+                checkpoint_vals = {
+                    'name': template.name,
+                    'compliance_project_id': self.id,
+                    'sequence': template.sequence,
+                    'notes': template.notes,
+                    'auto_advance_stage': True,  # Default value for compliance checkpoints
+                }
+                
+                self.env['project.task.checkpoint'].create(checkpoint_vals)
+            
+            self.message_post(body=_("Applied %d compliance checkpoint templates") % len(self.compliance_template_id.related_checkpoint_templates))
+        else:
+            raise UserError(_("No compliance checkpoint templates available in the selected template"))
+        return True
+
+    def action_create_compliance_checkpoint(self):
+        """Create a new compliance checkpoint"""
+        self.ensure_one()
+        return {
+            'name': _('Create Compliance Checkpoint'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'project.task.checkpoint',
+            'context': {
+                'default_compliance_project_id': self.id,
+                'default_name': f'Compliance Checkpoint - {self.name}',
+            },
+            'target': 'new',
+        }
+
+    def action_auto_create_compliance_checkpoints(self):
+        """Automatically create compliance checkpoints based on workflow state"""
+        self.ensure_one()
+        
+        # Define compliance workflow checkpoints
+        compliance_checkpoints = [
+            {
+                'name': 'Initial Compliance Review',
+                'sequence': 10,
+                'notes': 'Initial review of compliance requirements and documentation',
+                'auto_advance_stage': True,
+            },
+            {
+                'name': 'Shareholder Verification',
+                'sequence': 20,
+                'notes': 'Verify all shareholder information and documentation',
+                'auto_advance_stage': True,
+            },
+            {
+                'name': 'UBO Identification',
+                'sequence': 30,
+                'notes': 'Identify and verify Ultimate Beneficial Owners',
+                'auto_advance_stage': True,
+            },
+            {
+                'name': 'Document Collection',
+                'sequence': 40,
+                'notes': 'Collect all required compliance documents',
+                'auto_advance_stage': True,
+            },
+            {
+                'name': 'Compliance Assessment',
+                'sequence': 50,
+                'notes': 'Complete compliance assessment and validation',
+                'auto_advance_stage': True,
+            },
+            {
+                'name': 'Final Approval',
+                'sequence': 60,
+                'notes': 'Final compliance approval and sign-off',
+                'auto_advance_stage': True,
+            }
+        ]
+        
+        # Create checkpoints
+        for checkpoint_data in compliance_checkpoints:
+            checkpoint_vals = {
+                'name': checkpoint_data['name'],
+                'compliance_project_id': self.id,
+                'sequence': checkpoint_data['sequence'],
+                'notes': checkpoint_data['notes'],
+                'auto_advance_stage': checkpoint_data['auto_advance_stage'],
+            }
+            self.env['project.task.checkpoint'].create(checkpoint_vals)
+        
+        self.message_post(body=_("Created %d compliance checkpoints automatically") % len(compliance_checkpoints))
+        return True
