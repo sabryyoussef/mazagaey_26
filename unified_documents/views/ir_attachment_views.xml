@@ -8,7 +8,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='res_model']" position="after">
                 <field name="folder_id" 
-                       domain="[('type', '=', 'folder')]"
                        options="{'no_create': True}"
                        placeholder="Select a folder (optional)"/>
             </xpath>
