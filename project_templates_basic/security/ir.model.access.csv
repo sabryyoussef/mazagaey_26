@@ -19,3 +19,17 @@ access_project_checklist_item_user,project.checklist.item.user,model_project_che
 access_project_checklist_item_manager,project.checklist.item.manager,model_project_checklist_item,base.group_system,1,1,1,1
 access_task_template_selection_wizard_user,task.template.selection.wizard.user,model_task_template_selection_wizard,base.group_user,1,1,1,0
 access_task_template_selection_wizard_manager,task.template.selection.wizard.manager,model_task_template_selection_wizard,base.group_system,1,1,1,1
+access_project_task_template_user,project.task.template.user,model_project_task_template,base.group_user,1,1,1,0
+access_project_task_template_manager,project.task.template.manager,model_project_task_template,base.group_system,1,1,1,1
+access_project_task_template_usage_user,project.task.template.usage.user,model_project_task_template_usage,base.group_user,1,1,1,0
+access_project_task_template_usage_manager,project.task.template.usage.manager,model_project_task_template_usage,base.group_system,1,1,1,1
+access_project_task_generation_service_user,project.task.generation.service.user,model_project_task_generation_service,base.group_user,1,0,0,0
+access_project_task_generation_service_manager,project.task.generation.service.manager,model_project_task_generation_service,base.group_system,1,1,1,1
+access_workflow_template_wizard_user,workflow.template.wizard.user,model_workflow_template_wizard,base.group_user,1,1,1,0
+access_workflow_template_wizard_manager,workflow.template.wizard.manager,model_workflow_template_wizard,base.group_system,1,1,1,1
+access_workflow_task_template_wizard_user,workflow.task.template.wizard.user,model_workflow_task_template_wizard,base.group_user,1,1,1,0
+access_workflow_task_template_wizard_manager,workflow.task.template.wizard.manager,model_workflow_task_template_wizard,base.group_system,1,1,1,1
+access_workflow_checkpoint_template_wizard_user,workflow.checkpoint.template.wizard.user,model_workflow_checkpoint_template_wizard,base.group_user,1,1,1,0
+access_workflow_checkpoint_template_wizard_manager,workflow.checkpoint.template.wizard.manager,model_workflow_checkpoint_template_wizard,base.group_system,1,1,1,1
+access_workflow_template_user,workflow.template.user,model_workflow_template,base.group_user,1,1,1,0
+access_workflow_template_manager,workflow.template.manager,model_workflow_template,base.group_system,1,1,1,1

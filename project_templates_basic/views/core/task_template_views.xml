@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Task Template Tree View -->
+    <record id="view_project_task_template_tree" model="ir.ui.view">
+        <field name="name">project.task.template.tree</field>
+        <field name="model">project.task.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="document_category"/>
+                <field name="priority" widget="priority"/>
+                <field name="estimated_hours"/>
+                <field name="usage_count"/>
+                <field name="sequence" widget="handle"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Task Template Form View -->
+    <record id="view_project_task_template_form" model="ir.ui.view">
+        <field name="name">project.task.template.form</field>
+        <field name="model">project.task.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_task_from_template" type="object" 
+                            string="Create Task" class="btn-primary"/>
+                    <button name="action_view_usage" type="object" 
+                            string="View Usage" class="btn-secondary"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Usage Count Smart Button -->
+                        <button name="action_view_usage" type="object" 
+                                class="oe_stat_button" icon="fa-chart-line"
+                                title="View Template Usage">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="usage_count"/>
+                                </span>
+                                <span class="o_stat_text">Usage</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="template_type"/>
+                            <field name="document_category"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority"/>
+                            <field name="estimated_hours"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Describe this task template..."/>
+                        </page>
+                        
+                        <page string="Task Configuration" name="task_configuration">
+                            <group>
+                                <group>
+                                    <field name="task_name_pattern" 
+                                           placeholder="e.g., Complete {category} Documents ({count} items)"/>
+                                    <field name="task_description_pattern" 
+                                           placeholder="e.g., Complete all {category} documents for {project}"/>
+                                </group>
+                                <group>
+                                    <field name="prerequisite_task_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Pattern Variables:</strong>
+                                <ul>
+                                    <li><code>{category}</code> - Document category (Required, Deliverable, etc.)</li>
+                                    <li><code>{count}</code> - Number of documents in the category</li>
+                                    <li><code>{project}</code> - Project name</li>
+                                    <li><code>{template}</code> - Template name</li>
+                                    <li><code>{description}</code> - Template description</li>
+                                </ul>
+                            </div>
+                        </page>
+                        
+                        <page string="Usage History" name="usage_history">
+                            <field name="usage_count" readonly="1"/>
+                            <p class="text-muted">Click "View Usage" button to see detailed usage history.</p>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Task Template Search View -->
+    <record id="view_project_task_template_search" model="ir.ui.view">
+        <field name="name">project.task.template.search</field>
+        <field name="model">project.task.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="document_category"/>
+                
+                <filter string="Document-Based" name="document_based" domain="[('template_type', '=', 'document_based')]"/>
+                <filter string="Progress Tracking" name="progress_tracking" domain="[('template_type', '=', 'progress_tracking')]"/>
+                <filter string="Milestone" name="milestone" domain="[('template_type', '=', 'milestone')]"/>
+                <filter string="Custom" name="custom" domain="[('template_type', '=', 'custom')]"/>
+                
+                <filter string="Required Documents" name="required" domain="[('document_category', '=', 'required')]"/>
+                <filter string="Deliverable Documents" name="deliverable" domain="[('document_category', '=', 'deliverable')]"/>
+                <filter string="Reference Documents" name="reference" domain="[('document_category', '=', 'reference')]"/>
+                <filter string="Compliance Documents" name="compliance" domain="[('document_category', '=', 'compliance')]"/>
+                <filter string="All Documents" name="all_documents" domain="[('document_category', '=', 'all')]"/>
+                
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Template Type" name="group_template_type" context="{'group_by': 'template_type'}"/>
+                    <filter string="Document Category" name="group_document_category" context="{'group_by': 'document_category'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Task Template Action -->
+    <record id="action_project_task_template" model="ir.actions.act_window">
+        <field name="name">Task Templates</field>
+        <field name="res_model">project.task.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first task template!
+            </p>
+            <p>
+                Task templates help you standardize task creation from project templates.
+                Create templates that can generate tasks based on document categories, progress tracking, or milestones.
+            </p>
+        </field>
+    </record>
+
+    <!-- Task Template Usage Tree View -->
+    <record id="view_project_task_template_usage_tree" model="ir.ui.view">
+        <field name="name">project.task.template.usage.tree</field>
+        <field name="model">project.task.template.usage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="task_template_id"/>
+                <field name="project_template_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="document_category"/>
+                <field name="document_count"/>
+                <field name="applied_by"/>
+                <field name="applied_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Task Template Usage Form View -->
+    <record id="view_project_task_template_usage_form" model="ir.ui.view">
+        <field name="name">project.task.template.usage.form</field>
+        <field name="model">project.task.template.usage</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="task_template_id"/>
+                            <field name="project_template_id"/>
+                            <field name="project_id"/>
+                            <field name="task_id"/>
+                        </group>
+                        <group>
+                            <field name="document_category"/>
+                            <field name="document_count"/>
+                            <field name="applied_by"/>
+                            <field name="applied_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Task Template Usage Action -->
+    <record id="action_project_task_template_usage" model="ir.actions.act_window">
+        <field name="name">Task Template Usage</field>
+        <field name="res_model">project.task.template.usage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No usage records found!
+            </p>
+            <p>
+                Usage records are created when task templates are applied to projects.
+            </p>
+        </field>
+    </record>
+</odoo>

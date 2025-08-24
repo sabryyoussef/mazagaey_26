@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+
+        <!-- 1. Web Development Project Template -->
+        <record id="document_template_web_development" model="project.document.template">
+            <field name="name">Web Development Project</field>
+            <field name="description">Standard document template for web development projects including requirements, design, and delivery documents.</field>
+            <field name="sequence">10</field>
+            <field name="template_type">hybrid</field>
+            <field name="auto_apply">True</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+        </record>
+
+        <!-- Web Development Document Lines -->
+        <record id="web_dev_doc_requirements" model="project.document.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">10</field>
+            <field name="name">Project Requirements Document</field>
+            <field name="description">Detailed requirements specification for the web application</field>
+            <field name="category">required</field>
+            <field name="priority">3</field>
+            <field name="notes">Must be approved by client before development starts</field>
+        </record>
+
+        <record id="web_dev_doc_design" model="project.document.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">20</field>
+            <field name="name">UI/UX Design Mockups</field>
+            <field name="description">Visual design mockups and wireframes</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">Include mobile responsive designs</field>
+        </record>
+
+        <record id="web_dev_doc_contract" model="project.document.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">30</field>
+            <field name="name">Development Contract</field>
+            <field name="description">Legal contract between client and development team</field>
+            <field name="category">compliance</field>
+            <field name="priority">3</field>
+            <field name="notes">Must be signed by both parties</field>
+        </record>
+
+        <record id="web_dev_doc_testing" model="project.document.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">40</field>
+            <field name="name">Testing Documentation</field>
+            <field name="description">Test cases and quality assurance documentation</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">Include automated and manual testing procedures</field>
+        </record>
+
+        <record id="web_dev_doc_deployment" model="project.document.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">50</field>
+            <field name="name">Deployment Guide</field>
+            <field name="description">Step-by-step deployment instructions</field>
+            <field name="category">reference</field>
+            <field name="priority">1</field>
+            <field name="notes">Include server configuration details</field>
+        </record>
+
+        <!-- Web Development Checklist Lines -->
+        <record id="web_dev_checklist_requirements" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">10</field>
+            <field name="name">Requirements gathering completed</field>
+            <field name="description">All functional and non-functional requirements documented</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="web_dev_checklist_design" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">20</field>
+            <field name="name">Design approved by client</field>
+            <field name="description">UI/UX design mockups approved and signed off</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="web_dev_checklist_development" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">30</field>
+            <field name="name">Development phase completed</field>
+            <field name="description">All features implemented and unit tested</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="web_dev_checklist_testing" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">40</field>
+            <field name="name">Testing phase completed</field>
+            <field name="description">All test cases passed and bugs fixed</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="web_dev_checklist_deployment" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_web_development"/>
+            <field name="sequence">50</field>
+            <field name="name">Application deployed to production</field>
+            <field name="description">Application successfully deployed and accessible</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <!-- 2. Mobile App Development Template -->
+        <record id="document_template_mobile_app" model="project.document.template">
+            <field name="name">Mobile App Development</field>
+            <field name="description">Document template for mobile application development projects including app store requirements.</field>
+            <field name="sequence">20</field>
+            <field name="template_type">document_based</field>
+            <field name="auto_apply">False</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">False</field>
+        </record>
+
+        <!-- Mobile App Document Lines -->
+        <record id="mobile_app_doc_specs" model="project.document.template.line">
+            <field name="template_id" ref="document_template_mobile_app"/>
+            <field name="sequence">10</field>
+            <field name="name">App Specifications</field>
+            <field name="description">Detailed specifications for mobile application features</field>
+            <field name="category">required</field>
+            <field name="priority">3</field>
+            <field name="notes">Include platform-specific requirements (iOS/Android)</field>
+        </record>
+
+        <record id="mobile_app_doc_store_assets" model="project.document.template.line">
+            <field name="template_id" ref="document_template_mobile_app"/>
+            <field name="sequence">20</field>
+            <field name="name">App Store Assets</field>
+            <field name="description">Icons, screenshots, and promotional materials for app stores</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">Multiple sizes required for different devices</field>
+        </record>
+
+        <record id="mobile_app_doc_privacy" model="project.document.template.line">
+            <field name="template_id" ref="document_template_mobile_app"/>
+            <field name="sequence">30</field>
+            <field name="name">Privacy Policy</field>
+            <field name="description">Privacy policy document required for app store submission</field>
+            <field name="category">compliance</field>
+            <field name="priority">3</field>
+            <field name="notes">Must comply with GDPR and app store policies</field>
+        </record>
+
+        <record id="mobile_app_doc_terms" model="project.document.template.line">
+            <field name="template_id" ref="document_template_mobile_app"/>
+            <field name="sequence">40</field>
+            <field name="name">Terms of Service</field>
+            <field name="description">Terms of service document for the mobile application</field>
+            <field name="category">compliance</field>
+            <field name="priority">2</field>
+            <field name="notes">Legal terms for app usage</field>
+        </record>
+
+        <!-- 3. Financial Audit Template -->
+        <record id="document_template_financial_audit" model="project.document.template">
+            <field name="name">Financial Audit Project</field>
+            <field name="description">Document template for financial audit projects with compliance and regulatory requirements.</field>
+            <field name="sequence">30</field>
+            <field name="template_type">hybrid</field>
+            <field name="auto_apply">True</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+        </record>
+
+        <!-- Financial Audit Document Lines -->
+        <record id="audit_doc_scope" model="project.document.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">10</field>
+            <field name="name">Audit Scope Document</field>
+            <field name="description">Defines the scope and objectives of the financial audit</field>
+            <field name="category">required</field>
+            <field name="priority">3</field>
+            <field name="notes">Must be approved by audit committee</field>
+        </record>
+
+        <record id="audit_doc_risk_assessment" model="project.document.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">20</field>
+            <field name="name">Risk Assessment Report</field>
+            <field name="description">Assessment of financial risks and control weaknesses</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Include materiality thresholds</field>
+        </record>
+
+        <record id="audit_doc_working_papers" model="project.document.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">30</field>
+            <field name="name">Audit Working Papers</field>
+            <field name="description">Detailed audit procedures and findings documentation</field>
+            <field name="category">reference</field>
+            <field name="priority">2</field>
+            <field name="notes">Support for audit conclusions</field>
+        </record>
+
+        <record id="audit_doc_final_report" model="project.document.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">40</field>
+            <field name="name">Final Audit Report</field>
+            <field name="description">Final audit report with findings and recommendations</field>
+            <field name="category">deliverable</field>
+            <field name="priority">3</field>
+            <field name="notes">Must be reviewed by senior management</field>
+        </record>
+
+        <!-- Financial Audit Checklist Lines -->
+        <record id="audit_checklist_planning" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">10</field>
+            <field name="name">Audit planning completed</field>
+            <field name="description">Audit plan approved and resources allocated</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="audit_checklist_fieldwork" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">20</field>
+            <field name="name">Fieldwork completed</field>
+            <field name="description">All audit procedures performed and documented</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="audit_checklist_review" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">30</field>
+            <field name="name">Internal review completed</field>
+            <field name="description">All working papers reviewed by senior auditor</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="audit_checklist_management" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_financial_audit"/>
+            <field name="sequence">40</field>
+            <field name="name">Management review completed</field>
+            <field name="description">Final report reviewed and approved by management</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <!-- 4. Marketing Campaign Template -->
+        <record id="document_template_marketing_campaign" model="project.document.template">
+            <field name="name">Marketing Campaign</field>
+            <field name="description">Document template for marketing campaigns including creative briefs and performance reports.</field>
+            <field name="sequence">40</field>
+            <field name="template_type">document_based</field>
+            <field name="auto_apply">False</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+        </record>
+
+        <!-- Marketing Campaign Document Lines -->
+        <record id="marketing_doc_brief" model="project.document.template.line">
+            <field name="template_id" ref="document_template_marketing_campaign"/>
+            <field name="sequence">10</field>
+            <field name="name">Creative Brief</field>
+            <field name="description">Detailed brief for creative team including objectives and target audience</field>
+            <field name="category">required</field>
+            <field name="priority">2</field>
+            <field name="notes">Include brand guidelines and messaging</field>
+        </record>
+
+        <record id="marketing_doc_content" model="project.document.template.line">
+            <field name="template_id" ref="document_template_marketing_campaign"/>
+            <field name="sequence">20</field>
+            <field name="name">Content Calendar</field>
+            <field name="description">Content schedule and publishing timeline</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">Include all channels and formats</field>
+        </record>
+
+        <record id="marketing_doc_budget" model="project.document.template.line">
+            <field name="template_id" ref="document_template_marketing_campaign"/>
+            <field name="sequence">30</field>
+            <field name="name">Campaign Budget</field>
+            <field name="description">Detailed budget breakdown for campaign activities</field>
+            <field name="category">required</field>
+            <field name="priority">3</field>
+            <field name="notes">Include contingency budget</field>
+        </record>
+
+        <record id="marketing_doc_performance" model="project.document.template.line">
+            <field name="template_id" ref="document_template_marketing_campaign"/>
+            <field name="sequence">40</field>
+            <field name="name">Performance Report</field>
+            <field name="description">Campaign performance metrics and ROI analysis</field>
+            <field name="category">deliverable</field>
+            <field name="priority">2</field>
+            <field name="notes">Include KPIs and benchmarks</field>
+        </record>
+
+        <!-- 5. Simple Checklist Template -->
+        <record id="document_template_simple_checklist" model="project.document.template">
+            <field name="name">Simple Project Checklist</field>
+            <field name="description">Basic checklist template for simple projects without complex document requirements.</field>
+            <field name="sequence">50</field>
+            <field name="template_type">checklist_based</field>
+            <field name="auto_apply">True</field>
+            <field name="apply_to_projects">True</field>
+            <field name="apply_to_tasks">True</field>
+        </record>
+
+        <!-- Simple Checklist Lines -->
+        <record id="simple_checklist_kickoff" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_simple_checklist"/>
+            <field name="sequence">10</field>
+            <field name="name">Project kickoff meeting completed</field>
+            <field name="description">Initial project meeting with all stakeholders</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="simple_checklist_planning" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_simple_checklist"/>
+            <field name="sequence">20</field>
+            <field name="name">Project plan created</field>
+            <field name="description">Project timeline and resource allocation defined</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="simple_checklist_execution" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_simple_checklist"/>
+            <field name="sequence">30</field>
+            <field name="name">Project execution started</field>
+            <field name="description">Project work has begun according to plan</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="simple_checklist_review" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_simple_checklist"/>
+            <field name="sequence">40</field>
+            <field name="name">Project review completed</field>
+            <field name="description">Project deliverables reviewed and approved</field>
+            <field name="is_required">True</field>
+        </record>
+
+        <record id="simple_checklist_closure" model="project.checklist.template.line">
+            <field name="template_id" ref="document_template_simple_checklist"/>
+            <field name="sequence">50</field>
+            <field name="name">Project closure</field>
+            <field name="description">Project officially closed and lessons learned documented</field>
+            <field name="is_required">True</field>
+        </record>
+
+    </data>
+</odoo>
