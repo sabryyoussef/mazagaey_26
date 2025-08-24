@@ -160,7 +160,8 @@
         <!-- Company Formation Milestone Template -->
         <record id="demo_milestone_template_company_formation" model="project.milestone.template">
             <field name="name">Company Formation Milestone Template</field>
-            <field name="description">Standard milestone template for UAE company formation process</field>
+            <field name="milestone_name">Company Formation</field>
+            <field name="notes">Standard milestone template for UAE company formation process</field>
             <field name="active" eval="True"/>
             <field name="sequence">10</field>
         </record>
@@ -168,7 +169,8 @@
         <!-- Visa Processing Milestone Template -->
         <record id="demo_milestone_template_visa_processing" model="project.milestone.template">
             <field name="name">Visa Processing Milestone Template</field>
-            <field name="description">Standard milestone template for employee visa processing</field>
+            <field name="milestone_name">Visa Processing</field>
+            <field name="notes">Standard milestone template for employee visa processing</field>
             <field name="active" eval="True"/>
             <field name="sequence">20</field>
         </record>
@@ -176,7 +178,8 @@
         <!-- Office Setup Milestone Template -->
         <record id="demo_milestone_template_office_setup" model="project.milestone.template">
             <field name="name">Office Setup Milestone Template</field>
-            <field name="description">Standard milestone template for office setup process</field>
+            <field name="milestone_name">Office Setup</field>
+            <field name="notes">Standard milestone template for office setup process</field>
             <field name="active" eval="True"/>
             <field name="sequence">30</field>
         </record>
@@ -190,21 +193,21 @@
             <field name="template_id" ref="demo_milestone_template_company_formation"/>
             <field name="name">Initial Consultation</field>
             <field name="sequence">10</field>
-            <field name="description">Complete initial consultation and requirements gathering</field>
+            <field name="notes">Complete initial consultation and requirements gathering</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_documentation" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_company_formation"/>
             <field name="name">Document Collection</field>
             <field name="sequence">20</field>
-            <field name="description">Collect and verify all required documents</field>
+            <field name="notes">Collect and verify all required documents</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_submission" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_company_formation"/>
             <field name="name">Government Submission</field>
             <field name="sequence">30</field>
-            <field name="description">Submit application to government authorities</field>
+            <field name="notes">Submit application to government authorities</field>
         </record>
         
         <!-- Visa Processing Milestone Template Checkpoints -->
@@ -212,21 +215,21 @@
             <field name="template_id" ref="demo_milestone_template_visa_processing"/>
             <field name="name">Document Verification</field>
             <field name="sequence">10</field>
-            <field name="description">Verify all required documents are complete and valid</field>
+            <field name="notes">Verify all required documents are complete and valid</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_medical" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_visa_processing"/>
             <field name="name">Medical Examination</field>
             <field name="sequence">20</field>
-            <field name="description">Complete medical examination at approved center</field>
+            <field name="notes">Complete medical examination at approved center</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_approval" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_visa_processing"/>
             <field name="name">Visa Approval</field>
             <field name="sequence">30</field>
-            <field name="description">Receive visa approval and collect documents</field>
+            <field name="notes">Receive visa approval and collect documents</field>
         </record>
         
         <!-- Office Setup Milestone Template Checkpoints -->
@@ -234,21 +237,21 @@
             <field name="template_id" ref="demo_milestone_template_office_setup"/>
             <field name="name">Office Selection</field>
             <field name="sequence">10</field>
-            <field name="description">Select and finalize office location</field>
+            <field name="notes">Select and finalize office location</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_setup" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_office_setup"/>
             <field name="name">Utilities Setup</field>
             <field name="sequence">20</field>
-            <field name="description">Setup electricity, water, and internet services</field>
+            <field name="notes">Setup electricity, water, and internet services</field>
         </record>
         
         <record id="demo_milestone_template_checkpoint_completion" model="project.milestone.template.checkpoint">
             <field name="template_id" ref="demo_milestone_template_office_setup"/>
             <field name="name">Office Handover</field>
             <field name="sequence">30</field>
-            <field name="description">Complete office handover and compliance verification</field>
+            <field name="notes">Complete office handover and compliance verification</field>
         </record>
 
         <!-- ========================================

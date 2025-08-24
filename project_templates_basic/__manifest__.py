@@ -11,6 +11,7 @@
         "project",
         "product",
         "documents",  # For document templates
+        "project_checkpoints_basic"  # For milestone templates
     ],
     "data": [
         # Security
@@ -19,14 +20,13 @@
         
         # Views - Core
         "views/core/task_template_views.xml",
-        "views/core/document_template_views.xml",
         "views/core/workflow_template_views.xml",
         
-        # Views - Template Types
-        "views/template_types/project_template_views.xml",
-        
-        # Views - Templates (Legacy)
+        # Views - Templates
         "views/templates/checkpoint_template_views.xml",
+        "views/templates/milestone_template_views.xml",
+        "views/templates/project_template_views.xml",
+        "views/templates/document_template_views.xml",
         
         # Views - Tasks
         "views/tasks/task_views.xml",
@@ -40,11 +40,10 @@
         
         # Demo Data
         "data/demo_task_templates.xml",
-        "data/demo_document_templates.xml",
+        "data/demo_document_templates.xml"
     ],
     "demo": [
-        "data/demo_data_consolidated.xml",
-        "demo/demo_data.xml",
+        "data/demo_data_consolidated.xml"
     ],
     "application": False,
     "installable": True,

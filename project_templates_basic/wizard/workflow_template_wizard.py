@@ -15,13 +15,14 @@ class WorkflowTemplateWizard(models.TransientModel):
         ('product', 'Product Template'),
         ('project', 'Project Template'),
         ('checkpoints', 'Checkpoint Templates'),
+        ('milestones', 'Milestone Templates'),
         ('tasks', 'Task Templates'),
         ('review', 'Review & Create')
     ], string='Current Step', default='product', required=True)
 
     # Progress tracking
     progress = fields.Float('Progress', compute='_compute_progress', store=True)
-    step_count = fields.Integer('Total Steps', default=5)
+    step_count = fields.Integer('Total Steps', default=6)
     completed_steps = fields.Integer('Completed Steps', compute='_compute_progress', store=True)
     
     @api.model
@@ -88,9 +89,18 @@ class WorkflowTemplateWizard(models.TransientModel):
     existing_task_template_ids = fields.Many2many('project.task.template', string='Select Existing Task Templates')
     use_existing_tasks = fields.Boolean('Use Existing Task Templates', default=False)
 
+    # Milestone Templates Section
+    milestone_template_ids = fields.One2many('workflow.milestone.template.wizard', 'wizard_id', string='Milestone Templates')
+    create_default_milestones = fields.Boolean('Create Default Milestone Templates', default=True)
+    
+    # Milestone Template Selection
+    existing_milestone_template_ids = fields.Many2many('project.milestone.template', string='Select Existing Milestone Templates')
+    use_existing_milestones = fields.Boolean('Use Existing Milestone Templates', default=False)
+
     # Review Section
     summary_product = fields.Text('Product Template Summary', readonly=True)
     summary_project = fields.Text('Project Template Summary', readonly=True)
+    summary_milestones = fields.Text('Milestone Templates Summary', readonly=True)
     summary_tasks = fields.Text('Task Templates Summary', readonly=True)
 
     @api.depends('current_step')
@@ -100,8 +110,9 @@ class WorkflowTemplateWizard(models.TransientModel):
                 'product': 1,
                 'project': 2,
                 'checkpoints': 3,
-                'tasks': 4,
-                'review': 5
+                'milestones': 4,
+                'tasks': 5,
+                'review': 6
             }
             wizard.completed_steps = step_mapping.get(wizard.current_step, 0)
             wizard.progress = (wizard.completed_steps / wizard.step_count) * 100
@@ -163,6 +174,17 @@ class WorkflowTemplateWizard(models.TransientModel):
         elif not self.use_existing_checkpoints:
             # Clear the existing checkpoint template selection
             self.existing_checkpoint_template_ids = [(5, 0, 0)]
+
+    @api.onchange('use_existing_milestones', 'existing_milestone_template_ids')
+    def _onchange_existing_milestones(self):
+        """Update fields when existing milestone templates are selected"""
+        if self.use_existing_milestones and self.existing_milestone_template_ids:
+            # Clear the default milestone templates when using existing ones
+            self.milestone_template_ids = [(5, 0, 0)]
+            self.create_default_milestones = False
+        elif not self.use_existing_milestones:
+            # Clear the existing milestone template selection
+            self.existing_milestone_template_ids = [(5, 0, 0)]
 
     def _create_default_task_templates(self):
         """Create default task templates based on the strategy"""
@@ -256,6 +278,42 @@ class WorkflowTemplateWizard(models.TransientModel):
             }
             self.checkpoint_template_ids = [(0, 0, checkpoint_vals)]
 
+    def _create_default_milestone_templates(self):
+        """Create default milestone templates based on the project complexity"""
+        default_milestones = []
+        
+        if self.project_complexity == 'simple':
+            default_milestones = [
+                {'name': 'Simple Project Milestone', 'milestone_name': 'Project Completion', 'milestone_notes': 'Complete project delivery'},
+            ]
+        elif self.project_complexity == 'medium':
+            default_milestones = [
+                {'name': 'Planning Milestone', 'milestone_name': 'Planning Complete', 'milestone_notes': 'Project planning and design phase complete'},
+                {'name': 'Development Milestone', 'milestone_name': 'Development Complete', 'milestone_notes': 'Core development work complete'},
+                {'name': 'Delivery Milestone', 'milestone_name': 'Project Delivery', 'milestone_notes': 'Final project delivery and handover'},
+            ]
+        else:  # complex
+            default_milestones = [
+                {'name': 'Requirements Milestone', 'milestone_name': 'Requirements Complete', 'milestone_notes': 'All requirements gathered and approved'},
+                {'name': 'Design Milestone', 'milestone_name': 'Design Complete', 'milestone_notes': 'System design and architecture complete'},
+                {'name': 'Development Milestone', 'milestone_name': 'Development Complete', 'milestone_notes': 'Core development work complete'},
+                {'name': 'Testing Milestone', 'milestone_name': 'Testing Complete', 'milestone_notes': 'All testing phases complete'},
+                {'name': 'Delivery Milestone', 'milestone_name': 'Project Delivery', 'milestone_notes': 'Final project delivery and handover'},
+            ]
+
+        # Clear existing milestone templates
+        self.milestone_template_ids = [(5, 0, 0)]
+        
+        # Create new default milestone templates
+        for i, milestone_data in enumerate(default_milestones):
+            milestone_vals = {
+                'sequence': (i + 1) * 10,
+                'name': milestone_data['name'],
+                'milestone_name': milestone_data['milestone_name'],
+                'milestone_notes': milestone_data['milestone_notes'],
+            }
+            self.milestone_template_ids = [(0, 0, milestone_vals)]
+
     def action_next_step(self):
         """Move to the next step"""
         if self.current_step == 'product':
@@ -272,6 +330,10 @@ class WorkflowTemplateWizard(models.TransientModel):
             self._create_default_checkpoint_templates()
             view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_checkpoints').id
         elif self.current_step == 'checkpoints':
+            self.current_step = 'milestones'
+            self._create_default_milestone_templates()
+            view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_milestones').id
+        elif self.current_step == 'milestones':
             self.current_step = 'tasks'
             self._create_default_task_templates()
             view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_tasks').id
@@ -297,9 +359,12 @@ class WorkflowTemplateWizard(models.TransientModel):
         elif self.current_step == 'checkpoints':
             self.current_step = 'project'
             view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_project').id
-        elif self.current_step == 'tasks':
+        elif self.current_step == 'milestones':
             self.current_step = 'checkpoints'
             view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_checkpoints').id
+        elif self.current_step == 'tasks':
+            self.current_step = 'milestones'
+            view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_milestones').id
         elif self.current_step == 'review':
             self.current_step = 'tasks'
             view_id = self.env.ref('project_templates_basic.view_workflow_template_wizard_tasks').id
@@ -423,6 +488,31 @@ class WorkflowTemplateWizard(models.TransientModel):
             }
         }
 
+    def action_view_milestone_templates(self):
+        """Open milestone templates list view"""
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'list,form',
+            'target': 'new',
+            'context': {
+                'search_default_active': 1,
+            }
+        }
+
+    def action_create_milestone_template(self):
+        """Open milestone template creation form"""
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sequence': 10,
+                'default_active': True,
+            }
+        }
+
     def _generate_summaries(self):
         """Generate summary text for review step"""
         # Product template summary
@@ -461,6 +551,19 @@ Task Strategy: {self.task_generation_strategy}
 Description: {project_description}
         """.strip()
 
+        # Milestone templates summary
+        if self.use_existing_milestones and self.existing_milestone_template_ids:
+            milestone_count = len(self.existing_milestone_template_ids)
+            milestone_summary = f"Total Existing Milestones: {milestone_count}\n"
+            milestone_summary += "Using existing milestone templates"
+        else:
+            milestone_count = len(self.milestone_template_ids)
+            milestone_summary = f"Total Milestones: {milestone_count}\n"
+            for milestone in self.milestone_template_ids:
+                milestone_summary += f"- {milestone.milestone_name}\n"
+        
+        self.summary_milestones = milestone_summary.strip()
+
         # Task templates summary
         if self.use_existing_tasks and self.existing_task_template_ids:
             task_count = len(self.existing_task_template_ids)
@@ -490,14 +593,17 @@ Description: {project_description}
             # 3. Create Checkpoint Templates
             checkpoint_templates = self._create_checkpoint_templates()
             
-            # 4. Create Task Templates
+            # 4. Create Milestone Templates
+            milestone_templates = self._create_milestone_templates()
+            
+            # 5. Create Task Templates
             task_templates = self._create_task_templates()
             
-            # 5. Link everything together
-            self._link_templates(product_template, project_template, task_templates, checkpoint_templates)
+            # 6. Link everything together
+            self._link_templates(product_template, project_template, task_templates, checkpoint_templates, milestone_templates)
             
-            # 6. Create Workflow Template Record
-            workflow_template = self._create_workflow_template_record(product_template, project_template, task_templates, checkpoint_templates)
+            # 7. Create Workflow Template Record
+            workflow_template = self._create_workflow_template_record(product_template, project_template, task_templates, checkpoint_templates, milestone_templates)
             
             # 6. Show success message and return to templates
             return {
@@ -613,7 +719,31 @@ Description: {project_description}
             
             return checkpoint_templates
 
-    def _link_templates(self, product_template, project_template, task_templates, checkpoint_templates):
+    def _create_milestone_templates(self):
+        """Create or use existing milestone templates"""
+        if self.use_existing_milestones and self.existing_milestone_template_ids:
+            # Use existing milestone templates
+            return list(self.existing_milestone_template_ids)
+        else:
+            # Create new milestone templates from wizard data
+            milestone_templates = []
+            
+            for milestone_wizard in self.milestone_template_ids:
+                milestone_vals = {
+                    'name': milestone_wizard.name,
+                    'milestone_name': milestone_wizard.milestone_name,
+                    'milestone_deadline': milestone_wizard.milestone_deadline,
+                    'milestone_notes': milestone_wizard.milestone_notes,
+                    'notes': milestone_wizard.notes,
+                    'sequence': milestone_wizard.sequence,
+                }
+                
+                milestone_template = self.env['project.milestone.template'].create(milestone_vals)
+                milestone_templates.append(milestone_template)
+            
+            return milestone_templates
+
+    def _link_templates(self, product_template, project_template, task_templates, checkpoint_templates, milestone_templates):
         """Link the created templates together"""
         # Link project template to product template
         if hasattr(product_template, 'project_template_id'):
@@ -632,8 +762,14 @@ Description: {project_description}
             project_template.write({
                 'checkpoint_template_ids': [(6, 0, [checkpoint.id for checkpoint in checkpoint_templates])]
             })
+        
+        # Link milestone templates to project template
+        if milestone_templates and hasattr(project_template, 'milestone_template_ids'):
+            project_template.write({
+                'milestone_template_ids': [(6, 0, [milestone.id for milestone in milestone_templates])]
+            })
 
-    def _create_workflow_template_record(self, product_template, project_template, task_templates, checkpoint_templates):
+    def _create_workflow_template_record(self, product_template, project_template, task_templates, checkpoint_templates, milestone_templates):
         """Create a workflow template record"""
         # Get product name
         if self.use_existing_product and self.existing_product_template_id:
@@ -664,6 +800,7 @@ Description: {project_description}
             'project_template_id': project_template.id,
             'task_template_ids': [(6, 0, [task.id for task in task_templates])],
             'checkpoint_template_ids': [(6, 0, [checkpoint.id for checkpoint in checkpoint_templates])],
+            'milestone_template_ids': [(6, 0, [milestone.id for milestone in milestone_templates])],
         }
         
         workflow_template = self.env['workflow.template'].create(workflow_vals)
@@ -728,3 +865,18 @@ class WorkflowTaskTemplateWizard(models.TransientModel):
     
     estimated_hours = fields.Float('Estimated Hours', default=8.0)
     description = fields.Text('Description')
+
+
+class WorkflowMilestoneTemplateWizard(models.TransientModel):
+    _name = 'workflow.milestone.template.wizard'
+    _description = 'Workflow Milestone Template Wizard'
+    _order = 'sequence'
+
+    wizard_id = fields.Many2one('workflow.template.wizard', string='Wizard', required=True, ondelete='cascade')
+    
+    sequence = fields.Integer('Sequence', default=10)
+    name = fields.Char('Template Name', required=True)
+    milestone_name = fields.Char('Milestone Name', required=True)
+    milestone_deadline = fields.Date('Default Deadline')
+    milestone_notes = fields.Text('Milestone Notes')
+    notes = fields.Text('Template Notes')

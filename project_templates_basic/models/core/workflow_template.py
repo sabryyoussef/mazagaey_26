@@ -58,6 +58,7 @@ class WorkflowTemplate(models.Model):
     project_template_id = fields.Many2one('project.project', string='Project Template')
     task_template_ids = fields.Many2many('project.task.template', string='Task Templates')
     checkpoint_template_ids = fields.Many2many('project.checkpoint.template', string='Checkpoint Templates')
+    milestone_template_ids = fields.Many2many('project.milestone.template', string='Milestone Templates')
     
     # Checkpoint Template Selection
     use_existing_checkpoints = fields.Boolean('Use Existing Checkpoint Templates', default=False)
@@ -67,19 +68,25 @@ class WorkflowTemplate(models.Model):
     use_existing_tasks = fields.Boolean('Use Existing Task Templates', default=False)
     selected_task_template_ids = fields.Many2many('project.task.template', relation='workflow_template_selected_task_rel', string='Select Existing Task Templates')
     
+    # Milestone Template Selection
+    use_existing_milestones = fields.Boolean('Use Existing Milestone Templates', default=False)
+    selected_milestone_template_ids = fields.Many2many('project.milestone.template', relation='workflow_template_selected_milestone_rel', string='Select Existing Milestone Templates')
+    
     # Statistics
     task_template_count = fields.Integer('Task Templates', compute='_compute_counts', store=True)
     checkpoint_template_count = fields.Integer('Checkpoint Templates', compute='_compute_counts', store=True)
+    milestone_template_count = fields.Integer('Milestone Template Count', compute='_compute_counts', store=True)
     
     # Tracking
     created_by = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user)
     create_date = fields.Datetime('Created Date', default=fields.Datetime.now)
     
-    @api.depends('task_template_ids', 'checkpoint_template_ids')
+    @api.depends('task_template_ids', 'checkpoint_template_ids', 'milestone_template_ids')
     def _compute_counts(self):
         for template in self:
             template.task_template_count = len(template.task_template_ids)
             template.checkpoint_template_count = len(template.checkpoint_template_ids)
+            template.milestone_template_count = len(template.milestone_template_ids)
 
     @api.onchange('use_existing_product', 'existing_product_template_id')
     def _onchange_existing_product(self):
@@ -122,6 +129,15 @@ class WorkflowTemplate(models.Model):
         elif not self.use_existing_tasks:
             # Clear the existing task template selection
             self.selected_task_template_ids = [(5, 0, 0)]
+
+    @api.onchange('use_existing_milestones', 'selected_milestone_template_ids')
+    def _onchange_existing_milestones(self):
+        """Update fields when existing milestone templates are selected"""
+        if self.use_existing_milestones and self.selected_milestone_template_ids:
+            self.milestone_template_ids = [(6, 0, self.selected_milestone_template_ids.ids)]
+        elif not self.use_existing_milestones:
+            # Clear the existing milestone template selection
+            self.selected_milestone_template_ids = [(5, 0, 0)]
     
     def action_view_product_template(self):
         """Open the related product template"""
@@ -282,6 +298,44 @@ class WorkflowTemplate(models.Model):
                 'default_checkpoint_type': 'milestone',
                 'default_is_mandatory': True,
                 'default_estimated_days': 1,
+            }
+        }
+
+    def action_view_milestone_templates(self):
+        """Open the related milestone templates"""
+        self.ensure_one()
+        if self.milestone_template_ids:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.milestone.template',
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', self.milestone_template_ids.ids)],
+                'target': 'current',
+            }
+        return False
+
+    def action_view_all_milestone_templates(self):
+        """Open milestone templates list view"""
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'list,form',
+            'target': 'new',
+            'context': {
+                'search_default_active': 1,
+            }
+        }
+
+    def action_create_milestone_template(self):
+        """Open milestone template creation form"""
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sequence': 10,
+                'default_active': True,
             }
         }
     

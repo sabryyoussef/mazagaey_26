@@ -38,4 +38,12 @@
               action="action_project_checkpoint_template"
               sequence="20"
               groups="base.group_user"/>
+
+    <!-- Milestone Templates Submenu -->
+    <menuitem id="menu_project_templates_milestone_templates"
+              name="Milestone Templates"
+              parent="menu_project_templates_root"
+              action="action_project_milestone_template"
+              sequence="25"
+              groups="base.group_user"/>
 </odoo>

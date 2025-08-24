@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                 <form string="Step 1: Product Template">
                     <div class="oe_title">
-                        <h1>Step 1 of 4: Product Template</h1>
+                        <h1>Step 1 of 6: Product Template</h1>
                         <div class="alert alert-info" role="alert">
                             <strong>Define your product template or select an existing one</strong>
                         </div>
@@ -114,7 +114,7 @@
             <field name="arch" type="xml">
                 <form string="Step 2: Project Template">
                     <div class="oe_title">
-                        <h1>Step 2 of 4: Project Template</h1>
+                        <h1>Step 2 of 6: Project Template</h1>
                         <div class="alert alert-info" role="alert">
                             <strong>Configure your project template or select an existing one</strong>
                         </div>
@@ -176,7 +176,7 @@
             <field name="arch" type="xml">
                 <form string="Step 3: Checkpoint Templates">
                     <div class="oe_title">
-                        <h1>Step 3 of 5: Checkpoint Templates</h1>
+                        <h1>Step 3 of 6: Checkpoint Templates</h1>
                         <div class="alert alert-info" role="alert">
                             <strong>Configure checkpoint templates or select existing ones</strong>
                         </div>
@@ -224,14 +224,69 @@
             </field>
         </record>
 
-        <!-- Step 4: Task Templates View -->
+        <!-- Step 4: Milestone Templates View -->
+        <record id="view_workflow_template_wizard_milestones" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.milestones</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 4: Milestone Templates">
+                    <div class="oe_title">
+                        <h1>Step 4 of 6: Milestone Templates</h1>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Configure milestone templates or select existing ones</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <!-- Milestone Template Selection -->
+                        <group>
+                            <group>
+                                <field name="use_existing_milestones"/>
+                                <field name="existing_milestone_template_ids" 
+                                       invisible="not use_existing_milestones"
+                                       widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <button name="action_view_milestone_templates" 
+                                        type="object" 
+                                        string="View Milestone Templates" 
+                                        class="btn-secondary"
+                                        icon="fa-list"/>
+                                <button name="action_create_milestone_template" 
+                                        type="object" 
+                                        string="Create New Milestone Template" 
+                                        class="btn-secondary"
+                                        icon="fa-plus"/>
+                            </group>
+                        </group>
+
+                        <group invisible="use_existing_milestones">
+                            <group>
+                                <field name="create_default_milestones"/>
+                            </group>
+                        </group>
+                        
+                        <field name="milestone_template_ids" 
+                               invisible="not create_default_milestones or use_existing_milestones"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_previous_step" type="object" string="Previous" class="btn-secondary"/>
+                        <button name="action_next_step" type="object" string="Next" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Step 5: Task Templates View -->
         <record id="view_workflow_template_wizard_tasks" model="ir.ui.view">
             <field name="name">workflow.template.wizard.tasks</field>
             <field name="model">workflow.template.wizard</field>
             <field name="arch" type="xml">
-                <form string="Step 4: Task Templates">
+                <form string="Step 5: Task Templates">
                     <div class="oe_title">
-                        <h1>Step 4 of 5: Task Templates</h1>
+                        <h1>Step 5 of 6: Task Templates</h1>
                         <div class="alert alert-info" role="alert">
                             <strong>Configure task templates or select existing ones</strong>
                         </div>
@@ -279,14 +334,14 @@
             </field>
         </record>
 
-        <!-- Step 5: Review View -->
+        <!-- Step 6: Review View -->
         <record id="view_workflow_template_wizard_review" model="ir.ui.view">
             <field name="name">workflow.template.wizard.review</field>
             <field name="model">workflow.template.wizard</field>
             <field name="arch" type="xml">
-                <form string="Step 5: Review &amp; Create">
+                <form string="Step 6: Review &amp; Create">
                     <div class="oe_title">
-                        <h1>Step 5 of 5: Review &amp; Create</h1>
+                        <h1>Step 6 of 6: Review &amp; Create</h1>
                         <div class="alert alert-success" role="alert">
                             <strong>Review and create your workflow template</strong>
                         </div>
@@ -302,6 +357,7 @@
                             </group>
                         </group>
                         
+                        <field name="summary_milestones" widget="text"/>
                         <field name="summary_tasks" widget="text"/>
                     </sheet>
 
