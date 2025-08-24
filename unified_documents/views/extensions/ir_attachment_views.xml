@@ -9,7 +9,8 @@
             <xpath expr="//field[@name='res_model']" position="after">
                 <field name="folder_id" 
                        options="{'no_create': True}"
-                       placeholder="Select a folder (optional)"/>
+                       placeholder="Select a folder to organize your file"
+                       help="Choose a folder to organize this file. Files in folders appear in the Documents app."/>
             </xpath>
         </field>
     </record>

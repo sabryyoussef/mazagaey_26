@@ -43,8 +43,8 @@
                         <field name="source_id" invisible="1"/>
                         <field name="target_model" invisible="1"/>
                         <field name="target_id" invisible="1"/>
-                        <field name="source_product_id" string="Source Product?"/>
-                        <field name="target_project_id" string="Target Project?"/>
+                        <field name="source_product_id" string="Source Product" readonly="1"/>
+                        <field name="target_project_id" string="Target Project"/>
                     </group>
                     
                     <group string="Copy Options">
