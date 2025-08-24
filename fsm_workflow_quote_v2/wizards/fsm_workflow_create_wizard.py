@@ -85,16 +85,27 @@ class FSMWorkflowCreateWizard(models.TransientModel):
         # Generate tasks from template
         if self.template_id and self.template_id.task_template_ids:
             for task_template in self.template_id.task_template_ids:
+                # Map priority from template to task (template: 0=Low, 1=Normal, 2=High, 3=Critical)
+                # Task: 0=Low, 1=High
+                priority_mapping = {
+                    '0': '0',  # Low -> Low
+                    '1': '0',  # Normal -> Low
+                    '2': '1',  # High -> High
+                    '3': '1',  # Critical -> High
+                }
+                task_priority = priority_mapping.get(task_template.priority, '0')
+                
                 task_vals = {
                     'name': task_template.name,
                     'project_id': project.id,
-                    'user_ids': [(6, 0, task_template.user_ids.ids)] if task_template.user_ids else False,
                     'description': task_template.description or '',
+                    'priority': task_priority,
+                    'allocated_hours': task_template.estimated_hours,
                 }
                 self.env['project.task'].create(task_vals)
         
         # Create checkpoints from template if available
-        if self.template_id:
+        if self.template_id and 'project.task.checkpoint.template' in self.env:
             try:
                 # Look for checkpoint templates associated with the workflow template
                 checkpoint_templates = self.env['project.task.checkpoint.template'].search([
@@ -111,7 +122,8 @@ class FSMWorkflowCreateWizard(models.TransientModel):
                             'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
                             'notes': line.notes or '',
                         })
-            except Exception:
+            except Exception as e:
+                _logger.warning(f"Checkpoint creation failed: {e}")
                 # Checkpoint creation failed, continue without checkpoints
                 pass
         
@@ -173,16 +185,20 @@ class FSMWorkflowCreateWizard(models.TransientModel):
         
         # Create lines from template tasks
         for task_template in self.template_id.task_template_ids:
-            product = self._get_product_for_task(task_template)
-            if product:
-                line_vals = {
-                    'order_id': sale_order.id,
-                    'product_id': product.id,
-                    'name': task_template.name,
-                    'product_uom_qty': self._calculate_quantity(task_template),
-                    'price_unit': self._calculate_price_unit(product, task_template),
-                }
-                self.env['sale.order.line'].create(line_vals)
+            try:
+                product = self._get_product_for_task(task_template)
+                if product:
+                    line_vals = {
+                        'order_id': sale_order.id,
+                        'product_id': product.id,
+                        'name': task_template.name,
+                        'product_uom_qty': self._calculate_quantity(task_template),
+                        'price_unit': self._calculate_price_unit(product, task_template),
+                    }
+                    self.env['sale.order.line'].create(line_vals)
+            except Exception as e:
+                _logger.warning(f"Failed to create quotation line for task template {task_template.name}: {e}")
+                continue
 
     def _create_default_quotation_line(self, sale_order):
         """Create a default quotation line"""
