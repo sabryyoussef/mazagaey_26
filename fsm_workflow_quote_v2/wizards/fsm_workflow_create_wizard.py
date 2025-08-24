@@ -145,6 +145,7 @@ class FSMWorkflowCreateWizard(models.TransientModel):
             'estimated_hours': self.estimated_hours,
             'hourly_rate': self.hourly_rate,
             'fixed_price': self.fixed_price,
+            'state': 'in_progress',  # Set initial state
         }
         
         workflow_instance = self.env['fsm.workflow.instance'].create(workflow_vals)

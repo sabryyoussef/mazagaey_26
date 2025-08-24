@@ -9,11 +9,11 @@
         <field name="name"/>
         <field name="partner_id"/>
         <field name="template_id"/>
-        <field name="project_id"/>
-        <field name="timesheet_hours"/>
+        <field name="state"/>
         <field name="quotation_state"/>
         <field name="quotation_amount"/>
         <field name="checkpoint_progress" widget="percentage"/>
+        <field name="timesheet_hours"/>
         <field name="create_date"/>
       </list>
     </field>
@@ -31,21 +31,59 @@
         <sheet>
           <div class="oe_title">
             <h1>
-              <field name="name" placeholder="Workflow Name"/>
+              <field name="name" readonly="1"/>
             </h1>
           </div>
+          
+          <div class="oe_button_box" name="button_box">
+            <button name="action_open_project" type="object" class="oe_stat_button" icon="fa-tasks" string="Open Project">
+              <field name="project_id" invisible="1"/>
+            </button>
+            <button name="action_open_fsm" type="object" class="oe_stat_button" icon="fa-truck" string="Open FSM">
+              <field name="fsm_order_id" invisible="1"/>
+            </button>
+            <button name="action_open_sale" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Open Quotation">
+              <field name="sale_order_id" invisible="1"/>
+            </button>
+            <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
+              <field name="checkpoint_ids" invisible="1"/>
+            </button>
+            <button name="action_create_checkpoint" type="object" class="oe_stat_button" icon="fa-plus" string="Add Checkpoint">
+              <field name="project_id" invisible="1"/>
+            </button>
+            <button name="action_create_handover" type="object" class="oe_stat_button" icon="fa-exchange" string="Create Handover">
+              <field name="project_id" invisible="1"/>
+              <field name="partner_id" invisible="1"/>
+            </button>
+            <button name="action_create_quotation" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Create Quotation" 
+                    invisible="sale_order_id != False">
+              <field name="partner_id" invisible="1"/>
+            </button>
+            <button name="action_send_quotation" type="object" class="oe_stat_button" icon="fa-paper-plane" string="Send Quotation"
+                    invisible="quotation_state not in ['draft']">
+              <field name="sale_order_id" invisible="1"/>
+            </button>
+            <button name="action_confirm_quotation" type="object" class="oe_stat_button" icon="fa-check" string="Confirm Quotation"
+                    invisible="quotation_state not in ['draft', 'sent']">
+              <field name="sale_order_id" invisible="1"/>
+            </button>
+          </div>
+          
+          <widget name="web_ribbon" title="Archived" bg_color="text-bg-warning" invisible="active"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+          
           <group>
             <group>
-              <field name="partner_id" options="{'no_create_edit': True}"/>
-              <field name="template_id" options="{'no_create_edit': True}"/>
-              <field name="project_id" options="{'no_create_edit': True}"/>
+              <field name="partner_id"/>
+              <field name="template_id"/>
+              <field name="project_id"/>
               <field name="fsm_order_id"/>
             </group>
             <group>
-              <field name="timesheet_hours" readonly="1"/>
-              <field name="total_checkpoints" readonly="1"/>
-              <field name="completed_checkpoints" readonly="1"/>
-              <field name="checkpoint_progress" readonly="1" widget="percentage"/>
+              <field name="timesheet_hours"/>
+              <field name="total_checkpoints"/>
+              <field name="completed_checkpoints"/>
+              <field name="checkpoint_progress" widget="percentage"/>
             </group>
           </group>
           
@@ -63,40 +101,6 @@
               <field name="currency_id" invisible="1"/>
             </group>
           </group>
-          
-          <div class="oe_button_box" name="button_box">
-            <button name="action_open_project" type="object" class="oe_stat_button" icon="fa-tasks" string="Open Project">
-              <field name="project_id" invisible="1"/>
-            </button>
-            <button name="action_open_fsm" type="object" class="oe_stat_button" icon="fa-wrench" string="Open FSM">
-              <field name="fsm_order_id" invisible="1"/>
-            </button>
-            <button name="action_open_sale" type="object" class="oe_stat_button" icon="fa-shopping-cart" string="Open Quotation">
-              <field name="sale_order_id" invisible="1"/>
-            </button>
-            <button name="action_create_quotation" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Create Quotation" 
-                    invisible="sale_order_id != False">
-              <field name="partner_id" invisible="1"/>
-            </button>
-            <button name="action_send_quotation" type="object" class="oe_stat_button" icon="fa-paper-plane" string="Send Quotation"
-                    invisible="quotation_state not in ['draft']">
-              <field name="sale_order_id" invisible="1"/>
-            </button>
-            <button name="action_confirm_quotation" type="object" class="oe_stat_button" icon="fa-check" string="Confirm Quotation"
-                    invisible="quotation_state not in ['draft', 'sent']">
-              <field name="sale_order_id" invisible="1"/>
-            </button>
-            <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
-              <field name="checkpoint_ids" invisible="1"/>
-            </button>
-            <button name="action_create_checkpoint" type="object" class="oe_stat_button" icon="fa-plus" string="Add Checkpoint">
-              <field name="project_id" invisible="1"/>
-            </button>
-            <button name="action_create_handover" type="object" class="oe_stat_button" icon="fa-exchange" string="Create Handover">
-              <field name="project_id" invisible="1"/>
-              <field name="partner_id" invisible="1"/>
-            </button>
-          </div>
         </sheet>
       </form>
     </field>

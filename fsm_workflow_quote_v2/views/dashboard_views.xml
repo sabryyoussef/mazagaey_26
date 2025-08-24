@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Dashboard Form View -->
+  <record id="view_fsm_workflow_dashboard_form" model="ir.ui.view">
+    <field name="name">fsm.workflow.dashboard.form</field>
+    <field name="model">fsm.workflow.dashboard</field>
+    <field name="arch" type="xml">
+      <form string="FSM Workflow Dashboard">
+        <header>
+          <button name="%(action_report_workflow_analytics)d" type="action" string="Print Report" class="btn-primary" icon="fa-print"/>
+          <button name="action_refresh_dashboard" type="object" string="Refresh" class="btn-secondary" icon="fa-refresh"/>
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <h1>FSM Workflow Analytics Dashboard</h1>
+          </div>
+          
+          <group string="Overview Statistics">
+            <group>
+              <field name="total_workflows"/>
+              <field name="active_workflows"/>
+              <field name="completed_workflows"/>
+              <field name="total_revenue"/>
+            </group>
+            <group>
+              <field name="total_quotations"/>
+              <field name="quotation_conversion_rate"/>
+              <field name="checkpoint_completion_rate"/>
+              <field name="currency_id" invisible="1"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Dashboard Action -->
+  <record id="action_fsm_workflow_dashboard" model="ir.actions.act_window">
+    <field name="name">FSM Workflow Dashboard</field>
+    <field name="res_model">fsm.workflow.dashboard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_fsm_workflow_dashboard_form"/>
+    <field name="target">current</field>
+    <field name="context">{'create': False}</field>
+  </record>
+
+  <!-- Dashboard Menu Item -->
+  <menuitem id="menu_fsm_workflow_dashboard"
+            name="Dashboard"
+            parent="menu_fsm_workflow_root"
+            action="action_fsm_workflow_dashboard"
+            sequence="1"/>
+
+  <!-- Reports Menu Item -->
+  <menuitem id="menu_fsm_workflow_reports"
+            name="Reports"
+            parent="menu_fsm_workflow_root"
+            sequence="2"/>
+</odoo>

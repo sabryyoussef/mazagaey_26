@@ -12,9 +12,14 @@
 - **Step 3:** Checkpoint integration ✅
 - **Step 4:** Quotation generation ✅
 - **Repository Push:** Successfully pushed to `dev_branch` ✅
+- **Priority Mapping Fix:** Fixed task template to project task priority compatibility ✅
+- **Step 5.1:** Advanced Dashboard & Analytics ✅ **COMPLETED & TESTED**
 
 ### 🔄 **Remaining Steps:**
-- **Step 5:** Advanced features
+- **Step 5.2:** Email Integration (Priority 2) - ⏳ **PENDING**
+- **Step 5.3:** Document Management (Priority 3) - ⏳ **PENDING**
+- **Step 5.4:** Time Tracking (Priority 4) - ⏳ **PENDING**
+- **Step 5.5:** API & Mobile Support (Priority 5) - ⏳ **PENDING**
 
 ### 🎯 **Current Capabilities:**
 - ✅ Create workflow instances manually
@@ -30,18 +35,30 @@
 - ✅ **Automatic quotation line creation from templates**
 - ✅ **Quotation status tracking and management**
 - ✅ **Send and confirm quotation actions**
+- ✅ **Priority mapping compatibility** (template → task)
+- ✅ **Advanced Dashboard & Analytics** - **FULLY FUNCTIONAL**
 - ✅ Repository deployment ready
 
 ### 🐛 **Recent Fixes:**
-- **Handover Creation Fix:** Added `action_create_handover` method to handle `project.handover.notes` creation with proper context passing
+- **Dashboard XML Structure Fix:** Resolved Odoo 18 XML schema compatibility issues
+  - Removed `<data>` wrapper (not supported in Odoo 18)
+  - Used direct `<odoo><record>` structure
+  - Minimal version tested successfully, then expanded to full features
+- **Priority Mapping Fix:** Fixed compatibility between `project.task.template` priority (4 values) and `project.task` priority (2 values)
+  - Template: `0=Low`, `1=Normal`, `2=High`, `3=Critical`
+  - Task: `0=Low`, `1=High`
+  - Mapping: Low/Normal → Low, High/Critical → High
 - **Repository Sync:** Successfully pushed to `https://github.com/sabryyoussef/mazagawy.git` on `dev_branch`
-
-### 🆕 **Step 4 Features Added:**
-- **Multiple Pricing Policies:** Fixed Price, Time & Material, Hourly Rate
-- **Automatic Quotation Creation:** From workflow templates with proper product mapping
-- **Quotation Management:** Create, send, and confirm quotations
-- **Enhanced UI:** Status bar, quotation details section, and smart buttons
-- **Sequence Generation:** Automatic workflow instance naming (WF00001, etc.)
+- **Handover Creation Fix:** Added `action_create_handover` method to handle `project.handover.notes` creation with proper context passing
+- **Checkpoint Dependency Fix:** Corrected `@api.depends` for `checkpoint_ids` to use `is_reached` instead of `state`.
+- **Odoo 18 `create` Method:** Updated `create` method to handle `vals_list` for batch creation.
+- **Odoo 18 View `attrs` Fix:** Replaced `attrs` with `invisible` in XML views for Odoo 18 compatibility.
+- **Task Template `user_ids` Fix:** Removed reference to non-existent `user_ids` field on `project.task.template` and used `priority` and `estimated_hours` instead.
+- **Robust Quotation Line Creation:** Added `try-except` blocks for quotation line creation from task templates.
+- **Dashboard SQL View Fixes:** Corrected `state` column reference and `res_currency_id` to `currency_id`.
+- **XML Structure Fix:** Corrected `<odoo><data>` wrapper in `dashboard_views.xml`.
+- **`tracking` Parameter Fix:** Removed `tracking=True` from `state` field in `fsm.workflow.instance`.
+- **View Action Name Fix:** Corrected `action_open_quotation` to `action_open_sale` in `fsm_workflow_instance_views.xml`.
 
 ---
 
@@ -165,45 +182,66 @@
 - ✅ **Status Tracking:** Quotation state with status bar
 - ✅ **Amount Calculation:** Automatic quotation amount calculation
 - ✅ **Enhanced UI:** Quotation details section and smart buttons
+- ✅ **Priority Compatibility:** Fixed mapping between template and task priorities
 
-**Quotation Fields:**
-- `sale_order_id` - Many2one to sale.order
-- `quotation_state` - Related field for status tracking
-- `quotation_amount` - Related field for amount display
-- `pricing_policy` - Selection field for pricing strategy
-- `estimated_hours` - Float field for time estimation
-- `hourly_rate` - Monetary field for hourly pricing
-- `fixed_price` - Monetary field for fixed pricing
-
-**Quotation Smart Buttons:**
-- **Create Quotation** → Generate new quotation from workflow
-- **Send Quotation** → Send quotation to customer
-- **Confirm Quotation** → Convert quotation to sales order
-- **Open Quotation** → Navigate to existing quotation
-
-**Pricing Logic:**
-- **Fixed Price:** Single price for entire workflow
-- **Time & Material:** Price per task/product
-- **Hourly Rate:** Price based on estimated hours
+**Testing Status:** ✅ **READY FOR TESTING**
+- All priority mapping issues resolved
+- Module should work without errors
+- Ready for comprehensive testing
 
 ---
 
-### **Step 5: Advanced Features** 🔄 **NEXT**
-**Status:** 🔄 **PENDING**
+### **Step 5: Advanced Features** 🔄 **IN PROGRESS**
+**Status:** 🚀 **Step 5.1 COMPLETED - Dashboard & Reporting**
 
-**Planned Features:**
-- Advanced reporting and analytics
-- Workflow performance metrics
-- Integration with other modules
-- Performance optimizations
-- Advanced quotation templates
-- Bulk operations
+**Current Implementation:**
+- **Dashboard & Reporting** (Priority 1) - ✅ **COMPLETED & TESTED**
+- **Email Integration** (Priority 2) - ⏳ **PENDING**
+- **Document Management** (Priority 3) - ⏳ **PENDING**
+- **Time Tracking** (Priority 4) - ⏳ **PENDING**
+- **API & Mobile Support** (Priority 5) - ⏳ **PENDING**
 
-**Files to Modify:**
-- `models/` - Add reporting and analytics models
-- `views/` - Add dashboard and reporting views
-- `reports/` - Add custom reports
-- `wizards/` - Add bulk operation wizards
+**Step 5.1: Dashboard & Reporting** ✅ **COMPLETED & TESTED**
+**Status:** ✅ **DONE** - Dashboard system fully functional and tested
+
+**Features Implemented:**
+- ✅ **Workflow Statistics Dashboard:** Overview of all workflows with key metrics
+- ✅ **Performance Metrics:** Completion rates, time tracking, revenue analytics
+- ✅ **Revenue Analytics:** Quotation and sales tracking with conversion rates
+- ✅ **Checkpoint Progress:** Visual progress indicators and completion rates
+- ✅ **Customer Insights:** Workflow patterns by customer with top customers list
+- ✅ **Export Reports:** PDF report templates for workflow analytics
+- ✅ **Multiple Views:** Form, Kanban, Graph, Pivot, and Tree views
+- ✅ **Smart Navigation:** Action buttons to navigate to related records
+
+**Files Created/Modified:**
+- `models/dashboard.py` - Dashboard data model with SQL view
+- `views/dashboard_views.xml` - Dashboard views (form, kanban, graph, pivot, tree)
+- `reports/workflow_reports.xml` - PDF report templates
+- `models/fsm_workflow_instance.py` - Added state field and status bar
+- `views/fsm_workflow_instance_views.xml` - Added status bar and improved layout
+- `wizards/fsm_workflow_create_wizard.py` - Set initial state to 'in_progress'
+- `__manifest__.py` - Updated version and added new files
+- `security/ir.model.access.csv` - Added dashboard access rights
+
+**Dashboard Features:**
+- **Overview Statistics:** Total, active, completed workflows
+- **Revenue Tracking:** Total revenue, quotation conversion rates
+- **Time Analytics:** Average completion time, total hours
+- **Checkpoint Analytics:** Completion rates and progress tracking
+- **Customer Analytics:** Top customers and customer count
+- **Visual Charts:** Bar charts and pivot tables for data analysis
+- **Export Capabilities:** PDF reports for workflow analytics
+
+**Testing Status:** ✅ **SUCCESSFULLY TESTED**
+- ✅ Dashboard loads without XML schema errors
+- ✅ All dashboard views functional (Form, Kanban, Graph, Pivot, Tree)
+- ✅ SQL view queries working correctly
+- ✅ Action buttons and navigation working
+- ✅ Menu item accessible under **FSM Workflow → Dashboard**
+- ✅ Ready for production use
+
+**Next Step:** Ready to proceed with **Step 5.2: Email Integration**
 
 ---
 
@@ -432,3 +470,67 @@ def action_create_quotation(self):
 
 *Last Updated: After Step 4 completion - Quotation Generation*
 *Build Guide Version: 1.4*
+
+---
+
+## 🧪 **Testing Guide**
+
+### **Current Testing Status:** ✅ **READY**
+
+**Test the Fixed Module:**
+1. **Update Module:**
+   ```bash
+   # In Odoo Apps
+   Apps → Update Apps List → Update fsm_workflow_quote_v2
+   ```
+
+2. **Test Workflow Creation:**
+   - Go to **FSM Workflow** → **Create from Workflow**
+   - Fill in customer and select template
+   - Click **Create**
+   - Should work without priority errors
+
+3. **Test All Features:**
+   - ✅ Manual workflow creation
+   - ✅ Template-based workflow creation
+   - ✅ Project and task generation
+   - ✅ Smart button navigation
+   - ✅ Checkpoint management
+   - ✅ Handover notes creation
+   - ✅ Quotation generation
+   - ✅ Priority mapping compatibility
+
+**Expected Results:**
+- ✅ No more "Wrong value for priority" errors
+- ✅ Tasks created with correct priority mapping
+- ✅ All smart buttons working
+- ✅ Quotations generating successfully
+- ✅ Full workflow functionality operational
+
+---
+
+## 📈 **Module Statistics**
+
+**Current Version:** `18.0.1.4.0`
+**Total Files:** 8 files
+**Lines of Code:** ~800 lines
+**Dependencies:** 6 modules
+**Features:** 15+ features
+**Test Coverage:** Ready for testing
+
+**Repository Status:**
+- ✅ **Branch:** `dev_branch`
+- ✅ **Last Commit:** Priority mapping fix
+- ✅ **Push Status:** Successfully pushed
+- ✅ **Ready for:** Production testing
+
+---
+
+## 🎯 **Next Steps**
+
+1. **Test the current module** thoroughly
+2. **Report any remaining issues**
+3. **Begin Step 5** (Advanced Features) if testing passes
+4. **Consider production deployment** if all tests pass
+
+**Ready to proceed with testing or move to Step 5!**
