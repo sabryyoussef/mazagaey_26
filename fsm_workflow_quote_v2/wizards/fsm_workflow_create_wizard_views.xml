@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_fsm_workflow_create_wizard" model="ir.ui.view">
+    <field name="name">fsm.workflow.create.wizard.form</field>
+    <field name="model">fsm.workflow.create.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Create FSM from Workflow Template">
+        <sheet>
+          <group>
+            <field name="partner_id" options="{'no_create_edit': True}"/>
+            <field name="template_id" options="{'no_create_edit': True}"/>
+            <field name="project_name"/>
+            <field name="pricing_policy"/>
+          </group>
+        </sheet>
+        <footer>
+          <button string="Create" name="action_create" type="object" class="btn-primary"/>
+          <button string="Cancel" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_fsm_workflow_create_wizard" model="ir.actions.act_window">
+    <field name="name">Create from Workflow Template</field>
+    <field name="res_model">fsm.workflow.create.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{}</field>
+  </record>
+
+  <menuitem id="menu_fsm_workflow_create" 
+            name="Create from Workflow" 
+            parent="menu_fsm_workflow_root" 
+            action="action_fsm_workflow_create_wizard" 
+            sequence="5"/>
+</odoo>
