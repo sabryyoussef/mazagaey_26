@@ -1,6 +1,6 @@
 {
     'name': 'FSM Workflow → Quotation v2',
-    'version': '18.0.1.4.0',
+    'version': '18.0.1.5.0',
     'summary': 'FSM Workflow Quotation System with Advanced Features',
     'description': """
 FSM Workflow → Quotation System v2
@@ -15,11 +15,19 @@ Features:
 - Handover notes creation
 - Timesheet integration
 - Optional FSM integration
+- Advanced Dashboard & Analytics
 
 Pricing Policies:
 - Fixed Price
 - Time & Material
 - Hourly Rate
+
+Dashboard Features:
+- Workflow statistics and analytics
+- Performance metrics and KPIs
+- Revenue tracking and reporting
+- Customer insights and patterns
+- Visual charts and graphs
 
 Dependencies:
 - project_templates_basic
@@ -42,9 +50,12 @@ Dependencies:
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
         'views/fsm_workflow_instance_views.xml',
+        'views/dashboard_views.xml',
+        'reports/workflow_reports.xml',
         'wizards/fsm_workflow_create_wizard_views.xml',
     ],
     'installable': True,
     'application': False,
     'auto_install': False,
+    'post_init_hook': 'post_init_hook',
 }

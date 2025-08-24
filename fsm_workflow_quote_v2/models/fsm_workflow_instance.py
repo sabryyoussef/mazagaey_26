@@ -59,6 +59,14 @@ class FSMWorkflowInstance(models.Model):
     active = fields.Boolean(default=True)
     create_date = fields.Datetime(string='Created on', readonly=True)
     write_date = fields.Datetime(string='Last Updated on', readonly=True)
+    
+    # Workflow State
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ], string='Workflow State', default='draft', required=True)
 
     def create(self, vals_list):
         """Override create to set automatic sequence"""

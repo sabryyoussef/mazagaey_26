@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Workflow Analytics Report -->
+  <record id="action_report_workflow_analytics" model="ir.actions.report">
+    <field name="name">Workflow Analytics Report</field>
+    <field name="model">fsm.workflow.dashboard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">fsm_workflow_quote_v2.report_workflow_analytics</field>
+    <field name="report_file">fsm_workflow_quote_v2.report_workflow_analytics</field>
+    <field name="print_report_name">'Workflow Analytics - %s' % (object.name)</field>
+    <field name="binding_model_id" ref="model_fsm_workflow_dashboard"/>
+    <field name="binding_type">report</field>
+  </record>
+
+  <!-- Report Template -->
+  <template id="report_workflow_analytics">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="o">
+        <t t-call="fsm_workflow_quote_v2.report_workflow_analytics_document"/>
+      </t>
+    </t>
+  </template>
+
+  <!-- Report Document Template -->
+  <template id="report_workflow_analytics_document">
+    <t t-call="web.external_layout">
+      <div class="page">
+        <h2>FSM Workflow Analytics Report</h2>
+        
+        <div class="row mt32 mb32">
+          <div class="col-6">
+            <strong>Report Date:</strong>
+            <span t-field="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <h3>Overview Statistics</h3>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Total Workflows:</strong></td>
+                <td t-field="o.total_workflows"/>
+              </tr>
+              <tr>
+                <td><strong>Active Workflows:</strong></td>
+                <td t-field="o.active_workflows"/>
+              </tr>
+              <tr>
+                <td><strong>Completed Workflows:</strong></td>
+                <td t-field="o.completed_workflows"/>
+              </tr>
+              <tr>
+                <td><strong>Total Revenue:</strong></td>
+                <td t-field="o.total_revenue"/>
+              </tr>
+              <tr>
+                <td><strong>Average Completion Time:</strong></td>
+                <td t-field="o.avg_completion_time"/> days
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <h3>Quotation Analytics</h3>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Total Quotations:</strong></td>
+                <td t-field="o.total_quotations"/>
+              </tr>
+              <tr>
+                <td><strong>Sent Quotations:</strong></td>
+                <td t-field="o.sent_quotations"/>
+              </tr>
+              <tr>
+                <td><strong>Confirmed Quotations:</strong></td>
+                <td t-field="o.confirmed_quotations"/>
+              </tr>
+              <tr>
+                <td><strong>Conversion Rate:</strong></td>
+                <td t-field="o.quotation_conversion_rate"/>%
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <h3>Time Tracking</h3>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Total Hours:</strong></td>
+                <td t-field="o.total_hours"/>
+              </tr>
+              <tr>
+                <td><strong>Average Hours per Workflow:</strong></td>
+                <td t-field="o.avg_hours_per_workflow"/>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <h3>Checkpoint Analytics</h3>
+            <table class="table table-sm">
+              <tr>
+                <td><strong>Total Checkpoints:</strong></td>
+                <td t-field="o.total_checkpoints"/>
+              </tr>
+              <tr>
+                <td><strong>Completed Checkpoints:</strong></td>
+                <td t-field="o.completed_checkpoints"/>
+              </tr>
+              <tr>
+                <td><strong>Completion Rate:</strong></td>
+                <td t-field="o.checkpoint_completion_rate"/>%
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>
