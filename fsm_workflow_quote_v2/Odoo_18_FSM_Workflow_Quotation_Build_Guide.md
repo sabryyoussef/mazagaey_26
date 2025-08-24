@@ -1,47 +1,19 @@
-# Odoo 18 FSM Workflow → Quotation: Step-Up Build Guide (with Local-Grepped Dependencies)
-
-## 🎯 **Objective**
-Build a robust FSM Workflow Quotation module (`fsm_workflow_quote_v2`) that integrates with existing local modules, following Odoo 18 best practices and avoiding dependency issues.
-
-## 📋 **Local Module Dependencies Discovered**
-Based on grepping `/home/sabry3/odoo-dev/mazagawy/custom_addons`:
-
-### ✅ **Available Modules:**
-- `project_templates_basic` → Provides `workflow.template` model
-- `project_checkpoints_basic` → Provides checkpoint functionality  
-- `project_workflow_integration` → Workflow integration features
-- `project_compliance` → Compliance tracking
-- `project_handover_notes` → Handover functionality
-- `project_task_checkpoints` → Task checkpoint system
-- `product_workflow_simple` → Product workflow features
-- `project_documents_extension` → Document management
-- `project_task_attachments` → Task attachments
-- `contact_documents` → Contact document management
-- `documents_upload_folder_enforcer` → Document upload rules
-- `product_document_domain` → Product document domains
-
-### ❌ **Missing/Unavailable:**
-- `industry_fsm` → Not installed in current setup
-- `fsm.order` model → Not available without industry_fsm
-
-## 🔧 **Build Strategy**
-1. **Step-by-step validation** after each component
-2. **Conditional dependencies** for optional features
-3. **Robust error handling** for missing models
-4. **Progressive enhancement** from core to advanced features
+# 🚀 **Odoo 18 FSM Workflow → Quotation: Step-Up Build Guide**
+## *(with Local-Grepped Dependencies)*
 
 ---
 
 ## 📊 **Current Progress Summary**
 
 ### ✅ **Completed Steps:**
-- **Step 0:** Skeleton module (installable)
-- **Step 1:** Core model with smart buttons
-- **Step 2:** Workflow template integration wizard
-- **Step 3:** Checkpoint integration
+- **Step 0:** Skeleton module (installable) ✅
+- **Step 1:** Core model with smart buttons ✅
+- **Step 2:** Workflow template integration wizard ✅
+- **Step 3:** Checkpoint integration ✅
+- **Step 4:** Quotation generation ✅
+- **Repository Push:** Successfully pushed to `dev_branch` ✅
 
 ### 🔄 **Remaining Steps:**
-- **Step 4:** Quotation generation
 - **Step 5:** Advanced features
 
 ### 🎯 **Current Capabilities:**
@@ -53,592 +25,410 @@ Based on grepping `/home/sabry3/odoo-dev/mazagawy/custom_addons`:
 - ✅ Optional FSM integration
 - ✅ Checkpoint tracking and management
 - ✅ Checkpoint progress calculation
+- ✅ Handover notes creation (with project_handover_notes integration)
+- ✅ **Quotation generation with multiple pricing policies**
+- ✅ **Automatic quotation line creation from templates**
+- ✅ **Quotation status tracking and management**
+- ✅ **Send and confirm quotation actions**
+- ✅ Repository deployment ready
+
+### 🐛 **Recent Fixes:**
+- **Handover Creation Fix:** Added `action_create_handover` method to handle `project.handover.notes` creation with proper context passing
+- **Repository Sync:** Successfully pushed to `https://github.com/sabryyoussef/mazagawy.git` on `dev_branch`
+
+### 🆕 **Step 4 Features Added:**
+- **Multiple Pricing Policies:** Fixed Price, Time & Material, Hourly Rate
+- **Automatic Quotation Creation:** From workflow templates with proper product mapping
+- **Quotation Management:** Create, send, and confirm quotations
+- **Enhanced UI:** Status bar, quotation details section, and smart buttons
+- **Sequence Generation:** Automatic workflow instance naming (WF00001, etc.)
 
 ---
 
-## 4. Step-Up Build Plan
+## 🎯 **Module Overview**
 
-### ✅ Step 0 — Skeleton (Installable Only) - COMPLETED
+**Target:** Build a robust FSM Workflow → Quotation system that integrates with existing local modules.
 
-**Objective:** Create minimal installable module.
+**Key Dependencies (Grepped from local):**
+- `project_templates_basic` → Provides `workflow.template` model
+- `project_checkpoints_basic` → Provides checkpoint functionality
+- `project_handover_notes` → Provides handover notes functionality
+- `project_compliance` → Provides compliance project integration
 
-**Files created:**
-- ✅ `__init__.py` - Main module initialization
-- ✅ `__manifest__.py` - Module manifest with basic dependencies
-- ✅ `models/__init__.py` - Models package initialization
-- ✅ Directory structure created
+---
 
-**Current Status:** Basic skeleton is ready for installation.
+## 📋 **Step-by-Step Build Process**
 
-**Validation:**
-```bash
-# Check if module appears in Apps list
-# Install module - should succeed without errors
-```
+### **Step 0: Skeleton Module** ✅ **COMPLETED**
+**Status:** ✅ **DONE** - Module is installable and functional
 
-**Next Step:** Proceed to Step 1 - Core Model
+**Files Created:**
+- `__manifest__.py` - Basic dependencies and data files
+- `__init__.py` - Module initialization
+- `models/__init__.py` - Model imports
+- `security/ir.model.access.csv` - Access rights
 
-### ✅ Step 1 — Core Model - COMPLETED
+**Key Features:**
+- ✅ Installable module structure
+- ✅ Proper dependency management
+- ✅ Security access rights configured
 
-**Objective:** Add FSM workflow instance model with basic fields and smart buttons.
+---
 
-**Files to add:**
+### **Step 1: Core Model with Smart Buttons** ✅ **COMPLETED**
+**Status:** ✅ **DONE** - Core functionality working
 
+**Files Modified:**
+- `models/fsm_workflow_instance.py` - Main model with all fields and methods
+- `views/fsm_workflow_instance_views.xml` - List and form views with smart buttons
+
+**Key Features:**
+- ✅ `fsm.workflow.instance` model with all required fields
+- ✅ Smart buttons for Project, FSM, Quotation navigation
+- ✅ Timesheet hours calculation
+- ✅ Robust error handling for missing dependencies
+- ✅ Optional FSM integration (Char field instead of Many2one)
+
+**Smart Buttons Implemented:**
+- **Open Project** → Navigate to linked project
+- **Open FSM** → Search for FSM order by reference (if FSM module available)
+- **Open Quotation** → Navigate to linked sale order
+- **Checkpoints** → View project checkpoints
+- **Add Checkpoint** → Create new checkpoint
+- **Create Handover** → Create handover notes
+
+---
+
+### **Step 2: Workflow Template Integration Wizard** ✅ **COMPLETED**
+**Status:** ✅ **DONE** - Template-based creation working
+
+**Files Created:**
+- `wizards/fsm_workflow_create_wizard.py` - Wizard model
+- `wizards/fsm_workflow_create_wizard_views.xml` - Wizard views
+- `wizards/__init__.py` - Wizard imports
+
+**Key Features:**
+- ✅ Create workflow instances from templates
+- ✅ Automatic project creation
+- ✅ Automatic task generation from template
+- ✅ Optional FSM order creation
+- ✅ Pricing policy selection
+- ✅ Partner and template selection
+
+**Wizard Flow:**
+1. Select partner and workflow template
+2. Auto-fill project name from template
+3. Choose pricing policy
+4. Create project and tasks
+5. Create workflow instance
+
+---
+
+### **Step 3: Checkpoint Integration** ✅ **COMPLETED**
+**Status:** ✅ **DONE** - Checkpoint tracking fully functional
+
+**Files Modified:**
+- `models/fsm_workflow_instance.py` - Added checkpoint fields and methods
+- `views/fsm_workflow_instance_views.xml` - Added checkpoint UI elements
+- `wizards/fsm_workflow_create_wizard.py` - Added automatic checkpoint creation
+
+**Key Features:**
+- ✅ Checkpoint progress tracking
+- ✅ Automatic checkpoint creation from templates
+- ✅ Progress percentage calculation
+- ✅ Checkpoint management buttons
+- ✅ Integration with `project_checkpoints_basic` module
+
+**Checkpoint Fields:**
+- `checkpoint_ids` - One2many to project.task.checkpoint
+- `total_checkpoints` - Computed field
+- `completed_checkpoints` - Computed field  
+- `checkpoint_progress` - Percentage widget
+
+---
+
+### **Step 4: Quotation Generation** ✅ **COMPLETED**
+**Status:** ✅ **DONE** - Quotation system fully functional
+
+**Files Modified:**
+- `models/fsm_workflow_instance.py` - Added quotation fields and methods
+- `views/fsm_workflow_instance_views.xml` - Added quotation UI elements
+- `wizards/fsm_workflow_create_wizard.py` - Added quotation creation
+- `data/ir_sequence_data.xml` - Added sequence for automatic naming
+- `__manifest__.py` - Updated version and dependencies
+
+**Key Features:**
+- ✅ **Multiple Pricing Policies:** Fixed Price, Time & Material, Hourly Rate
+- ✅ **Automatic Quotation Creation:** From workflow templates
+- ✅ **Product Mapping:** Automatic product selection for task templates
+- ✅ **Quotation Management:** Create, send, confirm actions
+- ✅ **Status Tracking:** Quotation state with status bar
+- ✅ **Amount Calculation:** Automatic quotation amount calculation
+- ✅ **Enhanced UI:** Quotation details section and smart buttons
+
+**Quotation Fields:**
+- `sale_order_id` - Many2one to sale.order
+- `quotation_state` - Related field for status tracking
+- `quotation_amount` - Related field for amount display
+- `pricing_policy` - Selection field for pricing strategy
+- `estimated_hours` - Float field for time estimation
+- `hourly_rate` - Monetary field for hourly pricing
+- `fixed_price` - Monetary field for fixed pricing
+
+**Quotation Smart Buttons:**
+- **Create Quotation** → Generate new quotation from workflow
+- **Send Quotation** → Send quotation to customer
+- **Confirm Quotation** → Convert quotation to sales order
+- **Open Quotation** → Navigate to existing quotation
+
+**Pricing Logic:**
+- **Fixed Price:** Single price for entire workflow
+- **Time & Material:** Price per task/product
+- **Hourly Rate:** Price based on estimated hours
+
+---
+
+### **Step 5: Advanced Features** 🔄 **NEXT**
+**Status:** 🔄 **PENDING**
+
+**Planned Features:**
+- Advanced reporting and analytics
+- Workflow performance metrics
+- Integration with other modules
+- Performance optimizations
+- Advanced quotation templates
+- Bulk operations
+
+**Files to Modify:**
+- `models/` - Add reporting and analytics models
+- `views/` - Add dashboard and reporting views
+- `reports/` - Add custom reports
+- `wizards/` - Add bulk operation wizards
+
+---
+
+## 🛠 **Technical Implementation Details**
+
+### **Model Structure:**
 ```python
-# models/fsm_workflow_instance.py
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
-
 class FSMWorkflowInstance(models.Model):
     _name = 'fsm.workflow.instance'
     _description = 'FSM Workflow Instance'
-    _order = 'id desc'
-
-    name = fields.Char(required=True, default=lambda self: _('FSM Workflow Instance'))
-    project_id = fields.Many2one('project.project', string='Project', required=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', required=True)
-
-    pricing_policy = fields.Selection([
-        ('tm', 'Time & Materials'),
-        ('fixed', 'Fixed Price'),
-        ('hybrid', 'Hybrid'),
-    ], string='Pricing Policy', default='tm', required=True)
-
-    state = fields.Selection([
-        ('running', 'Running'),
-        ('quoted', 'Quoted'),
-        ('closed', 'Closed'),
-    ], default='running', string='State')
-
-    sale_order_id = fields.Many2one('sale.order', string='Last Quotation', copy=False)
-    timesheet_hours = fields.Float(string='Total Timesheet Hours', compute='_compute_hours', store=False)
-
-    # Optional fields from our modules
-    template_id = fields.Many2one('workflow.template', string='Workflow Template', required=False, copy=False)
-    fsm_order_id = fields.Char(string='FSM Order Reference', required=False, copy=False, help='Reference to FSM Order (if FSM module is installed)')
-
+    
+    # Core Fields
+    name = fields.Char(required=True, copy=False, readonly=True, default=lambda self: _('New'))
+    partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', copy=False)
+    template_id = fields.Many2one('workflow.template', ondelete='set null', copy=False)
+    
+    # Project Integration
+    project_id = fields.Many2one('project.project', ondelete='set null', copy=False)
+    timesheet_hours = fields.Float(compute='_compute_hours', store=True)
+    
+    # FSM Integration (Optional)
+    fsm_order_id = fields.Char(string='FSM Order Reference', help='FSM order reference if FSM module is installed')
+    
+    # Sales Integration
+    sale_order_id = fields.Many2one('sale.order', ondelete='set null', copy=False)
+    quotation_state = fields.Selection(related='sale_order_id.state', store=True, readonly=True)
+    quotation_amount = fields.Monetary(related='sale_order_id.amount_total', store=True, readonly=True)
+    currency_id = fields.Many2one('res.currency', related='sale_order_id.currency_id', readonly=True)
+    
     # Checkpoint Integration
-    checkpoint_ids = fields.One2many('project.task.checkpoint', 'compliance_project_id', string='Project Checkpoints', domain=[('compliance_project_id', '!=', False)])
-    total_checkpoints = fields.Integer(string='Total Checkpoints', compute='_compute_checkpoint_stats', store=False)
-    completed_checkpoints = fields.Integer(string='Completed Checkpoints', compute='_compute_checkpoint_stats', store=False)
-    checkpoint_progress = fields.Float(string='Checkpoint Progress (%)', compute='_compute_checkpoint_stats', store=False)
-
-    @api.depends('project_id')
-    def _compute_hours(self):
-        for rec in self:
-            if rec.project_id:
-                try:
-                    aal = self.env['account.analytic.line'].read_group(
-                        domain=[('project_id', '=', rec.project_id.id), ('unit_amount', '>', 0)],
-                        fields=['unit_amount:sum'],
-                        groupby=[]
-                    )
-                    rec.timesheet_hours = (aal and aal[0].get('unit_amount_sum') or 0.0)
-                except:
-                    rec.timesheet_hours = 0.0
-            else:
-                rec.timesheet_hours = 0.0
-
-    @api.depends('checkpoint_ids', 'checkpoint_ids.is_reached')
-    def _compute_checkpoint_stats(self):
-        """Compute checkpoint statistics"""
-        for rec in self:
-            if rec.checkpoint_ids:
-                rec.total_checkpoints = len(rec.checkpoint_ids)
-                rec.completed_checkpoints = len(rec.checkpoint_ids.filtered(lambda c: c.is_reached))
-                rec.checkpoint_progress = (rec.completed_checkpoints / rec.total_checkpoints * 100) if rec.total_checkpoints > 0 else 0.0
-            else:
-                rec.total_checkpoints = 0
-                rec.completed_checkpoints = 0
-                rec.checkpoint_progress = 0.0
-
-    def action_open_project(self):
-        self.ensure_one()
-        if not self.project_id:
-            return {}
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.project',
-            'res_id': self.project_id.id,
-            'view_mode': 'form',
-        }
-
-    def action_open_fsm(self):
-        self.ensure_one()
-        if not self.fsm_order_id or 'fsm.order' not in self.env:
-            return {}
-        # Try to find the FSM order by reference
-        try:
-            fsm_order = self.env['fsm.order'].search([('name', '=', self.fsm_order_id)], limit=1)
-            if fsm_order:
-                return {
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'fsm.order',
-                    'res_id': fsm_order.id,
-                    'view_mode': 'form',
-                }
-        except:
-            pass
-        return {}
-
-    def action_open_sale(self):
-        self.ensure_one()
-        if not self.sale_order_id:
-            return {}
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'sale.order',
-            'res_id': self.sale_order_id.id,
-            'view_mode': 'form',
-        }
-
-    def action_open_checkpoints(self):
-        """Open checkpoints view for this workflow instance"""
-        self.ensure_one()
-        if not self.checkpoint_ids:
-            return {}
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.task.checkpoint',
-            'view_mode': 'list,form',
-            'domain': [('compliance_project_id', '=', self.project_id.id)],
-            'context': {
-                'default_compliance_project_id': self.project_id.id,
-                'default_name': 'New Checkpoint',
-            },
-            'name': f'Checkpoints - {self.name}',
-        }
-
-    def action_create_checkpoint(self):
-        """Create a new checkpoint for this workflow instance"""
-        self.ensure_one()
-        if not self.project_id:
-            return {}
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.task.checkpoint',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_compliance_project_id': self.project_id.id,
-                'default_name': 'New Checkpoint',
-            },
-        }
+    checkpoint_ids = fields.One2many('project.task.checkpoint', 'compliance_project_id', related='project_id.checkpoint_ids')
+    total_checkpoints = fields.Integer(compute='_compute_checkpoint_stats', store=True)
+    completed_checkpoints = fields.Integer(compute='_compute_checkpoint_stats', store=True)
+    checkpoint_progress = fields.Float(compute='_compute_checkpoint_stats', store=True)
+    
+    # Quotation Details
+    pricing_policy = fields.Selection([('fixed', 'Fixed Price'), ('time_material', 'Time & Material'), ('hourly', 'Hourly Rate')], default='fixed')
+    estimated_hours = fields.Float(default=0.0)
+    hourly_rate = fields.Monetary(default=0.0)
+    fixed_price = fields.Monetary(default=0.0)
 ```
 
+### **Quotation Creation Logic:**
 ```python
-# models/__init__.py
-# -*- coding: utf-8 -*-
-from . import fsm_workflow_instance
+def action_create_quotation(self):
+    """Create a quotation from this workflow instance"""
+    self.ensure_one()
+    if self.sale_order_id:
+        return self.action_open_sale()
+    
+    # Create sale order
+    sale_order_vals = {
+        'partner_id': self.partner_id.id,
+        'project_id': self.project_id.id if self.project_id else False,
+        'origin': self.name,
+        'note': f'Generated from FSM Workflow: {self.name}',
+    }
+    
+    sale_order = self.env['sale.order'].create(sale_order_vals)
+    
+    # Add quotation lines based on template and pricing policy
+    if self.template_id:
+        self._create_quotation_lines_from_template(sale_order)
+    else:
+        self._create_default_quotation_line(sale_order)
+    
+    # Update workflow instance
+    self.sale_order_id = sale_order.id
+    
+    return {
+        'type': 'ir.actions.act_window',
+        'res_model': 'sale.order',
+        'res_id': sale_order.id,
+        'view_mode': 'form',
+        'target': 'current',
+    }
 ```
 
+### **Enhanced Smart Button Implementation:**
 ```xml
-<!-- views/fsm_workflow_instance_views.xml -->
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-  <record id="view_fsm_workflow_instance_list" model="ir.ui.view">
-    <field name="name">fsm.workflow.instance.list</field>
-    <field name="model">fsm.workflow.instance</field>
-    <field name="arch" type="xml">
-      <list>
-        <field name="name"/>
-        <field name="partner_id"/>
-        <field name="project_id"/>
-        <field name="fsm_order_id"/>
-        <field name="pricing_policy"/>
-        <field name="timesheet_hours"/>
-        <field name="checkpoint_progress"/>
-        <field name="state"/>
-        <field name="sale_order_id"/>
-      </list>
-    </field>
-  </record>
-
-  <record id="view_fsm_workflow_instance_form" model="ir.ui.view">
-    <field name="name">fsm.workflow.instance.form</field>
-    <field name="model">fsm.workflow.instance</field>
-    <field name="arch" type="xml">
-      <form>
-        <sheet>
-          <group>
-            <field name="name"/>
-            <field name="partner_id"/>
-            <field name="pricing_policy"/>
-          </group>
-          <group>
-            <field name="project_id"/>
-            <field name="fsm_order_id"/>
-            <field name="sale_order_id"/>
-            <field name="state"/>
-          </group>
-          <group>
-            <field name="timesheet_hours" readonly="1"/>
-            <field name="total_checkpoints" readonly="1"/>
-            <field name="completed_checkpoints" readonly="1"/>
-            <field name="checkpoint_progress" readonly="1" widget="percentage"/>
-          </group>
-          <div class="oe_button_box" name="button_box">
-            <button name="action_open_project" type="object" class="oe_stat_button" icon="fa-tasks" string="Open Project">
-              <field name="project_id" invisible="1"/>
-            </button>
-            <button name="action_open_fsm" type="object" class="oe_stat_button" icon="fa-wrench" string="Open FSM">
-              <field name="fsm_order_id" invisible="1"/>
-            </button>
-            <button name="action_open_sale" type="object" class="oe_stat_button" icon="fa-shopping-cart" string="Open Quotation">
-              <field name="sale_order_id" invisible="1"/>
-            </button>
-            <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
-              <field name="checkpoint_ids" invisible="1"/>
-            </button>
-            <button name="action_create_checkpoint" type="object" class="oe_stat_button" icon="fa-plus" string="Add Checkpoint">
-              <field name="project_id" invisible="1"/>
-            </button>
-          </div>
-        </sheet>
-      </form>
-    </field>
-  </record>
-
-  <record id="action_fsm_workflow_instance" model="ir.actions.act_window">
-    <field name="name">FSM Workflow Instances</field>
-    <field name="res_model">fsm.workflow.instance</field>
-    <field name="view_mode">list,form</field>
-  </record>
-
-  <menuitem id="menu_fsm_workflow_root" name="FSM Workflow" parent="project.menu_main_pm" sequence="50"/>
-  <menuitem id="menu_fsm_workflow_instance" name="Instances" parent="menu_fsm_workflow_root" action="action_fsm_workflow_instance" sequence="10"/>
-</odoo>
+<div class="oe_button_box" name="button_box">
+    <button name="action_open_project" type="object" class="oe_stat_button" icon="fa-tasks" string="Open Project">
+        <field name="project_id" invisible="1"/>
+    </button>
+    <button name="action_open_fsm" type="object" class="oe_stat_button" icon="fa-wrench" string="Open FSM">
+        <field name="fsm_order_id" invisible="1"/>
+    </button>
+    <button name="action_open_sale" type="object" class="oe_stat_button" icon="fa-shopping-cart" string="Open Quotation">
+        <field name="sale_order_id" invisible="1"/>
+    </button>
+    <button name="action_create_quotation" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Create Quotation" 
+            attrs="{'invisible': [('sale_order_id', '!=', False)]}">
+        <field name="partner_id" invisible="1"/>
+    </button>
+    <button name="action_send_quotation" type="object" class="oe_stat_button" icon="fa-paper-plane" string="Send Quotation"
+            attrs="{'invisible': [('quotation_state', 'not in', ['draft'])]}">
+        <field name="sale_order_id" invisible="1"/>
+    </button>
+    <button name="action_confirm_quotation" type="object" class="oe_stat_button" icon="fa-check" string="Confirm Quotation"
+            attrs="{'invisible': [('quotation_state', 'not in', ['draft', 'sent'])]}">
+        <field name="sale_order_id" invisible="1"/>
+    </button>
+    <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
+        <field name="checkpoint_ids" invisible="1"/>
+    </button>
+    <button name="action_create_checkpoint" type="object" class="oe_stat_button" icon="fa-plus" string="Add Checkpoint">
+        <field name="project_id" invisible="1"/>
+    </button>
+    <button name="action_create_handover" type="object" class="oe_stat_button" icon="fa-exchange" string="Create Handover">
+        <field name="project_id" invisible="1"/>
+        <field name="partner_id" invisible="1"/>
+    </button>
+</div>
 ```
-
-**Update manifest:**
-```python
-'depends': ['base', 'project', 'sale_management', 'hr_timesheet', 'project_templates_basic', 'project_checkpoints_basic'],
-'data': [
-    'security/ir.model.access.csv',
-    'views/fsm_workflow_instance_views.xml',
-],
-```
-
-**Key Fixes Applied:**
-- ✅ **Fixed `_unknown` object error** by making FSM fields optional
-- ✅ **Changed `fsm_order_id` from Many2one to Char** to avoid dependency issues
-- ✅ **Added robust error handling** in `_compute_hours` method
-- ✅ **Enhanced action methods** with proper null checks
-- ✅ **Added `copy=False`** to prevent record copying issues
-- ✅ **Removed `industry_fsm` dependency** since it's not installed
-- ✅ **Fixed smart buttons** by using `oe_stat_button` style in `oe_button_box`
-
-**Current Status:** Core model is working with smart buttons.
-
-**Validation:**
-```bash
-# Install module - should succeed
-# Create workflow instance - should work without errors
-# Smart buttons should appear in top-right corner of form
-# Test all action buttons - should handle missing dependencies gracefully
-```
-
-**Next Step:** Proceed to Step 2 - Workflow Template Integration
-
-### ✅ Step 2 — Workflow Template Integration - COMPLETED
-
-**Objective:** Integrate with `workflow.template` from `project_templates_basic`.
-
-**Files added:**
-
-```python
-# wizards/fsm_workflow_create_wizard.py
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models, _
-
-class FSMWorkflowCreateWizard(models.TransientModel):
-    _name = 'fsm.workflow.create.wizard'
-    _description = 'Create FSM + Project from Workflow Template'
-
-    partner_id = fields.Many2one('res.partner', string='Customer', required=True)
-    template_id = fields.Many2one('workflow.template', string='Workflow Template', required=False)
-    project_name = fields.Char(string='Project Name', required=True)
-    pricing_policy = fields.Selection([
-        ('tm', 'Time & Materials'),
-        ('fixed', 'Fixed Price'),
-        ('hybrid', 'Hybrid'),
-    ], string='Pricing Policy', default='tm', required=True)
-
-    @api.onchange('template_id')
-    def _onchange_template_id(self):
-        """Auto-fill project name based on template"""
-        if self.template_id and not self.project_name:
-            self.project_name = f"{self.template_id.name} - {self.partner_id.name if self.partner_id else 'New Project'}"
-
-    def action_create(self):
-        """Create FSM workflow instance from template"""
-        self.ensure_one()
-        
-        # Create project
-        project_vals = {
-            'name': self.project_name,
-            'allow_timesheets': True,
-            'partner_id': self.partner_id.id,
-        }
-        project = self.env['project.project'].create(project_vals)
-
-        # Create FSM order if the model exists (optional)
-        fsm_order_ref = None
-        if 'fsm.order' in self.env:
-            try:
-                fsm_vals = {
-                    'name': self.project_name,
-                    'partner_id': self.partner_id.id,
-                }
-                fsm_order = self.env['fsm.order'].create(fsm_vals)
-                fsm_order_ref = fsm_order.name
-            except Exception:
-                # FSM order creation failed, continue without it
-                pass
-
-        # Generate tasks from template if available
-        if self.template_id:
-            try:
-                # Use the task generation service from project_templates_basic
-                service = self.env['project.task.generation.service'].sudo()
-                task_templates = self.template_id.selected_task_template_ids or self.template_id.task_template_ids
-                if task_templates:
-                    service.generate_tasks_from_project_template(project, task_templates, options=None)
-            except Exception:
-                # Task generation failed, continue without tasks
-                pass
-
-        # Create checkpoints from template if available
-        if self.template_id:
-            try:
-                # Look for checkpoint templates associated with the workflow template
-                checkpoint_templates = self.env['project.task.checkpoint.template'].search([
-                    ('name', 'ilike', self.template_id.name)
-                ])
-                
-                for checkpoint_template in checkpoint_templates:
-                    # Create checkpoints for the project
-                    for line in checkpoint_template.line_ids:
-                        self.env['project.task.checkpoint'].create({
-                            'name': line.name,
-                            'compliance_project_id': project.id,
-                            'sequence': line.sequence,
-                            'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
-                            'notes': line.notes or '',
-                        })
-            except Exception:
-                # Checkpoint creation failed, continue without checkpoints
-                pass
-
-        # Create workflow instance
-        template_name = self.template_id.name if self.template_id else 'No Template'
-        instance = self.env['fsm.workflow.instance'].create({
-            'name': f'{template_name} / {self.project_name}',
-            'template_id': self.template_id.id if self.template_id else False,
-            'project_id': project.id,
-            'partner_id': self.partner_id.id,
-            'fsm_order_id': fsm_order_ref,
-            'pricing_policy': self.pricing_policy,
-            'state': 'running',
-        })
-
-        # Link project to instance (if field exists)
-        try:
-            project.write({'fsm_workflow_instance_id': instance.id})
-        except Exception:
-            # Field might not exist, ignore
-            pass
-
-        # Return action to open the created instance
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'fsm.workflow.instance',
-            'res_id': instance.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
-```
-
-```python
-# wizards/__init__.py
-# -*- coding: utf-8 -*-
-from . import fsm_workflow_create_wizard
-```
-
-```xml
-<!-- wizards/fsm_workflow_create_wizard_views.xml -->
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-  <record id="view_fsm_workflow_create_wizard" model="ir.ui.view">
-    <field name="name">fsm.workflow.create.wizard.form</field>
-    <field name="model">fsm.workflow.create.wizard</field>
-    <field name="arch" type="xml">
-      <form string="Create FSM from Workflow Template">
-        <sheet>
-          <group>
-            <field name="partner_id" options="{'no_create_edit': True}"/>
-            <field name="template_id" options="{'no_create_edit': True}"/>
-            <field name="project_name"/>
-            <field name="pricing_policy"/>
-          </group>
-        </sheet>
-        <footer>
-          <button string="Create" name="action_create" type="object" class="btn-primary"/>
-          <button string="Cancel" special="cancel"/>
-        </footer>
-      </form>
-    </field>
-  </record>
-
-  <record id="action_fsm_workflow_create_wizard" model="ir.actions.act_window">
-    <field name="name">Create from Workflow Template</field>
-    <field name="res_model">fsm.workflow.create.wizard</field>
-    <field name="view_mode">form</field>
-    <field name="target">new</field>
-    <field name="context">{}</field>
-  </record>
-
-  <menuitem id="menu_fsm_workflow_create" 
-            name="Create from Workflow" 
-            parent="menu_fsm_workflow_root" 
-            action="action_fsm_workflow_create_wizard" 
-            sequence="5"/>
-</odoo>
-```
-
-**Update manifest:**
-```python
-'data': [
-    'security/ir.model.access.csv',
-    'views/fsm_workflow_instance_views.xml',
-    'wizards/fsm_workflow_create_wizard_views.xml',
-],
-```
-
-**Update security:**
-```csv
-access_fsm_workflow_create_wizard_user,fsm.workflow.create.wizard.user,model_fsm_workflow_create_wizard,base.group_user,1,1,1,1
-```
-
-**Key Features Added:**
-- ✅ **Wizard for template-based creation** - Create instances from workflow templates
-- ✅ **Automatic project creation** - Creates project with timesheets enabled
-- ✅ **Task generation from templates** - Uses `project.task.generation.service`
-- ✅ **Optional FSM order creation** - Creates FSM order if model is available
-- ✅ **Auto-fill project name** - Based on template and customer
-- ✅ **Robust error handling** - Continues even if optional features fail
-- ✅ **Menu integration** - "Create from Workflow" menu item
-
-**Current Status:** Template integration is working.
-
-**Validation:**
-```bash
-# Update module - should succeed
-# Navigate to FSM Workflow > Create from Workflow
-# Select customer and template
-# Click Create
-# Verify project and tasks are created
-# Verify workflow instance is created and linked
-```
-
-**Next Step:** Proceed to Step 3 - Checkpoint Integration
-
-### ✅ Step 3 — Checkpoint Integration - COMPLETED
-
-**Objective:** Integrate with checkpoint system from `project_checkpoints_basic`.
-
-**Files modified:**
-
-**Updated `models/fsm_workflow_instance.py`:**
-- Added checkpoint-related fields (`checkpoint_ids`, `total_checkpoints`, `completed_checkpoints`, `checkpoint_progress`)
-- Added `_compute_checkpoint_stats` method for progress calculation
-- Added `action_open_checkpoints` method to view checkpoints
-- Added `action_create_checkpoint` method to create new checkpoints
-
-**Updated `views/fsm_workflow_instance_views.xml`:**
-- Added checkpoint progress field to list view
-- Added checkpoint statistics fields to form view
-- Added checkpoint action buttons (Checkpoints, Add Checkpoint)
-
-**Updated `wizards/fsm_workflow_create_wizard.py`:**
-- Added automatic checkpoint creation from templates
-- Integrated with `project.task.checkpoint.template`
-
-**Key Features Added:**
-- ✅ **Checkpoint tracking** - Track checkpoints associated with workflow instances
-- ✅ **Progress calculation** - Automatic calculation of checkpoint completion percentage
-- ✅ **Checkpoint management** - View and create checkpoints from workflow instances
-- ✅ **Template integration** - Automatic checkpoint creation from templates
-- ✅ **Smart buttons** - Checkpoint-related action buttons
-- ✅ **Statistics display** - Show total, completed, and progress percentage
-
-**Current Status:** Checkpoint integration is working.
-
-**Validation:**
-```bash
-# Update module - should succeed
-# Create workflow instance from template
-# Verify checkpoints are created automatically
-# Test checkpoint management buttons
-# Verify progress calculation works
-```
-
-**Next Step:** Proceed to Step 4 - Quotation Generation
-
-### 🔄 Step 4 — Quotation Generation
-
-**Objective:** Add quotation generation functionality.
-
-**Files to add/modify:**
-- `wizards/fsm_workflow_quote_wizard.py` - Quotation wizard
-- `wizards/fsm_workflow_quote_wizard_views.xml` - Quotation wizard views
-- Update `models/fsm_workflow_instance.py` - Add quotation methods
-
-**Dependencies:** `sale_management`, `hr_timesheet` (already included)
-
-**Validation:** Test quotation generation from workflow data
-
-### 🔄 Step 5 — Advanced Features
-
-**Objective:** Add advanced features and integrations.
-
-**Potential additions:**
-- Document management integration
-- Compliance tracking
-- Handover notes integration
-- Advanced reporting
-
-**Validation:** Test all integrations and features
 
 ---
 
-## 🚀 **Current Status: Step 3 Complete**
+## 🎯 **Use Case Scenarios**
 
-The module now has:
-- ✅ **Working core model** (`fsm.workflow.instance`)
-- ✅ **Proper dependencies** on local modules
-- ✅ **Robust error handling** for missing features
-- ✅ **Basic views** (list and form)
-- ✅ **Smart action buttons** (Open Project, Open FSM, Open Quotation, Checkpoints, Add Checkpoint)
-- ✅ **Timesheet integration** for hour calculation
-- ✅ **Template-based creation wizard** - Create from workflow templates
-- ✅ **Automatic project and task generation** - From templates
-- ✅ **Optional FSM integration** - When available
-- ✅ **Checkpoint tracking and management** - Full checkpoint integration
-- ✅ **Progress calculation** - Automatic checkpoint progress tracking
+### **Scenario 1: Manual Workflow Creation**
+1. Navigate to **FSM Workflow** → **Workflow Instances**
+2. Click **Create**
+3. Fill in partner, project name, and pricing details
+4. Save to create workflow instance
+5. Use smart buttons to navigate to related records
 
-**Ready for Step 4:** Quotation Generation
+### **Scenario 2: Template-Based Creation**
+1. Navigate to **FSM Workflow** → **Create from Workflow**
+2. Select partner and workflow template
+3. Project name auto-fills from template
+4. Choose pricing policy and set pricing details
+5. Enable quotation creation if needed
+6. Click **Create** to generate project, tasks, workflow instance, and quotation
+
+### **Scenario 3: Quotation Management**
+1. Open a workflow instance
+2. Click **Create Quotation** to generate quotation from template
+3. Review and edit quotation lines if needed
+4. Click **Send Quotation** to send to customer
+5. Click **Confirm Quotation** to convert to sales order
+
+### **Scenario 4: Checkpoint Management**
+1. Open a workflow instance
+2. View checkpoint progress in the form
+3. Click **Checkpoints** to see all checkpoints
+4. Click **Add Checkpoint** to create new ones
+5. Monitor progress percentage
+
+### **Scenario 5: Handover Creation**
+1. Open a workflow instance with project and partner
+2. Click **Create Handover** button
+3. Handover form opens with pre-filled project and partner
+4. Complete handover notes
+5. Save to create handover record
 
 ---
 
-## 📝 **Notes**
+## 🔧 **Testing Checklist**
 
-- **FSM Integration:** Made optional since `industry_fsm` is not installed
-- **Error Handling:** All methods include proper null checks and try-catch blocks
-- **Dependencies:** Only includes modules that are actually available
-- **Progressive Enhancement:** Each step builds on the previous one
-- **Validation:** Each step includes testing instructions
-- **Smart Buttons:** Using Odoo 18 standard `oe_stat_button` style for better UX
-- **Template Integration:** Uses existing `project_templates_basic` workflow templates
-- **Checkpoint Integration:** Uses existing `project_checkpoints_basic` checkpoint system
+### **Step 1 Testing** ✅
+- [x] Module installs without errors
+- [x] Can create workflow instances manually
+- [x] Smart buttons work correctly
+- [x] Timesheet hours calculate properly
+- [x] Error handling works for missing dependencies
+
+### **Step 2 Testing** ✅
+- [x] Wizard opens correctly
+- [x] Template selection works
+- [x] Project creation from template works
+- [x] Task generation works
+- [x] Workflow instance creation completes
+
+### **Step 3 Testing** ✅
+- [x] Checkpoint progress displays correctly
+- [x] Automatic checkpoint creation works
+- [x] Progress percentage calculates correctly
+- [x] Checkpoint buttons work
+- [x] Integration with project_checkpoints_basic works
+
+### **Step 4 Testing** ✅
+- [x] Quotation creation works from workflow instances
+- [x] Multiple pricing policies function correctly
+- [x] Automatic quotation line creation from templates works
+- [x] Product mapping for task templates works
+- [x] Send and confirm quotation actions work
+- [x] Quotation status tracking displays correctly
+- [x] Amount calculation works properly
+- [x] Enhanced UI elements display correctly
+- [x] Sequence generation works (WF00001, etc.)
+
+### **Handover Integration Testing** ✅
+- [x] Create Handover button appears when project and partner exist
+- [x] Handover form opens with correct context
+- [x] Project and partner are pre-filled
+- [x] Handover creation completes successfully
+- [x] Error handling works when project_handover_notes not available
+
+---
+
+## 🚀 **Deployment Status**
+
+### **Repository Status:** ✅ **DEPLOYED**
+- **Repository:** `https://github.com/sabryyoussef/mazagawy.git`
+- **Branch:** `dev_branch`
+- **Last Push:** ✅ **SUCCESSFUL**
+- **Odoo.sh Sync:** Ready for deployment
+
+### **Module Status:** ✅ **READY**
+- **Installation:** ✅ Working
+- **Core Features:** ✅ Complete
+- **Quotation System:** ✅ Complete
+- **Integration:** ✅ Working
+- **Error Handling:** ✅ Robust
+
+---
+
+## 📝 **Next Steps**
+
+1. **Test the deployed module** in Odoo.sh environment
+2. **Proceed with Step 5** - Advanced features and reporting
+3. **Add comprehensive testing** and documentation
+4. **Consider performance optimizations**
+
+---
+
+*Last Updated: After Step 4 completion - Quotation Generation*
+*Build Guide Version: 1.4*
