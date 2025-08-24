@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Workflow Template List View -->
+        <record id="view_workflow_template_list" model="ir.ui.view">
+            <field name="name">workflow.template.list</field>
+            <field name="model">workflow.template</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="product_name"/>
+                    <field name="product_type"/>
+                    <field name="project_name"/>
+                    <field name="project_duration"/>
+                    <field name="project_complexity"/>
+                    <field name="task_generation_strategy"/>
+                    <field name="checkpoint_template_count"/>
+                    <field name="task_template_count"/>
+                    <field name="created_by"/>
+                    <field name="create_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Workflow Template Form View -->
+        <record id="view_workflow_template_form" model="ir.ui.view">
+            <field name="name">workflow.template.form</field>
+            <field name="model">workflow.template</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_create_from_template" 
+                                type="object" 
+                                string="Create New from Template" 
+                                class="btn-primary"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- Smart Buttons -->
+                            <button name="action_view_product_template" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-cube"
+                                    title="View Product Template">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Product Template</span>
+                                </div>
+                            </button>
+                            
+                            <button name="action_view_project_template" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-project-diagram"
+                                    title="View Project Template">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Project Template</span>
+                                </div>
+                            </button>
+                            
+                            <button name="action_view_checkpoint_templates" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-flag-checkered"
+                                    title="View Checkpoint Templates">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="checkpoint_template_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Checkpoint Templates</span>
+                                </div>
+                            </button>
+                            
+                            <button name="action_view_task_templates" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-tasks"
+                                    title="View Task Templates">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="task_template_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Task Templates</span>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Workflow Template Name"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="active"/>
+                                <field name="created_by"/>
+                                <field name="create_date"/>
+                            </group>
+                            <group>
+                                <field name="task_template_count"/>
+                            </group>
+                        </group>
+                        
+                        <field name="description" placeholder="Describe this workflow template..."/>
+                        
+                        <notebook>
+                            <page string="Product Template" name="product_template">
+                                <!-- Product Template Selection -->
+                                <group>
+                                    <group>
+                                        <field name="use_existing_product"/>
+                                        <field name="existing_product_template_id" 
+                                               invisible="not use_existing_product"
+                                               domain="[('type', 'in', ['service', 'product'])]"/>
+                                    </group>
+                                    <group>
+                                        <button name="action_view_product_templates" 
+                                                type="object" 
+                                                string="View Product Templates" 
+                                                class="btn-secondary"
+                                                icon="fa-list"/>
+                                        <button name="action_create_product_template" 
+                                                type="object" 
+                                                string="Create New Product Template" 
+                                                class="btn-secondary"
+                                                icon="fa-plus"/>
+                                    </group>
+                                </group>
+
+                                <group invisible="use_existing_product">
+                                    <group>
+                                        <field name="product_name"/>
+                                        <field name="product_type"/>
+                                        <field name="product_category_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="product_template_id"/>
+                                    </group>
+                                </group>
+                                
+                                <field name="product_description" 
+                                       invisible="use_existing_product"/>
+                            </page>
+                            
+                            <page string="Project Template" name="project_template">
+                                <!-- Project Template Selection -->
+                                <group>
+                                    <group>
+                                        <field name="use_existing_project"/>
+                                        <field name="existing_project_template_id" 
+                                               invisible="not use_existing_project"/>
+                                    </group>
+                                    <group>
+                                        <button name="action_view_project_templates" 
+                                                type="object" 
+                                                string="View Project Templates" 
+                                                class="btn-secondary"
+                                                icon="fa-list"/>
+                                        <button name="action_create_project_template" 
+                                                type="object" 
+                                                string="Create New Project Template" 
+                                                class="btn-secondary"
+                                                icon="fa-plus"/>
+                                    </group>
+                                </group>
+
+                                <group invisible="use_existing_project">
+                                    <group>
+                                        <field name="project_name"/>
+                                        <field name="project_duration"/>
+                                        <field name="project_complexity"/>
+                                    </group>
+                                    <group>
+                                        <field name="project_template_id"/>
+                                    </group>
+                                </group>
+                                
+                                <field name="project_description" 
+                                       invisible="use_existing_project"/>
+                            </page>
+                            
+                            <page string="Checkpoint Templates" name="checkpoint_templates">
+                                <!-- Checkpoint Template Selection -->
+                                <group>
+                                    <group>
+                                        <field name="use_existing_checkpoints"/>
+                                        <field name="selected_checkpoint_template_ids" 
+                                               invisible="not use_existing_checkpoints"
+                                               widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <button name="action_view_all_checkpoint_templates" 
+                                                type="object" 
+                                                string="View Checkpoint Templates" 
+                                                class="btn-secondary"
+                                                icon="fa-list"/>
+                                        <button name="action_create_checkpoint_template" 
+                                                type="object" 
+                                                string="Create New Checkpoint Template" 
+                                                class="btn-secondary"
+                                                icon="fa-plus"/>
+                                    </group>
+                                </group>
+                                
+                                <field name="checkpoint_template_ids" readonly="1"/>
+                            </page>
+                            
+                            <page string="Task Generation" name="task_generation">
+                                <!-- Task Template Selection -->
+                                <group>
+                                    <group>
+                                        <field name="use_existing_tasks"/>
+                                        <field name="selected_task_template_ids" 
+                                               invisible="not use_existing_tasks"
+                                               widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <button name="action_view_all_task_templates" 
+                                                type="object" 
+                                                string="View Task Templates" 
+                                                class="btn-secondary"
+                                                icon="fa-list"/>
+                                        <button name="action_create_task_template" 
+                                                type="object" 
+                                                string="Create New Task Template" 
+                                                class="btn-secondary"
+                                                icon="fa-plus"/>
+                                    </group>
+                                </group>
+
+                                <group>
+                                    <group>
+                                        <field name="auto_generate_tasks"/>
+                                        <field name="task_generation_strategy"/>
+                                    </group>
+                                </group>
+                                
+                                <field name="task_template_ids" readonly="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Workflow Template Search View -->
+        <record id="view_workflow_template_search" model="ir.ui.view">
+            <field name="name">workflow.template.search</field>
+            <field name="model">workflow.template</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="product_name"/>
+                    <field name="project_name"/>
+                    <field name="product_type"/>
+                    <field name="task_generation_strategy"/>
+                    <filter string="Services" name="services" domain="[('product_type', '=', 'service')]"/>
+                    <filter string="Products" name="products" domain="[('product_type', '=', 'product')]"/>
+                    <filter string="Document-Based" name="document_based" domain="[('task_generation_strategy', '=', 'document_based')]"/>
+                    <filter string="Progress Tracking" name="progress_tracking" domain="[('task_generation_strategy', '=', 'progress_tracking')]"/>
+                    <filter string="Milestone-Based" name="milestone" domain="[('task_generation_strategy', '=', 'milestone')]"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product Type" name="group_product_type" context="{'group_by': 'product_type'}"/>
+                        <filter string="Task Strategy" name="group_task_strategy" context="{'group_by': 'task_generation_strategy'}"/>
+                        <filter string="Created By" name="group_created_by" context="{'group_by': 'created_by'}"/>
+                        <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Workflow Template Action -->
+        <record id="action_workflow_template" model="ir.actions.act_window">
+            <field name="name">Workflow Templates</field>
+            <field name="res_model">workflow.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first workflow template!
+                </p>
+                <p>
+                    Workflow templates help you standardize the creation of product templates, 
+                    project templates, and task templates in one unified process.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

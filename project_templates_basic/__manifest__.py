@@ -17,10 +17,16 @@
         "security/security.xml",
         "security/ir.model.access.csv",
         
-        # Views - Templates
-        "views/templates/project_template_views.xml",
+        # Views - Core
+        "views/core/task_template_views.xml",
+        "views/core/document_template_views.xml",
+        "views/core/workflow_template_views.xml",
+        
+        # Views - Template Types
+        "views/template_types/project_template_views.xml",
+        
+        # Views - Templates (Legacy)
         "views/templates/checkpoint_template_views.xml",
-        "views/templates/task_template_views.xml",
         
         # Views - Tasks
         "views/tasks/task_views.xml",
@@ -30,6 +36,11 @@
         
         # Wizards
         "wizard/task_template_selection_wizard_views.xml",
+        "wizard/workflow_template_wizard_views.xml",
+        
+        # Demo Data
+        "data/demo_task_templates.xml",
+        "data/demo_document_templates.xml",
     ],
     "demo": [
         "data/demo_data_consolidated.xml",

@@ -7,12 +7,20 @@
               sequence="90"
               groups="base.group_user"/>
 
+    <!-- Document Templates Submenu -->
+    <menuitem id="menu_project_templates_document_templates"
+              name="Document Templates"
+              parent="menu_project_templates_root"
+              action="action_project_document_template"
+              sequence="10"
+              groups="base.group_user"/>
+
     <!-- Task Templates Submenu -->
     <menuitem id="menu_project_templates_task_templates"
               name="Task Templates"
               parent="menu_project_templates_root"
-              action="action_project_document_template"
-              sequence="10"
+              action="action_project_task_template"
+              sequence="15"
               groups="base.group_user"/>
 
     <!-- Project Templates Submenu -->

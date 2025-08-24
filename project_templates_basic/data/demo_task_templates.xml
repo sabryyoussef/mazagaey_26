@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Document-Based Task Templates -->
+        
+        <!-- Required Documents Task Template -->
+        <record id="task_template_required_documents" model="project.task.template">
+            <field name="name">Required Documents Task</field>
+            <field name="description">Task for completing all required documents for a project</field>
+            <field name="template_type">document_based</field>
+            <field name="document_category">required</field>
+            <field name="task_name_pattern">Complete Required Documents ({count} items)</field>
+            <field name="task_description_pattern">Complete all required documents for {project}. This includes {count} document(s) that are mandatory for project completion.</field>
+            <field name="estimated_hours">4.0</field>
+            <field name="priority">2</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Deliverable Documents Task Template -->
+        <record id="task_template_deliverable_documents" model="project.task.template">
+            <field name="name">Deliverable Documents Task</field>
+            <field name="description">Task for preparing deliverable documents</field>
+            <field name="template_type">document_based</field>
+            <field name="document_category">deliverable</field>
+            <field name="task_name_pattern">Prepare Deliverable Documents ({count} items)</field>
+            <field name="task_description_pattern">Prepare all deliverable documents for {project}. This includes {count} document(s) that will be delivered to the client.</field>
+            <field name="estimated_hours">6.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Reference Documents Task Template -->
+        <record id="task_template_reference_documents" model="project.task.template">
+            <field name="name">Reference Documents Task</field>
+            <field name="description">Task for reviewing reference documents</field>
+            <field name="template_type">document_based</field>
+            <field name="document_category">reference</field>
+            <field name="task_name_pattern">Review Reference Documents ({count} items)</field>
+            <field name="task_description_pattern">Review all reference documents for {project}. This includes {count} document(s) that provide background information and context.</field>
+            <field name="estimated_hours">2.0</field>
+            <field name="priority">0</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Compliance Documents Task Template -->
+        <record id="task_template_compliance_documents" model="project.task.template">
+            <field name="name">Compliance Documents Task</field>
+            <field name="description">Task for verifying compliance documents</field>
+            <field name="template_type">document_based</field>
+            <field name="document_category">compliance</field>
+            <field name="task_name_pattern">Verify Compliance Documents ({count} items)</field>
+            <field name="task_description_pattern">Verify all compliance documents for {project}. This includes {count} document(s) that ensure regulatory compliance.</field>
+            <field name="estimated_hours">3.0</field>
+            <field name="priority">2</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- All Documents Task Template -->
+        <record id="task_template_all_documents" model="project.task.template">
+            <field name="name">All Documents Task</field>
+            <field name="description">Task for managing all project documents</field>
+            <field name="template_type">document_based</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Manage All Documents ({count} items)</field>
+            <field name="task_description_pattern">Manage all documents for {project}. This includes {count} total document(s) across all categories.</field>
+            <field name="estimated_hours">8.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Progress Tracking Task Templates -->
+        
+        <!-- Overall Progress Tracking Task Template -->
+        <record id="task_template_overall_progress" model="project.task.template">
+            <field name="name">Overall Progress Tracking</field>
+            <field name="description">Task for tracking overall document completion progress</field>
+            <field name="template_type">progress_tracking</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Track Overall Document Progress</field>
+            <field name="task_description_pattern">Monitor and track the overall progress of document completion for {project}. Total documents: {count}</field>
+            <field name="estimated_hours">1.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <!-- Category Progress Tracking Task Template -->
+        <record id="task_template_category_progress" model="project.task.template">
+            <field name="name">Category Progress Tracking</field>
+            <field name="description">Task for tracking progress by document category</field>
+            <field name="template_type">progress_tracking</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Track {category} Document Progress</field>
+            <field name="task_description_pattern">Monitor and track the progress of {category} documents for {project}. Documents in this category: {count}</field>
+            <field name="estimated_hours">0.5</field>
+            <field name="priority">0</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <!-- Document Review Task Template -->
+        <record id="task_template_document_review" model="project.task.template">
+            <field name="name">Document Review</field>
+            <field name="description">Task for reviewing all project documents</field>
+            <field name="template_type">progress_tracking</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Review All Documents</field>
+            <field name="task_description_pattern">Conduct a comprehensive review of all documents for {project}. Total documents to review: {count}</field>
+            <field name="estimated_hours">4.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">80</field>
+        </record>
+
+        <!-- Milestone Task Templates -->
+        
+        <!-- Document Collection Milestone Task Template -->
+        <record id="task_template_collection_milestone" model="project.task.template">
+            <field name="name">Document Collection Milestone</field>
+            <field name="description">Milestone task for document collection completion</field>
+            <field name="template_type">milestone</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Document Collection Complete</field>
+            <field name="task_description_pattern">All required documents have been collected for {project}. This milestone indicates the completion of the document collection phase.</field>
+            <field name="estimated_hours">0.0</field>
+            <field name="priority">2</field>
+            <field name="sequence">90</field>
+        </record>
+
+        <!-- Document Review Milestone Task Template -->
+        <record id="task_template_review_milestone" model="project.task.template">
+            <field name="name">Document Review Milestone</field>
+            <field name="description">Milestone task for document review completion</field>
+            <field name="template_type">milestone</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Document Review Complete</field>
+            <field name="task_description_pattern">All documents have been reviewed and approved for {project}. This milestone indicates the completion of the document review phase.</field>
+            <field name="estimated_hours">0.0</field>
+            <field name="priority">2</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Document Submission Milestone Task Template -->
+        <record id="task_template_submission_milestone" model="project.task.template">
+            <field name="name">Document Submission Milestone</field>
+            <field name="description">Milestone task for document submission completion</field>
+            <field name="template_type">milestone</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Document Submission Complete</field>
+            <field name="task_description_pattern">All documents have been submitted to relevant authorities for {project}. This milestone indicates the completion of the document submission phase.</field>
+            <field name="estimated_hours">0.0</field>
+            <field name="priority">3</field>
+            <field name="sequence">110</field>
+        </record>
+
+        <!-- Custom Task Templates -->
+        
+        <!-- Project Setup Task Template -->
+        <record id="task_template_project_setup" model="project.task.template">
+            <field name="name">Project Setup</field>
+            <field name="description">Custom task for project setup and initialization</field>
+            <field name="template_type">custom</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Setup {project}</field>
+            <field name="task_description_pattern">Initialize and setup the project {project}. This includes creating project structure, setting up communication channels, and preparing initial documentation.</field>
+            <field name="estimated_hours">2.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">120</field>
+        </record>
+
+        <!-- Quality Assurance Task Template -->
+        <record id="task_template_quality_assurance" model="project.task.template">
+            <field name="name">Quality Assurance</field>
+            <field name="description">Custom task for quality assurance and verification</field>
+            <field name="template_type">custom</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Quality Assurance - {project}</field>
+            <field name="task_description_pattern">Conduct quality assurance review for {project}. This includes verifying document accuracy, completeness, and compliance with standards.</field>
+            <field name="estimated_hours">3.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">130</field>
+        </record>
+
+        <!-- Client Communication Task Template -->
+        <record id="task_template_client_communication" model="project.task.template">
+            <field name="name">Client Communication</field>
+            <field name="description">Custom task for client communication and updates</field>
+            <field name="template_type">custom</field>
+            <field name="document_category">all</field>
+            <field name="task_name_pattern">Client Communication - {project}</field>
+            <field name="task_description_pattern">Maintain regular communication with the client for {project}. This includes providing updates, addressing concerns, and ensuring client satisfaction.</field>
+            <field name="estimated_hours">1.0</field>
+            <field name="priority">1</field>
+            <field name="sequence">140</field>
+        </record>
+
+        <!-- Set up dependencies between task templates -->
+        
+        <!-- Document Collection Milestone depends on Required Documents -->
+        <record id="task_template_collection_milestone" model="project.task.template">
+            <field name="prerequisite_task_ids" eval="[(6, 0, [ref('task_template_required_documents')])]"/>
+        </record>
+
+        <!-- Document Review Milestone depends on Document Review -->
+        <record id="task_template_review_milestone" model="project.task.template">
+            <field name="prerequisite_task_ids" eval="[(6, 0, [ref('task_template_document_review')])]"/>
+        </record>
+
+        <!-- Document Submission Milestone depends on Review Milestone -->
+        <record id="task_template_submission_milestone" model="project.task.template">
+            <field name="prerequisite_task_ids" eval="[(6, 0, [ref('task_template_review_milestone')])]"/>
+        </record>
+
+        <!-- Quality Assurance depends on Document Review -->
+        <record id="task_template_quality_assurance" model="project.task.template">
+            <field name="prerequisite_task_ids" eval="[(6, 0, [ref('task_template_document_review')])]"/>
+        </record>
+
+    </data>
+</odoo>
