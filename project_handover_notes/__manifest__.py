@@ -15,7 +15,7 @@
         'mail',
         'unified_documents',
         'project_templates_basic',
-        'project_checkpoints_basic',
+        'project_checkpoints_basic'
     ],
     'data': [
         'security/security.xml',
@@ -26,11 +26,11 @@
         'views/partner_handover.xml',
         "views/checkpoint_handover.xml",
         'wizard/return_handover_wizard.xml',
-        'wizard/handover_summary_wizard.xml',
+        'wizard/handover_summary_wizard.xml'
     ],
     'demo': [
         'demo/handover_demo.xml',
-        'demo/demo_data.xml',
+        'demo/demo_data.xml'
     ],
     'installable': True,
     'application': False,

@@ -41,24 +41,6 @@ class ProjectProject(models.Model):
         string='Deliverable Document Count'
     )
 
-    # Document category counts
-    required_document_count = fields.Integer(
-        compute='_compute_document_category_counts',
-        string='Required Documents'
-    )
-    deliverable_document_count = fields.Integer(
-        compute='_compute_document_category_counts',
-        string='Deliverable Documents'
-    )
-    reference_document_count = fields.Integer(
-        compute='_compute_document_category_counts',
-        string='Reference Documents'
-    )
-    compliance_document_count = fields.Integer(
-        compute='_compute_document_category_counts',
-        string='Compliance Documents'
-    )
-
     # Temporary fields for document creation
     new_document_name = fields.Char('Document Name')
     new_document_category = fields.Selection([
@@ -118,134 +100,7 @@ class ProjectProject(models.Model):
             project.required_document_count = len(project.required_document_ids)
             project.deliverable_document_count = len(project.deliverable_document_ids)
 
-    @api.depends('document_ids')
-    def _compute_document_category_counts(self):
-        """Compute document counts by category"""
-        for project in self:
-            project.required_document_count = len(project.document_ids.filtered(lambda d: d.category == 'required'))
-            project.deliverable_document_count = len(project.document_ids.filtered(lambda d: d.category == 'deliverable'))
-            project.reference_document_count = len(project.document_ids.filtered(lambda d: d.category == 'reference'))
-            project.compliance_document_count = len(project.document_ids.filtered(lambda d: d.category == 'compliance'))
 
-    def action_copy_product_documents_and_create_tasks(self):
-        """Manual action to copy documents from product and create document category tasks"""
-        self.ensure_one()
-        
-        # Find sale order lines for this project
-        sale_lines = self.env['sale.order.line'].search([
-            ('project_id', '=', self.id),
-            ('product_id.document_ids', '!=', False)
-        ])
-        
-        if not sale_lines:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': 'No Documents Found',
-                    'message': 'No products with documents found for this project.',
-                    'type': 'warning',
-                }
-            }
-        
-        created_tasks = []
-        for line in sale_lines:
-            # Copy documents
-            if line.copy_documents_to_project():
-                # Create tasks (this will be called automatically by copy_documents_to_project)
-                pass
-        
-        # Force recomputation of document counts
-        self._invalidate_cache(['document_ids', 'required_document_count', 'deliverable_document_count', 'reference_document_count', 'compliance_document_count'])
-        
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Documents Copied & Tasks Created',
-                'message': f'Documents copied and document category tasks created for project {self.name}.',
-                'type': 'success',
-            }
-        }
-
-    def create_document_category_tasks(self):
-        """Create tasks for each document category that has documents"""
-        self.ensure_one()
-        
-        # Get document counts by category
-        required_count = len(self.document_ids.filtered(lambda d: d.category == 'required'))
-        deliverable_count = len(self.document_ids.filtered(lambda d: d.category == 'deliverable'))
-        reference_count = len(self.document_ids.filtered(lambda d: d.category == 'reference'))
-        compliance_count = len(self.document_ids.filtered(lambda d: d.category == 'compliance'))
-        
-        created_tasks = []
-        
-        # Create task for Required Documents
-        if required_count > 0:
-            task_vals = {
-                'name': f'Required Documents ({required_count})',
-                'description': f'Process {required_count} required documents for project {self.name}',
-                'project_id': self.id,
-                'allocated_hours': required_count * 0.5,  # 30 min per document
-            }
-            task = self.env['project.task'].create(task_vals)
-            created_tasks.append(task)
-        
-        # Create task for Deliverable Documents
-        if deliverable_count > 0:
-            task_vals = {
-                'name': f'Deliverable Documents ({deliverable_count})',
-                'description': f'Prepare {deliverable_count} deliverable documents for project {self.name}',
-                'project_id': self.id,
-                'allocated_hours': deliverable_count * 1.0,  # 1 hour per document
-            }
-            task = self.env['project.task'].create(task_vals)
-            created_tasks.append(task)
-        
-        # Create task for Reference Documents
-        if reference_count > 0:
-            task_vals = {
-                'name': f'Reference Documents ({reference_count})',
-                'description': f'Review {reference_count} reference documents for project {self.name}',
-                'project_id': self.id,
-                'allocated_hours': reference_count * 0.25,  # 15 min per document
-            }
-            task = self.env['project.task'].create(task_vals)
-            created_tasks.append(task)
-        
-        # Create task for Compliance Documents
-        if compliance_count > 0:
-            task_vals = {
-                'name': f'Compliance Documents ({compliance_count})',
-                'description': f'Process {compliance_count} compliance documents for project {self.name}',
-                'project_id': self.id,
-                'allocated_hours': compliance_count * 1.5,  # 1.5 hours per document
-            }
-            task = self.env['project.task'].create(task_vals)
-            created_tasks.append(task)
-        
-        return created_tasks
-
-    documents_folder_id = fields.Many2one(
-        'documents.document', 
-        string='Documents Folder',
-        help='Documents folder for this project in the Documents module'
-    )
-    
-    project_files_count = fields.Integer(
-        compute='_compute_project_files_count',
-        string='Project Files',
-        help='Number of files in the project folder'
-    )
-    
-    project_folder_files = fields.Many2many(
-        'ir.attachment',
-        compute='_compute_project_folder_files',
-        string='Project Folder Files',
-        help='Files in the project documents folder'
-    )
-    
-    # Note: Template functionality has been moved to project_templates_basic module
 
     @api.depends('documents_folder_id')
     def _compute_project_files_count(self):
@@ -529,130 +384,17 @@ class ProjectProject(models.Model):
             }
         }
 
-    def action_direct_copy_documents(self):
-        """Directly copy all documents from products linked to this project's sales orders"""
-        self.ensure_one()
-        
-        _logger.info(f"Starting direct copy for project: {self.name} (ID: {self.id})")
-        
-        # Get products from sales order lines linked to this project
-        sale_order_lines = self.env['sale.order.line'].search([
-            ('project_id', '=', self.id)
-        ])
-        
-        _logger.info(f"Found {len(sale_order_lines)} sale order lines for project {self.name}")
-        
-        if not sale_order_lines:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Sales Orders'),
-                    'message': _('This project is not linked to any sales orders. Please link it to a sales order first.'),
-                    'type': 'warning',
-                }
-            }
-        
-        # Get products from the sales order lines
-        products = sale_order_lines.mapped('product_id.product_tmpl_id')
-        _logger.info(f"Found {len(products)} products from sale order lines")
-        
-        # Filter products that have documents
-        products_with_documents = products.filtered(lambda p: p.document_ids)
-        _logger.info(f"Found {len(products_with_documents)} products with documents")
-        
-        if not products_with_documents:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Products with Documents'),
-                    'message': _('None of the products in this project\'s sales orders have documents to copy.'),
-                    'type': 'warning',
-                }
-            }
-        
-        # Copy documents from each product
-        total_copied = 0
-        total_documents = 0
-        
-        for product in products_with_documents:
-            _logger.info(f"Processing product: {product.name} with {len(product.document_ids)} documents")
-            total_documents += len(product.document_ids)
-            
-            try:
-                # Use the unified document service to copy documents
-                service = self.env['unified.document.service']
-                _logger.info(f"Calling copy_product_documents_to_project for product {product.name}")
-                
-                copied_docs = service.copy_product_documents_to_project(self, product)
-                _logger.info(f"Service returned: {copied_docs} (type: {type(copied_docs)})")
-                
-                # Count the total documents copied from the returned dictionary
-                if copied_docs and isinstance(copied_docs, dict):
-                    docs_copied = sum(len(docs) for docs in copied_docs.values())
-                    total_copied += docs_copied
-                    _logger.info(f"Copied {docs_copied} documents from product {product.name}")
-                elif copied_docs:
-                    # If it's a number, use it directly
-                    total_copied += copied_docs
-                    _logger.info(f"Copied {copied_docs} documents from product {product.name}")
-                else:
-                    _logger.warning(f"No documents copied from product {product.name}")
-                    
-            except Exception as e:
-                _logger.error(f"Failed to copy documents from product {product.name}: {e}")
-                import traceback
-                _logger.error(f"Traceback: {traceback.format_exc()}")
-        
-        _logger.info(f"Final result: {total_copied} documents copied from {len(products_with_documents)} products")
-        
-        if total_copied > 0:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Documents Copied'),
-                    'message': f"Successfully copied {total_copied} documents from {len(products_with_documents)} products.",
-                    'type': 'success',
-                }
-            }
-        else:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Copy Failed'),
-                    'message': _('Failed to copy documents. Please check if documents exist and try again.'),
-                    'type': 'error',
-                }
-            }
-
     def action_copy_from_product(self):
-        """Open wizard to copy documents from products linked to this project's sales orders"""
+        """Open wizard to copy documents from a selected product to this project"""
         self.ensure_one()
         
-        # Get products from sales order lines linked to this project
-        sale_order_lines = self.env['sale.order.line'].search([
-            ('project_id', '=', self.id)
+        # Find products that have documents
+        products_with_documents = self.env['product.template'].search([
+            ('id', 'in', self.env['documents.document'].search([
+                ('res_model', '=', 'product.template'),
+                ('active', '=', True)
+            ]).mapped('res_id'))
         ])
-        
-        if not sale_order_lines:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Sales Orders'),
-                    'message': _('This project is not linked to any sales orders. Please link it to a sales order first.'),
-                    'type': 'warning',
-                }
-            }
-        
-        # Get products from the sales order lines
-        products = sale_order_lines.mapped('product_id.product_tmpl_id')
-        
-        # Filter products that have documents
-        products_with_documents = products.filtered(lambda p: p.document_ids)
         
         if not products_with_documents:
             return {
@@ -660,7 +402,7 @@ class ProjectProject(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _('No Products with Documents'),
-                    'message': _('None of the products in this project\'s sales orders have documents to copy.'),
+                    'message': _('No products found with documents to copy.'),
                     'type': 'warning',
                 }
             }
@@ -683,7 +425,7 @@ class ProjectProject(models.Model):
                 }
             }
         
-        # If multiple products, show selection dialog with filtered products
+        # If multiple products, show selection dialog
         return {
             'name': _('Select Product to Copy Documents From'),
             'type': 'ir.actions.act_window',

@@ -17,7 +17,7 @@
         'unified_documents',
         'project_handover_notes',
         'project_templates_basic',
-        'project_checkpoints_basic',
+        'project_checkpoints_basic'
     ],
                     'data': [
                     'security/security.xml',
@@ -28,10 +28,10 @@
                     'views/business_shareholder.xml',
                     'views/project_compliance.xml',
                     'views/partner_compliance.xml',
-                    'wizard/return_compliance_wizard.xml',
+                    'wizard/return_compliance_wizard.xml'
                 ],
     'demo': [
-        'demo/demo_data.xml',
+        'demo/demo_data.xml'
     ],
     'installable': True,
     'application': False,

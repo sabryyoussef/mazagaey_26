@@ -16,6 +16,7 @@
                     <field name="task_generation_strategy"/>
                     <field name="checkpoint_template_count"/>
                     <field name="task_template_count"/>
+                    <field name="milestone_template_count"/>
                     <field name="created_by"/>
                     <field name="create_date"/>
                 </list>
@@ -83,6 +84,19 @@
                                     <span class="o_stat_text">Task Templates</span>
                                 </div>
                             </button>
+                            
+                            <button name="action_view_milestone_templates" 
+                                    type="object" 
+                                    class="oe_stat_button" 
+                                    icon="fa-flag"
+                                    title="View Milestone Templates">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="milestone_template_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Milestone Templates</span>
+                                </div>
+                            </button>
                         </div>
                         
                         <div class="oe_title">
@@ -99,6 +113,7 @@
                             </group>
                             <group>
                                 <field name="task_template_count"/>
+                                <field name="milestone_template_count"/>
                             </group>
                         </group>
                         
@@ -204,6 +219,32 @@
                                 </group>
                                 
                                 <field name="checkpoint_template_ids" readonly="1"/>
+                            </page>
+                            
+                            <page string="Milestone Templates" name="milestone_templates">
+                                <!-- Milestone Template Selection -->
+                                <group>
+                                    <group>
+                                        <field name="use_existing_milestones"/>
+                                        <field name="selected_milestone_template_ids" 
+                                               invisible="not use_existing_milestones"
+                                               widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <button name="action_view_all_milestone_templates" 
+                                                type="object" 
+                                                string="View Milestone Templates" 
+                                                class="btn-secondary"
+                                                icon="fa-list"/>
+                                        <button name="action_create_milestone_template" 
+                                                type="object" 
+                                                string="Create New Milestone Template" 
+                                                class="btn-secondary"
+                                                icon="fa-plus"/>
+                                    </group>
+                                </group>
+                                
+                                <field name="milestone_template_ids" readonly="1"/>
                             </page>
                             
                             <page string="Task Generation" name="task_generation">

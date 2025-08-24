@@ -71,7 +71,7 @@ class ProjectCheckpointTemplate(models.Model):
     # Note: Rule count removed as rules are handled by project_checkpoints_basic module
     
     display_milestone_name = fields.Char(
-        string='Milestone Name',
+        string='Display Milestone Name',
         compute='_compute_display_milestone_name',
         store=False,
         help='Display name for the milestone (template name or custom name)'

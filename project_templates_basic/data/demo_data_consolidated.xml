@@ -414,5 +414,201 @@
             <field name="document_requirements">Construction licenses, safety certificates, shareholder documentation, and regulatory approvals</field>
         </record>
         
+        <!-- ========================================
+             SECTION 4: MILESTONE TEMPLATES
+             ======================================== -->
+        
+        <!-- 1. Project Initiation Milestone Template -->
+        <record id="demo_milestone_template_initiation" model="project.milestone.template">
+            <field name="name">Project Initiation Milestone Template</field>
+            <field name="sequence">10</field>
+            <field name="milestone_name">Project Initiation</field>
+            <field name="milestone_deadline">2025-09-23</field>
+            <field name="milestone_notes">Initial project setup and requirements gathering phase</field>
+            <field name="active">True</field>
+            <field name="notes">Standard milestone template for project initiation phase including stakeholder alignment and scope definition</field>
+        </record>
+
+        <!-- 2. Development Milestone Template -->
+        <record id="demo_milestone_template_development" model="project.milestone.template">
+            <field name="name">Development Phase Milestone Template</field>
+            <field name="sequence">20</field>
+            <field name="milestone_name">Development Phase</field>
+            <field name="milestone_deadline">2025-11-22</field>
+            <field name="milestone_notes">Core development and implementation phase</field>
+            <field name="active">True</field>
+            <field name="notes">Standard milestone template for development phase including coding, testing, and integration</field>
+        </record>
+
+        <!-- 3. Testing & Deployment Milestone Template -->
+        <record id="demo_milestone_template_testing_deployment" model="project.milestone.template">
+            <field name="name">Testing & Deployment Milestone Template</field>
+            <field name="sequence">30</field>
+            <field name="milestone_name">Testing & Deployment</field>
+            <field name="milestone_deadline">2025-12-22</field>
+            <field name="milestone_notes">Quality assurance, testing, and production deployment phase</field>
+            <field name="active">True</field>
+            <field name="notes">Standard milestone template for testing and deployment phase including UAT, production setup, and go-live</field>
+        </record>
+
+        <!-- 4. Company Formation Milestone Template -->
+        <record id="demo_milestone_template_company_formation" model="project.milestone.template">
+            <field name="name">Company Formation Milestone Template</field>
+            <field name="sequence">40</field>
+            <field name="milestone_name">Company Formation</field>
+            <field name="milestone_deadline">2025-10-15</field>
+            <field name="milestone_notes">Complete company formation process including registration and licensing</field>
+            <field name="active">True</field>
+            <field name="notes">Standard milestone template for UAE company formation including all regulatory approvals</field>
+        </record>
+
+        <!-- 5. Visa Processing Milestone Template -->
+        <record id="demo_milestone_template_visa_processing" model="project.milestone.template">
+            <field name="name">Visa Processing Milestone Template</field>
+            <field name="sequence">50</field>
+            <field name="milestone_name">Visa Processing</field>
+            <field name="milestone_deadline">2025-11-30</field>
+            <field name="milestone_notes">Complete visa processing including medical, EID, and work permit</field>
+            <field name="active">True</field>
+            <field name="notes">Standard milestone template for UAE visa processing including all required steps</field>
+        </record>
+
+        <!-- ========================================
+             SECTION 5: MILESTONE TEMPLATE CHECKPOINTS
+             ======================================== -->
+        
+        <!-- Checkpoints for Project Initiation Milestone -->
+        <record id="demo_milestone_checkpoint_initiation_1" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_initiation"/>
+            <field name="name">Project Charter Approval</field>
+            <field name="sequence">10</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Obtain approval for project charter and scope definition</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_initiation_2" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_initiation"/>
+            <field name="name">Stakeholder Requirements</field>
+            <field name="sequence">20</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Gather and document stakeholder requirements and expectations</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_initiation_3" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_initiation"/>
+            <field name="name">Team Setup</field>
+            <field name="sequence">30</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Assemble project team and assign roles and responsibilities</field>
+        </record>
+
+        <!-- Checkpoints for Development Milestone -->
+        <record id="demo_milestone_checkpoint_development_1" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_development"/>
+            <field name="name">Technical Design</field>
+            <field name="sequence">10</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Complete technical design and architecture documentation</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_development_2" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_development"/>
+            <field name="name">Core Development</field>
+            <field name="sequence">20</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Implement core functionality and features</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_development_3" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_development"/>
+            <field name="name">Integration Testing</field>
+            <field name="sequence">30</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Perform integration testing of all components</field>
+        </record>
+
+        <!-- Checkpoints for Testing & Deployment Milestone -->
+        <record id="demo_milestone_checkpoint_testing_1" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_testing_deployment"/>
+            <field name="name">User Acceptance Testing</field>
+            <field name="sequence">10</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Complete user acceptance testing with stakeholders</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_testing_2" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_testing_deployment"/>
+            <field name="name">Production Deployment</field>
+            <field name="sequence">20</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Deploy to production environment and verify functionality</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_testing_3" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_testing_deployment"/>
+            <field name="name">Go-Live Support</field>
+            <field name="sequence">30</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Provide post-deployment support and monitoring</field>
+        </record>
+
+        <!-- Checkpoints for Company Formation Milestone -->
+        <record id="demo_milestone_checkpoint_company_1" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">Document Preparation</field>
+            <field name="sequence">10</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Prepare all required company formation documents</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_company_2" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">Authority Submission</field>
+            <field name="sequence">20</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Submit application to relevant authority (DMCC, IFZA, etc.)</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_company_3" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_company_formation"/>
+            <field name="name">License Issuance</field>
+            <field name="sequence">30</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Receive trade license and complete registration</field>
+        </record>
+
+        <!-- Checkpoints for Visa Processing Milestone -->
+        <record id="demo_milestone_checkpoint_visa_1" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Document Collection</field>
+            <field name="sequence">10</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Collect all required visa documents from employee</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_visa_2" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Medical Examination</field>
+            <field name="sequence">20</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Complete medical examination at approved center</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_visa_3" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">Visa Approval</field>
+            <field name="sequence">30</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Receive visa approval from immigration authorities</field>
+        </record>
+
+        <record id="demo_milestone_checkpoint_visa_4" model="project.milestone.template.checkpoint">
+            <field name="template_id" ref="demo_milestone_template_visa_processing"/>
+            <field name="name">EID & Work Permit</field>
+            <field name="sequence">40</field>
+            <field name="auto_advance_stage">True</field>
+            <field name="notes">Process Emirates ID and work permit</field>
+        </record>
+        
     </data>
 </odoo>

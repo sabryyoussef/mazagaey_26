@@ -103,120 +103,43 @@
                         <group>
                             <field name="user_id"/>
                             <field name="partner_id"/>
-                            <field name="last_used_date" readonly="1"/>
+                            <field name="date_start"/>
+                            <field name="date"/>
                         </group>
                     </group>
                     
                     <notebook>
-                        <page string="Template Description" name="template_description">
-                            <field name="template_description" placeholder="Describe what this template is used for..."/>
+                        <page string="Template Configuration" name="template_config">
+                            <group>
+                                <field name="template_description"/>
+                                <field name="compliance_requirements"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Task Generation" name="task_generation">
+                            <group>
+                                <group>
+                                    <field name="auto_generate_tasks"/>
+                                    <field name="task_generation_strategy"/>
+                                </group>
+                                <group>
+                                    <field name="generate_document_tasks"/>
+                                    <field name="generate_progress_tasks"/>
+                                    <field name="generate_milestone_tasks"/>
+                                </group>
+                            </group>
+                            <field name="selected_task_template_ids" widget="many2many_tags"/>
                         </page>
                         
                         <page string="Related Templates" name="related_templates">
                             <group>
-                                <group string="Task Templates">
-                                    <field name="related_task_templates" widget="many2many_tags"/>
-                                </group>
-                                <group string="Checkpoint Templates">
-                                    <field name="related_checkpoint_templates" widget="many2many_tags"/>
-                                </group>
+                                <field name="related_task_templates" widget="many2many_tags"/>
+                                <field name="related_checkpoint_templates" widget="many2many_tags"/>
                             </group>
-                        </page>
-                        
-                        <page string="Compliance Requirements" name="compliance_requirements" invisible="template_category != 'compliance_services'">
-                            <group>
-                                <group string="General Requirements">
-                                    <field name="compliance_requirements" placeholder="Enter general compliance requirements..."/>
-                                </group>
-                                <group string="Shareholder Requirements">
-                                    <field name="shareholder_requirements" placeholder="Enter shareholder requirements..."/>
-                                </group>
-                            </group>
-                            <group>
-                                <group string="UBO Requirements">
-                                    <field name="ubo_requirements" placeholder="Enter UBO requirements..."/>
-                                </group>
-                                <group string="Document Requirements">
-                                    <field name="document_requirements" placeholder="Enter document requirements..."/>
-                                </group>
-                            </group>
-                        </page>
-                        
-                        <page string="Tasks" name="tasks">
-                            <field name="task_ids" readonly="1">
-                                <list>
-                                    <field name="name"/>
-                                    <field name="user_ids"/>
-                                    <field name="priority"/>
-                                    <field name="sequence"/>
-                                    <field name="stage_id"/>
-                                </list>
-                            </field>
-                        </page>
-                        
-                        <page string="Description" name="description">
-                            <field name="description" placeholder="Project description..."/>
                         </page>
                     </notebook>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <!-- Project Template Search View -->
-    <record id="view_project_template_search" model="ir.ui.view">
-        <field name="name">project.project.template.search</field>
-        <field name="model">project.project</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <field name="template_category"/>
-                <field name="complexity_level"/>
-                <field name="user_id"/>
-                <field name="partner_id"/>
-                
-                <filter string="Company Formation" name="company_formation" 
-                        domain="[('template_category', '=', 'company_formation')]"/>
-                <filter string="Visa Services" name="visa_services" 
-                        domain="[('template_category', '=', 'visa_services')]"/>
-                <filter string="Government Services" name="government_services" 
-                        domain="[('template_category', '=', 'government_services')]"/>
-                <filter string="Financial Services" name="financial_services" 
-                        domain="[('template_category', '=', 'financial_services')]"/>
-                <filter string="Compliance Services" name="compliance_services" 
-                        domain="[('template_category', '=', 'compliance_services')]"/>
-                <filter string="General" name="general" 
-                        domain="[('template_category', '=', 'general')]"/>
-                
-                <separator/>
-                <filter string="Simple" name="simple" 
-                        domain="[('complexity_level', '=', 'simple')]"/>
-                <filter string="Medium" name="medium" 
-                        domain="[('complexity_level', '=', 'medium')]"/>
-                <filter string="Complex" name="complex" 
-                        domain="[('complexity_level', '=', 'complex')]"/>
-                <filter string="Very Complex" name="very_complex" 
-                        domain="[('complexity_level', '=', 'very_complex')]"/>
-                
-                <separator/>
-                <filter string="Most Used" name="most_used" 
-                        domain="[('usage_count', '>', 0)]" 
-                        context="{'orderby': 'usage_count desc'}"/>
-                <filter string="Recently Used" name="recently_used" 
-                        domain="[('last_used_date', '!=', False)]" 
-                        context="{'orderby': 'last_used_date desc'}"/>
-                
-                <group expand="0" string="Group By">
-                    <filter string="Category" name="group_category" 
-                            context="{'group_by': 'template_category'}"/>
-                    <filter string="Complexity" name="group_complexity" 
-                            context="{'group_by': 'complexity_level'}"/>
-                    <filter string="User" name="group_user" 
-                            context="{'group_by': 'user_id'}"/>
-                    <filter string="Partner" name="group_partner" 
-                            context="{'group_by': 'partner_id'}"/>
-                </group>
-            </search>
         </field>
     </record>
 
@@ -225,8 +148,6 @@
         <field name="name">Project Templates</field>
         <field name="res_model">project.project</field>
         <field name="view_mode">list,form</field>
-        <field name="view_id" ref="view_project_template_list"/>
-        <field name="search_view_id" ref="view_project_template_search"/>
         <field name="domain">[('is_template', '=', True)]</field>
         <field name="context">{'default_is_template': True}</field>
         <field name="help" type="html">
@@ -234,10 +155,10 @@
                 Create your first project template!
             </p>
             <p>
-                Project templates help you standardize your project creation process.
-                Mark any project as a template and reuse it to create new projects quickly.
+                Project templates allow you to create predefined project structures
+                that can be used to quickly set up new projects with consistent
+                configurations, tasks, and checkpoints.
             </p>
         </field>
     </record>
-
 </odoo>
