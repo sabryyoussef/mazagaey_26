@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fsm_workflow_instance_user,fsm.workflow.instance.user,model_fsm_workflow_instance,base.group_user,1,1,1,1
+access_fsm_workflow_create_wizard_user,fsm.workflow.create.wizard.user,model_fsm_workflow_create_wizard,base.group_user,1,1,1,1
