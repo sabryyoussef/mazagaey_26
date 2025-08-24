@@ -69,6 +69,29 @@ class ProjectTemplate(models.Model):
         help='Checkpoint templates that are commonly used with this project template'
     )
     
+    # Task Generation Configuration
+    auto_generate_tasks = fields.Boolean('Auto-Generate Tasks', default=True)
+    task_generation_strategy = fields.Selection([
+        ('document_based', 'Document-Based'),
+        ('progress_tracking', 'Progress Tracking'),
+        ('milestone', 'Milestone'),
+        ('custom', 'Custom'),
+        ('all', 'All Strategies')
+    ], string='Task Generation Strategy', default='document_based')
+    
+    # Task Template Selection
+    selected_task_template_ids = fields.Many2many('project.task.template',
+        string='Selected Task Templates')
+    
+    # Task Generation Options
+    generate_document_tasks = fields.Boolean('Generate Document Tasks', default=True)
+    generate_progress_tasks = fields.Boolean('Generate Progress Tasks', default=True)
+    generate_milestone_tasks = fields.Boolean('Generate Milestone Tasks', default=True)
+    
+    # Task Generation Results
+    generated_task_count = fields.Integer('Generated Task Count', compute='_compute_generated_task_count', store=True)
+    last_task_generation_date = fields.Datetime('Last Task Generation Date')
+    
     # Compliance-specific fields
     compliance_requirements = fields.Text(
         string='Compliance Requirements',
@@ -260,3 +283,199 @@ class ProjectTemplate(models.Model):
                 'default_is_template': False,
             },
         }
+    
+    @api.depends('task_ids')
+    def _compute_generated_task_count(self):
+        """Compute the number of tasks generated from templates"""
+        for project in self:
+            if project.is_template:
+                # Count tasks that were generated from templates
+                generated_tasks = project.task_ids.filtered(lambda t: t.is_generated_from_template)
+                project.generated_task_count = len(generated_tasks)
+            else:
+                project.generated_task_count = 0
+    
+    def action_generate_tasks_from_template(self):
+        """Generate tasks from this project template"""
+        self.ensure_one()
+        
+        if not self.is_template:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Not a Template'),
+                    'message': _('This project is not marked as a template.'),
+                    'type': 'warning',
+                }
+            }
+        
+        try:
+            # Get task generation service
+            task_service = self.env['project.task.generation.service']
+            
+            # Get task templates based on strategy
+            task_templates = self._get_task_templates_for_strategy()
+            
+            if not task_templates:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('No Task Templates'),
+                        'message': _('No task templates found for the selected strategy.'),
+                        'type': 'warning',
+                    }
+                }
+            
+            # Prepare generation options
+            options = {
+                'generate_document_tasks': self.generate_document_tasks,
+                'generate_progress_tasks': self.generate_progress_tasks,
+                'generate_milestone_tasks': self.generate_milestone_tasks,
+                'generate_overall_progress': True,
+                'generate_category_progress': True,
+                'set_dependencies': True,
+                'assign_users': False,
+            }
+            
+            # Generate tasks
+            result = task_service.generate_tasks_from_project_template(
+                self, task_templates, options
+            )
+            
+            if result['success']:
+                # Update generation date
+                self.last_task_generation_date = fields.Datetime.now()
+                
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Tasks Generated Successfully'),
+                        'message': result['message'],
+                        'type': 'success',
+                    }
+                }
+            else:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Task Generation Failed'),
+                        'message': result['message'],
+                        'type': 'error',
+                    }
+                }
+                
+        except Exception as e:
+            _logger.error(f"Error generating tasks from project template: {e}")
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Error'),
+                    'message': _('An error occurred while generating tasks: %s') % str(e),
+                    'type': 'error',
+                }
+            }
+    
+    def action_configure_task_generation(self):
+        """Configure task generation settings"""
+        self.ensure_one()
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Configure Task Generation'),
+            'res_model': 'project.project',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_is_template': True,
+                'form_view_initial_mode': 'edit',
+            },
+        }
+    
+    def action_preview_generated_tasks(self):
+        """Preview tasks that would be generated"""
+        self.ensure_one()
+        
+        if not self.is_template:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Not a Template'),
+                    'message': _('This project is not marked as a template.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get task templates for preview
+        task_templates = self._get_task_templates_for_strategy()
+        
+        if not task_templates:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Templates'),
+                    'message': _('No task templates found for preview.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Create preview data
+        preview_data = []
+        for template in task_templates:
+            preview_data.append({
+                'template_name': template.name,
+                'template_type': template.template_type,
+                'document_category': template.document_category,
+                'estimated_hours': template.estimated_hours,
+                'priority': template.priority,
+                'task_name': template.get_task_name({
+                    'category': template.document_category,
+                    'count': 5,  # Example count
+                    'project_name': self.name
+                }),
+                'task_description': template.get_task_description({
+                    'category': template.document_category,
+                    'count': 5,  # Example count
+                    'project_name': self.name
+                })
+            })
+        
+        # Return preview action (this would need a custom wizard or view)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Task Preview'),
+                'message': _('Would generate %d tasks from %d templates.') % (len(preview_data), len(task_templates)),
+                'type': 'info',
+            }
+        }
+    
+    def _get_task_templates_for_strategy(self):
+        """Get task templates based on the selected strategy"""
+        domain = [('active', '=', True)]
+        
+        if self.task_generation_strategy == 'document_based':
+            domain.append(('template_type', '=', 'document_based'))
+        elif self.task_generation_strategy == 'progress_tracking':
+            domain.append(('template_type', '=', 'progress_tracking'))
+        elif self.task_generation_strategy == 'milestone':
+            domain.append(('template_type', '=', 'milestone'))
+        elif self.task_generation_strategy == 'custom':
+            domain.append(('template_type', '=', 'custom'))
+        elif self.task_generation_strategy == 'all':
+            # No additional filter - get all types
+            pass
+        
+        # If specific templates are selected, use those
+        if self.selected_task_template_ids:
+            return self.selected_task_template_ids
+        
+        return self.env['project.task.template'].search(domain)

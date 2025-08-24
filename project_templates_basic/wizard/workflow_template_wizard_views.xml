@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Workflow Template Wizard List View -->
+        <record id="view_workflow_template_wizard_list" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.list</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="product_name"/>
+                    <field name="product_type"/>
+                    <field name="project_name"/>
+                    <field name="project_duration"/>
+                    <field name="project_complexity"/>
+                    <field name="task_generation_strategy"/>
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Workflow Template Wizard Search View -->
+        <record id="view_workflow_template_wizard_search" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.search</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="product_name"/>
+                    <field name="project_name"/>
+                    <field name="product_type"/>
+                    <field name="task_generation_strategy"/>
+                    <filter string="Services" name="services" domain="[('product_type', '=', 'service')]"/>
+                    <filter string="Products" name="products" domain="[('product_type', '=', 'product')]"/>
+                    <filter string="Document-Based" name="document_based" domain="[('task_generation_strategy', '=', 'document_based')]"/>
+                    <filter string="Progress Tracking" name="progress_tracking" domain="[('task_generation_strategy', '=', 'progress_tracking')]"/>
+                    <filter string="Milestone-Based" name="milestone" domain="[('task_generation_strategy', '=', 'milestone')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product Type" name="group_product_type" context="{'group_by': 'product_type'}"/>
+                        <filter string="Task Strategy" name="group_task_strategy" context="{'group_by': 'task_generation_strategy'}"/>
+                        <filter string="Created By" name="group_created_by" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Step 1: Product Template View -->
+        <record id="view_workflow_template_wizard_product" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.product</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 1: Product Template">
+                    <div class="oe_title">
+                        <h1>Step 1 of 4: Product Template</h1>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Define your product template or select an existing one</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <!-- Product Template Selection -->
+                        <group>
+                            <group>
+                                <field name="use_existing_product"/>
+                                <field name="existing_product_template_id" 
+                                       invisible="not use_existing_product"
+                                       domain="[('type', 'in', ['service', 'product'])]"/>
+                            </group>
+                            <group>
+                                <button name="action_view_product_templates" 
+                                        type="object" 
+                                        string="View Product Templates" 
+                                        class="btn-secondary"
+                                        icon="fa-list"/>
+                                <button name="action_create_product_template" 
+                                        type="object" 
+                                        string="Create New Product Template" 
+                                        class="btn-secondary"
+                                        icon="fa-plus"/>
+                            </group>
+                        </group>
+
+                        <group invisible="use_existing_product">
+                            <group>
+                                <field name="product_name" placeholder="e.g., Web Development Service"/>
+                                <field name="product_type"/>
+                                <field name="product_category"/>
+                            </group>
+                            <group>
+                                <field name="current_step" invisible="1"/>
+                                <field name="progress" invisible="1"/>
+                                <field name="step_count" invisible="1"/>
+                                <field name="completed_steps" invisible="1"/>
+                            </group>
+                        </group>
+                        
+                        <field name="product_description" 
+                               placeholder="Describe your product or service..."
+                               invisible="use_existing_product"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_next_step" type="object" string="Next" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Step 2: Project Template View -->
+        <record id="view_workflow_template_wizard_project" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.project</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 2: Project Template">
+                    <div class="oe_title">
+                        <h1>Step 2 of 4: Project Template</h1>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Configure your project template or select an existing one</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <!-- Project Template Selection -->
+                        <group>
+                            <group>
+                                <field name="use_existing_project"/>
+                                <field name="existing_project_template_id" 
+                                       invisible="not use_existing_project"/>
+                            </group>
+                            <group>
+                                <button name="action_view_project_templates" 
+                                        type="object" 
+                                        string="View Project Templates" 
+                                        class="btn-secondary"
+                                        icon="fa-list"/>
+                                <button name="action_create_project_template" 
+                                        type="object" 
+                                        string="Create New Project Template" 
+                                        class="btn-secondary"
+                                        icon="fa-plus"/>
+                            </group>
+                        </group>
+
+                        <group invisible="use_existing_project">
+                            <group>
+                                <field name="project_name" placeholder="e.g., Web Development Project"/>
+                                <field name="project_duration"/>
+                                <field name="project_complexity"/>
+                            </group>
+                            <group>
+                                <field name="auto_generate_tasks"/>
+                                <field name="task_generation_strategy" 
+                                       invisible="not auto_generate_tasks"/>
+                            </group>
+                        </group>
+                        
+                        <field name="project_description" 
+                               placeholder="Describe your project template..."
+                               invisible="use_existing_project"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_previous_step" type="object" string="Previous" class="btn-secondary"/>
+                        <button name="action_next_step" type="object" string="Next" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Step 3: Checkpoint Templates View -->
+        <record id="view_workflow_template_wizard_checkpoints" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.checkpoints</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 3: Checkpoint Templates">
+                    <div class="oe_title">
+                        <h1>Step 3 of 5: Checkpoint Templates</h1>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Configure checkpoint templates or select existing ones</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <!-- Checkpoint Template Selection -->
+                        <group>
+                            <group>
+                                <field name="use_existing_checkpoints"/>
+                                <field name="existing_checkpoint_template_ids" 
+                                       invisible="not use_existing_checkpoints"
+                                       widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <button name="action_view_checkpoint_templates" 
+                                        type="object" 
+                                        string="View Checkpoint Templates" 
+                                        class="btn-secondary"
+                                        icon="fa-list"/>
+                                <button name="action_create_checkpoint_template" 
+                                        type="object" 
+                                        string="Create New Checkpoint Template" 
+                                        class="btn-secondary"
+                                        icon="fa-plus"/>
+                            </group>
+                        </group>
+
+                        <group invisible="use_existing_checkpoints">
+                            <group>
+                                <field name="create_default_checkpoints"/>
+                            </group>
+                        </group>
+                        
+                        <field name="checkpoint_template_ids" 
+                               invisible="not create_default_checkpoints or use_existing_checkpoints"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_previous_step" type="object" string="Previous" class="btn-secondary"/>
+                        <button name="action_next_step" type="object" string="Next" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Step 4: Task Templates View -->
+        <record id="view_workflow_template_wizard_tasks" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.tasks</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 4: Task Templates">
+                    <div class="oe_title">
+                        <h1>Step 4 of 5: Task Templates</h1>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Configure task templates or select existing ones</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <!-- Task Template Selection -->
+                        <group>
+                            <group>
+                                <field name="use_existing_tasks"/>
+                                <field name="existing_task_template_ids" 
+                                       invisible="not use_existing_tasks"
+                                       widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <button name="action_view_task_templates" 
+                                        type="object" 
+                                        string="View Task Templates" 
+                                        class="btn-secondary"
+                                        icon="fa-list"/>
+                                <button name="action_create_task_template" 
+                                        type="object" 
+                                        string="Create New Task Template" 
+                                        class="btn-secondary"
+                                        icon="fa-plus"/>
+                            </group>
+                        </group>
+
+                        <group invisible="use_existing_tasks">
+                            <group>
+                                <field name="create_default_tasks"/>
+                            </group>
+                        </group>
+                        
+                        <field name="task_template_ids" 
+                               invisible="not create_default_tasks or use_existing_tasks"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_previous_step" type="object" string="Previous" class="btn-secondary"/>
+                        <button name="action_next_step" type="object" string="Next" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Step 5: Review View -->
+        <record id="view_workflow_template_wizard_review" model="ir.ui.view">
+            <field name="name">workflow.template.wizard.review</field>
+            <field name="model">workflow.template.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Step 5: Review &amp; Create">
+                    <div class="oe_title">
+                        <h1>Step 5 of 5: Review &amp; Create</h1>
+                        <div class="alert alert-success" role="alert">
+                            <strong>Review and create your workflow template</strong>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="summary_product" widget="text"/>
+                            </group>
+                            <group>
+                                <field name="summary_project" widget="text"/>
+                            </group>
+                        </group>
+                        
+                        <field name="summary_tasks" widget="text"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="action_previous_step" type="object" string="Previous" class="btn-secondary"/>
+                        <button name="action_create_workflow" type="object" string="Create Workflow Template" class="btn-success"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Workflow Template Wizard Action (Form) -->
+        <record id="action_workflow_template_wizard" model="ir.actions.act_window">
+            <field name="name">Create Workflow Template</field>
+            <field name="res_model">workflow.template.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_workflow_template_wizard_product"/>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a complete workflow template!
+                </p>
+                <p>
+                    This wizard will guide you through creating a product template, 
+                    project template, checkpoint templates, and task templates in one unified workflow.
+                </p>
+            </field>
+        </record>
+
+        <!-- Workflow Template List Action -->
+        <record id="action_workflow_template_list" model="ir.actions.act_window">
+            <field name="name">Workflow Templates</field>
+            <field name="res_model">workflow.template.wizard</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_workflow_template_wizard_list"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No workflow templates found!
+                </p>
+                <p>
+                    Create your first workflow template using the wizard.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item for Workflow Template List -->
+        <menuitem id="menu_workflow_template_list"
+                  name="Workflow Templates"
+                  parent="project_templates_basic.menu_project_templates_root"
+                  action="action_workflow_template"
+                  sequence="5"
+                  groups="base.group_user"/>
+
+        <!-- Menu Item for Workflow Template Creation -->
+        <menuitem id="menu_workflow_template_create"
+                  name="Create New Workflow"
+                  parent="project_templates_basic.menu_project_templates_root"
+                  action="action_workflow_template_wizard"
+                  sequence="6"
+                  groups="base.group_user"/>
+
+    </data>
+</odoo>
