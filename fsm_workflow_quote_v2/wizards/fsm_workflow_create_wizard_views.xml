@@ -15,14 +15,14 @@
             <group string="Pricing &amp; Quotation">
               <field name="pricing_policy"/>
               <field name="estimated_hours"/>
-              <field name="hourly_rate" attrs="{'invisible': [('pricing_policy', '!=', 'hourly')]}"/>
-              <field name="fixed_price" attrs="{'invisible': [('pricing_policy', '!=', 'fixed')]}"/>
+              <field name="hourly_rate" invisible="pricing_policy != 'hourly'"/>
+              <field name="fixed_price" invisible="pricing_policy != 'fixed'"/>
               <field name="currency_id" invisible="1"/>
             </group>
           </group>
           <group string="Quotation Options">
             <field name="create_quotation"/>
-            <field name="quotation_notes" attrs="{'invisible': [('create_quotation', '=', False)]}"/>
+            <field name="quotation_notes" invisible="not create_quotation"/>
           </group>
         </sheet>
         <footer>
