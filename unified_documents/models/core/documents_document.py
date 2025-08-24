@@ -108,20 +108,52 @@ class DocumentsDocument(models.Model):
     def action_upload_file(self):
         self.ensure_one()
         
-        # Simple direct attachment approach
+        # Determine the best default folder
+        default_folder_id = False
+        if self.folder_id:
+            default_folder_id = self.folder_id.id
+        elif self.res_model == 'project.project' and self.res_id:
+            # Try to get project folder
+            try:
+                project = self.env['project.project'].browse(self.res_id)
+                if project.exists():
+                    if hasattr(project, 'documents_folder_id') and project.documents_folder_id:
+                        default_folder_id = project.documents_folder_id.id
+                    else:
+                        # Create folder using our method
+                        project_folder = self._get_project_folder(project)
+                        if project_folder:
+                            default_folder_id = project_folder.id
+            except Exception as e:
+                _logger.error("Failed to get project folder: %s", e)
+        elif self.res_model == 'product.template' and self.res_id:
+            # Try to get product folder
+            try:
+                product = self.env['product.template'].browse(self.res_id)
+                if product.exists():
+                    product_folder = self._get_product_folder(product)
+                    if product_folder:
+                        default_folder_id = product_folder.id
+            except Exception as e:
+                _logger.error("Failed to get product folder: %s", e)
+        
+        # Create a new documents.document record instead of ir.attachment
         return {
             'name': _('Upload File for %s') % self.name,
             'type': 'ir.actions.act_window',
-            'res_model': 'ir.attachment',
+            'res_model': 'documents.document',
             'view_mode': 'form',
             'target': 'new',
             'context': {
-                'default_name': f"{self.name}_attachment",
-                'default_folder_id': self.folder_id.id if self.folder_id else False,
-                # Store document info in context but don't set as default
-                'upload_for_document': self.id,
-                'document_original_res_model': self.res_model,
-                'document_original_res_id': self.res_id,
+                'default_name': f"{self.name}_file",
+                'default_folder_id': default_folder_id,
+                'default_linked_project_id': self.linked_project_id.id if self.linked_project_id else False,
+                'default_linked_product_id': self.linked_product_id.id if self.linked_product_id else False,
+                'default_res_model': self.res_model,
+                'default_res_id': self.res_id,
+                'default_category': self.category,
+                'default_priority': self.priority,
+                'default_status': 'draft',
             },
         }
 
@@ -140,11 +172,13 @@ class DocumentsDocument(models.Model):
     def _get_or_create_folder(self, folder_name, parent_folder=None):
         try:
             domain = [('name', '=', folder_name),
+                      ('type', '=', 'folder'),
                       ('parent_folder_id', '=', parent_folder.id if parent_folder else False)]
-            folder = self.env['documents.folder'].search(domain, limit=1)
+            folder = self.env['documents.document'].search(domain, limit=1)
             if not folder:
-                folder = self.env['documents.folder'].create({
+                folder = self.env['documents.document'].create({
                     'name': folder_name,
+                    'type': 'folder',
                     'parent_folder_id': parent_folder.id if parent_folder else False,
                 })
             return folder
@@ -165,17 +199,42 @@ class DocumentsDocument(models.Model):
         return self._get_or_create_folder(product.name, self._get_or_create_folder('Products'))
 
     def _auto_assign_to_project_folder(self):
+        """Auto-assign documents to project folders"""
         for doc in self:
             if doc.res_model == 'project.project' and doc.res_id:
                 try:
                     project = self.env['project.project'].browse(doc.res_id)
                     if project.exists():
+                        # Ensure project has a documents folder
                         if hasattr(project, '_ensure_project_folder'):
                             project._ensure_project_folder()
+                        
+                        # Assign document to project's folder
                         if project.documents_folder_id and doc.folder_id != project.documents_folder_id:
                             doc.folder_id = project.documents_folder_id.id
+                        elif not doc.folder_id:
+                            # Fallback: create folder using our method
+                            project_folder = self._get_project_folder(project)
+                            if project_folder:
+                                doc.folder_id = project_folder.id
+                                # Also update the project's documents_folder_id if not set
+                                if not project.documents_folder_id:
+                                    project.documents_folder_id = project_folder.id
                 except Exception as e:
                     _logger.error("Failed to assign doc '%s' to project folder: %s", doc.name, e)
+
+    def _auto_assign_to_product_folder(self):
+        """Auto-assign documents to product folders"""
+        for doc in self:
+            if doc.res_model == 'product.template' and doc.res_id:
+                try:
+                    product = self.env['product.template'].browse(doc.res_id)
+                    if product.exists():
+                        product_folder = self._get_product_folder(product)
+                        if product_folder and not doc.folder_id:
+                            doc.folder_id = product_folder.id
+                except Exception as e:
+                    _logger.error("Failed to assign doc '%s' to product folder: %s", doc.name, e)
 
     @api.model
     def default_get(self, fields_list):
@@ -232,6 +291,7 @@ class DocumentsDocument(models.Model):
 
         docs = super().create(processed)
         docs._auto_assign_to_project_folder()
+        docs._auto_assign_to_product_folder()
         return docs
 
     def write(self, vals):
@@ -250,4 +310,5 @@ class DocumentsDocument(models.Model):
 
         if 'res_model' in vals or 'res_id' in vals:
             self._auto_assign_to_project_folder()
+            self._auto_assign_to_product_folder()
         return res

@@ -7,6 +7,16 @@ _logger = logging.getLogger(__name__)
 class IrAttachmentExtension(models.Model):
     _inherit = 'ir.attachment'
 
+    # Add folder field for document organization (optional)
+    # Add folder field for document organization
+    folder_id = fields.Many2one(
+        'documents.document',
+        string='Folder',
+        domain=[('type', '=', 'folder')],
+        help='Folder to organize this attachment in the Documents app',
+        required=False
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         """Override create to handle document uploads"""
