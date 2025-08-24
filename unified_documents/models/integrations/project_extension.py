@@ -121,10 +121,13 @@ class ProjectProject(models.Model):
         """Compute the files in the project folder"""
         for project in self:
             if project.documents_folder_id:
-                # Get attachments in the project folder
+                # Get attachments in the project folder (both linked to documents and directly to project)
                 files = self.env['ir.attachment'].search([
+                    '|',
                     ('folder_id', '=', project.documents_folder_id.id),
-                    ('res_model', '=', 'documents.document')
+                    '&',
+                    ('res_model', '=', 'project.project'),
+                    ('res_id', '=', project.id)
                 ])
                 # Force recomputation of computed fields on attachments
                 files._invalidate_cache(['document_name', 'document_category'])
@@ -511,8 +514,11 @@ class ProjectProject(models.Model):
                 'view_mode': 'list',
                 'view_id': self.env.ref('unified_documents.view_ir_attachment_tree_project_files').id,
                 'domain': [
+                    '|',
                     ('folder_id', '=', self.documents_folder_id.id),
-                    ('res_model', '=', 'documents.document')
+                    '&',
+                    ('res_model', '=', 'project.project'),
+                    ('res_id', '=', self.id)
                 ],
                 'context': {
                     'default_folder_id': self.documents_folder_id.id,

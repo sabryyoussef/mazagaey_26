@@ -135,6 +135,21 @@
                                 </span>
                             </div>
                         </button>
+                        
+                        <!-- Document Template Smart Button -->
+                        <button name="action_view_document_template" type="object" 
+                                class="oe_stat_button" icon="fa-file-text"
+                                invisible="document_template_id == False"
+                                title="View Document Template">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="document_template_id" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text">Template</span>
+                            </div>
+                        </button>
+                        
+
                     </div>
                     
                     <group>
@@ -142,9 +157,17 @@
                             <field name="required_document_count" readonly="1"/>
                             <field name="deliverable_document_count" readonly="1"/>
                         </group>
+                        <group>
+                            <field name="document_template_id" placeholder="Select a document template..."/>
+                        </group>
                     </group>
                     
-
+                    <!-- Document Template Actions -->
+                    <group string="Document Template Actions" invisible="document_template_id == False">
+                        <button name="action_apply_document_template" type="object"
+                                string="Apply Template Documents" class="btn-primary"
+                                icon="fa-magic"/>
+                    </group>
                     
                     <!-- Document List Section -->
                     <group string="Product Documents">
