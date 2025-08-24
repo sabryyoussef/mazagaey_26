@@ -38,9 +38,9 @@ class FSMWorkflowInstance(models.Model):
     quotation_amount = fields.Monetary(string='Quotation Amount', related='sale_order_id.amount_total', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='sale_order_id.currency_id', readonly=True)
     
-    # Checkpoint Integration
+    # Checkpoint Integration (Optional)
     checkpoint_ids = fields.One2many('project.task.checkpoint', 'compliance_project_id', 
-                                    related='project_id.checkpoint_ids', readonly=True)
+                                    string='Checkpoints', readonly=True)
     total_checkpoints = fields.Integer(string='Total Checkpoints', compute='_compute_checkpoint_stats', store=True)
     completed_checkpoints = fields.Integer(string='Completed Checkpoints', compute='_compute_checkpoint_stats', store=True)
     checkpoint_progress = fields.Float(string='Checkpoint Progress (%)', compute='_compute_checkpoint_stats', store=True)
@@ -60,11 +60,16 @@ class FSMWorkflowInstance(models.Model):
     create_date = fields.Datetime(string='Created on', readonly=True)
     write_date = fields.Datetime(string='Last Updated on', readonly=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('fsm.workflow.instance') or _('New')
-        return super(FSMWorkflowInstance, self).create(vals)
+    def create(self, vals_list):
+        """Override create to set automatic sequence"""
+        if isinstance(vals_list, dict):
+            vals_list = [vals_list]
+        
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('fsm.workflow.instance') or _('New')
+        
+        return super(FSMWorkflowInstance, self).create(vals_list)
 
     @api.depends('project_id.timesheet_ids.unit_amount')
     def _compute_hours(self):
@@ -83,16 +88,22 @@ class FSMWorkflowInstance(models.Model):
             else:
                 record.timesheet_hours = 0.0
 
-    @api.depends('checkpoint_ids', 'checkpoint_ids.state')
+    @api.depends('checkpoint_ids', 'checkpoint_ids.is_reached')
     def _compute_checkpoint_stats(self):
         for record in self:
-            if record.checkpoint_ids:
-                total = len(record.checkpoint_ids)
-                completed = len(record.checkpoint_ids.filtered(lambda c: c.state == 'done'))
-                record.total_checkpoints = total
-                record.completed_checkpoints = completed
-                record.checkpoint_progress = (completed / total * 100) if total > 0 else 0.0
-            else:
+            try:
+                if record.checkpoint_ids:
+                    total = len(record.checkpoint_ids)
+                    completed = len(record.checkpoint_ids.filtered(lambda c: c.is_reached))
+                    record.total_checkpoints = total
+                    record.completed_checkpoints = completed
+                    record.checkpoint_progress = (completed / total * 100) if total > 0 else 0.0
+                else:
+                    record.total_checkpoints = 0
+                    record.completed_checkpoints = 0
+                    record.checkpoint_progress = 0.0
+            except Exception as e:
+                _logger.warning(f"Error computing checkpoint stats for workflow {record.id}: {e}")
                 record.total_checkpoints = 0
                 record.completed_checkpoints = 0
                 record.checkpoint_progress = 0.0
@@ -149,34 +160,42 @@ class FSMWorkflowInstance(models.Model):
     def action_open_checkpoints(self):
         """Open checkpoints for this workflow instance"""
         self.ensure_one()
-        if not self.project_id:
+        if not self.project_id or 'project.task.checkpoint' not in self.env:
             return {}
         
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.task.checkpoint',
-            'view_mode': 'list,form',
-            'domain': [('compliance_project_id', '=', self.project_id.id)],
-            'context': {'default_compliance_project_id': self.project_id.id},
-            'target': 'current',
-        }
+        try:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task.checkpoint',
+                'view_mode': 'list,form',
+                'domain': [('compliance_project_id', '=', self.project_id.id)],
+                'context': {'default_compliance_project_id': self.project_id.id},
+                'target': 'current',
+            }
+        except Exception as e:
+            _logger.warning(f"Error opening checkpoints: {e}")
+            return {}
 
     def action_create_checkpoint(self):
         """Create a new checkpoint for this workflow instance"""
         self.ensure_one()
-        if not self.project_id:
+        if not self.project_id or 'project.task.checkpoint' not in self.env:
             return {}
         
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.task.checkpoint',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_compliance_project_id': self.project_id.id,
-                'default_name': 'New Checkpoint',
-            },
-        }
+        try:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'project.task.checkpoint',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_compliance_project_id': self.project_id.id,
+                    'default_name': 'New Checkpoint',
+                },
+            }
+        except Exception as e:
+            _logger.warning(f"Error creating checkpoint: {e}")
+            return {}
 
     def action_create_handover(self):
         """Create handover notes for this workflow instance"""
@@ -244,16 +263,20 @@ class FSMWorkflowInstance(models.Model):
         
         # Create lines from template tasks
         for task_template in self.template_id.task_template_ids:
-            product = self._get_product_for_task(task_template)
-            if product:
-                line_vals = {
-                    'order_id': sale_order.id,
-                    'product_id': product.id,
-                    'name': task_template.name,
-                    'product_uom_qty': self._calculate_quantity(task_template),
-                    'price_unit': self._calculate_price_unit(product, task_template),
-                }
-                self.env['sale.order.line'].create(line_vals)
+            try:
+                product = self._get_product_for_task(task_template)
+                if product:
+                    line_vals = {
+                        'order_id': sale_order.id,
+                        'product_id': product.id,
+                        'name': task_template.name,
+                        'product_uom_qty': self._calculate_quantity(task_template),
+                        'price_unit': self._calculate_price_unit(product, task_template),
+                    }
+                    self.env['sale.order.line'].create(line_vals)
+            except Exception as e:
+                _logger.warning(f"Failed to create quotation line for task template {task_template.name}: {e}")
+                continue
 
     def _create_default_quotation_line(self, sale_order):
         """Create a default quotation line"""

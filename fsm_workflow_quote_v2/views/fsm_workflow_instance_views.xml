@@ -54,8 +54,8 @@
             <group>
               <field name="pricing_policy"/>
               <field name="estimated_hours"/>
-              <field name="hourly_rate" attrs="{'invisible': [('pricing_policy', '!=', 'hourly')]}"/>
-              <field name="fixed_price" attrs="{'invisible': [('pricing_policy', '!=', 'fixed')]}"/>
+              <field name="hourly_rate" invisible="pricing_policy != 'hourly'"/>
+              <field name="fixed_price" invisible="pricing_policy != 'fixed'"/>
             </group>
             <group>
               <field name="sale_order_id" readonly="1"/>
@@ -75,15 +75,15 @@
               <field name="sale_order_id" invisible="1"/>
             </button>
             <button name="action_create_quotation" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Create Quotation" 
-                    attrs="{'invisible': [('sale_order_id', '!=', False)]}">
+                    invisible="sale_order_id != False">
               <field name="partner_id" invisible="1"/>
             </button>
             <button name="action_send_quotation" type="object" class="oe_stat_button" icon="fa-paper-plane" string="Send Quotation"
-                    attrs="{'invisible': [('quotation_state', 'not in', ['draft'])]}">
+                    invisible="quotation_state not in ['draft']">
               <field name="sale_order_id" invisible="1"/>
             </button>
             <button name="action_confirm_quotation" type="object" class="oe_stat_button" icon="fa-check" string="Confirm Quotation"
-                    attrs="{'invisible': [('quotation_state', 'not in', ['draft', 'sent'])]}">
+                    invisible="quotation_state not in ['draft', 'sent']">
               <field name="sale_order_id" invisible="1"/>
             </button>
             <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
