@@ -14,5 +14,7 @@
                   parent="project.menu_project_config"
                   action="action_project_milestone"
                   sequence="101"/>
+        
+
     </data>
 </odoo>

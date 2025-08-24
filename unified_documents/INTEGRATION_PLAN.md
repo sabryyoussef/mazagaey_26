@@ -37,6 +37,10 @@
 - ✅ **NEW**: Sales order button for bulk copying
 - ✅ **NEW**: Project button for copying from sales order products only
 - ✅ **NEW**: Automatic product filtering based on project's sales orders
+- ✅ **NEW**: Project template document copying when projects are created from products with project templates
+- ✅ **NEW**: Product document copying from project templates when project template is selected (safer approach)
+- ✅ **FIXED**: Transaction rollback issues and database lock timeouts
+- ✅ **IMPROVED**: Error handling and transaction safety for document copying
 
 #### **5. Integration Features**
 - ✅ Document deduplication system
@@ -88,6 +92,7 @@
 3. **Enhanced Sales Order Button**: Primary button for bulk copying from sales order
 4. **Improved Error Messages**: Clear feedback about what went wrong
 5. **Better User Experience**: Reduced clicks and clearer interface
+6. **Project Template Integration**: Automatically copies documents from project templates when projects are created
 
 #### **Button Locations:**
 - **Sales Order Form**: "Copy Documents to Projects" (primary button)

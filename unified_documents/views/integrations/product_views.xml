@@ -113,6 +113,18 @@
                             </div>
                         </button>
                         
+                        <!-- Copy from Project Template Smart Button -->
+                        <button name="action_copy_documents_from_project_template" type="object" 
+                                class="oe_stat_button" icon="fa-download"
+                                invisible="project_template_id == False"
+                                title="Copy Documents from Project Template">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-download"/>
+                                </span>
+                            </div>
+                        </button>
+                        
                         <!-- Fix Tags Smart Button -->
                         <button name="action_fix_document_tags" type="object" 
                                 class="oe_stat_button" icon="fa-tags"
@@ -246,6 +258,9 @@
                             <button name="action_create_custom_project_template" type="object" 
                                     string="Create Template" class="btn-primary"
                                     invisible="project_template_id != False"/>
+                            <button name="action_copy_documents_from_project_template" type="object" 
+                                    string="Copy Documents from Template" class="btn-info"
+                                    invisible="project_template_id == False"/>
                         </group>
                     </group>
                     

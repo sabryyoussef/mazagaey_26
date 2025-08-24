@@ -10,7 +10,7 @@
         "base",
         "project",
         "product",
-        "documents",  # For document integration
+        "documents"  # For document integration
     ],
     "data": [
         # Security (load first)
@@ -25,12 +25,12 @@
         # Template views
         "views/templates/milestone_template_views.xml",
         # Menu views (load last after all actions are defined)
-        "views/core/menu_views.xml",
+        "views/core/menu_views.xml"
     ],
     "demo": [
         "data/demo_data_consolidated.xml",
         "data/demo_visibility_conditions.xml",
-        "demo/demo_data.xml",
+        "demo/demo_data.xml"
     ],
     "application": False,
     "installable": True,

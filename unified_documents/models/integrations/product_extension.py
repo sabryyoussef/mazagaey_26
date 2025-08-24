@@ -90,6 +90,8 @@ class ProductTemplate(models.Model):
     )
     
 
+    
+
 
     @api.depends('document_ids', 'required_document_ids', 'deliverable_document_ids')
     def _compute_document_counts(self):
@@ -367,6 +369,14 @@ class ProductTemplate(models.Model):
             for record in self:
                 if record.service_tracking == 'task_in_project' and not (hasattr(record, 'project_template_id') and record.project_template_id):
                     record._create_product_project_template()
+        
+        # Check if project_template_id is being set and copy documents automatically
+        if vals.get('project_template_id'):
+            for record in self:
+                if record.project_template_id:
+                    # Use a safer approach - only copy if the product doesn't already have documents
+                    if not record.document_ids:
+                        record._copy_documents_from_project_template()
         
         return result
 
@@ -710,5 +720,115 @@ class ProductTemplate(models.Model):
                     'title': _('Test Failed'),
                     'message': _('Document copy test failed: %s') % str(e),
                     'type': 'danger',
+                }
+            }
+
+    def _copy_documents_from_project_template(self):
+        """Copy documents from the selected project template to this product"""
+        self.ensure_one()
+        
+        if not self.project_template_id:
+            return False
+        
+        project_template = self.project_template_id
+        
+        # Check if project template has documents
+        if not hasattr(project_template, 'document_ids') or not project_template.document_ids:
+            _logger.info(f"Project template {project_template.name} has no documents to copy")
+            return False
+        
+        # Use a safer approach with try-catch and transaction handling
+        try:
+            copied_count = 0
+            for doc in project_template.document_ids:
+                try:
+                    # Create a copy of the document linked to the product
+                    new_doc_vals = {
+                        'name': f"{doc.name} - {self.name}",
+                        'category': doc.category or 'reference',
+                        'status': doc.status or 'draft',
+                        'priority': doc.priority or '1',
+                        'description': doc.description or '',
+                        'notes': doc.notes or '',
+                        'tag_ids': [(6, 0, doc.tag_ids.ids)] if doc.tag_ids else False,
+                        'linked_product_id': self.id,  # Link to this product
+                        'res_model': 'product.template',
+                        'res_id': self.id,
+                    }
+                    
+                    # Copy attachment if exists and is valid
+                    if doc.attachment_id and doc.attachment_id.exists():
+                        new_doc_vals['attachment_id'] = doc.attachment_id.id
+                    
+                    # Create document with sudo to avoid permission issues
+                    new_doc = self.env['documents.document'].sudo().create(new_doc_vals)
+                    copied_count += 1
+                    
+                    _logger.info(f"Copied document '{doc.name}' from project template '{project_template.name}' to product '{self.name}'")
+                    
+                except Exception as e:
+                    _logger.warning(f"Failed to copy document '{doc.name}' from project template: {e}")
+                    continue
+            
+            # Invalidate cache to ensure product.document_ids is updated
+            if copied_count > 0:
+                self.invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+                _logger.info(f"Invalidated cache for product {self.name} after copying {copied_count} documents from project template")
+            
+            _logger.info(f"Project template copy completed: {copied_count} documents copied from template {project_template.name} to product {self.name}")
+            return copied_count > 0
+            
+        except Exception as e:
+            _logger.error(f"Failed to copy documents from project template: {e}")
+            return False
+
+    def action_copy_documents_from_project_template(self):
+        """Manual action to copy documents from project template to product"""
+        self.ensure_one()
+        
+        if not self.project_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Project Template'),
+                    'message': _('Please select a project template first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Use a safer approach with transaction handling
+        try:
+            copied = self._copy_documents_from_project_template()
+            
+            if copied:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Documents Copied'),
+                        'message': _('Documents have been copied from the project template to this product successfully.'),
+                        'type': 'success',
+                    }
+                }
+            else:
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('No Documents Copied'),
+                        'message': _('No documents were copied. The project template may not have any documents.'),
+                        'type': 'info',
+                    }
+                }
+        except Exception as e:
+            _logger.error(f"Error in action_copy_documents_from_project_template: {e}")
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Error'),
+                    'message': _('An error occurred while copying documents. Please try again.'),
+                    'type': 'error',
                 }
             }
