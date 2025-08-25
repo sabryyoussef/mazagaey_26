@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <!-- Workflow Analytics Report -->
+  <!-- Temporarily commented out to fix loading issues -->
+  <!--
   <record id="action_report_workflow_analytics" model="ir.actions.report">
     <field name="name">Workflow Analytics Report</field>
     <field name="model">fsm.workflow.dashboard</field>
@@ -11,6 +13,7 @@
     <field name="binding_model_id" ref="model_fsm_workflow_dashboard"/>
     <field name="binding_type">report</field>
   </record>
+  -->
 
   <!-- Report Template -->
   <template id="report_workflow_analytics">
