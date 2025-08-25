@@ -46,7 +46,7 @@
               <field name="sale_order_id" invisible="1"/>
             </button>
             <button name="action_open_checkpoints" type="object" class="oe_stat_button" icon="fa-check-square-o" string="Checkpoints">
-              <field name="checkpoint_ids" invisible="1"/>
+              <field name="project_id" invisible="1"/>
             </button>
             <button name="action_create_checkpoint" type="object" class="oe_stat_button" icon="fa-plus" string="Add Checkpoint">
               <field name="project_id" invisible="1"/>
