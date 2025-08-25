@@ -7,7 +7,6 @@
     <field name="arch" type="xml">
       <form string="FSM Workflow Dashboard">
         <header>
-          <button name="%(action_report_workflow_analytics)d" type="action" string="Print Report" class="btn-primary" icon="fa-print"/>
           <button name="action_refresh_dashboard" type="object" string="Refresh" class="btn-secondary" icon="fa-refresh"/>
         </header>
         <sheet>
