@@ -100,7 +100,7 @@ class ProjectHandoverNotes(models.Model):
     channel_plan_id = fields.Char(string='Channel Partner Plan', tracking=True)
     
     # Compliance Integration
-    compliance_project_id = fields.Many2one('project.project', string='Compliance Project', tracking=True)
+    project_id = fields.Many2one('project.project', string='Compliance Project', tracking=True)
     handover_type = fields.Selection([
         ('general', 'General'),
         ('compliance', 'Compliance'),
@@ -338,11 +338,11 @@ class ProjectHandoverNotes(models.Model):
             # Trigger compliance automation
             record._trigger_compliance_handover_automation('verify')
 
-    @api.onchange('compliance_project_id')
-    def _onchange_compliance_project_id(self):
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
         """Update compliance shareholders when compliance project changes"""
-        if self.compliance_project_id:
-            self.compliance_shareholder_ids = self.compliance_project_id.compliance_shareholder_ids
+        if self.project_id:
+            self.compliance_shareholder_ids = self.project_id.compliance_shareholder_ids
 
     def _trigger_compliance_handover_automation(self, trigger_type):
         """Trigger compliance handover automation"""
@@ -362,8 +362,8 @@ class ProjectHandoverNotes(models.Model):
         """Update the linked compliance project status"""
         self.ensure_one()
         
-        if self.compliance_project_id:
-            project = self.compliance_project_id
+        if self.project_id:
+            project = self.project_id
             if self.compliance_status == 'complete':
                 project.is_complete_compliance = True
                 project.message_post(body=_("Compliance status updated via handover: %s") % self.name)
@@ -372,7 +372,7 @@ class ProjectHandoverNotes(models.Model):
         """Transfer compliance shareholders between projects"""
         self.ensure_one()
         
-        if self.compliance_project_id and self.compliance_shareholder_ids:
+        if self.project_id and self.compliance_shareholder_ids:
             # Update the compliance project with current shareholders
-            self.compliance_project_id.compliance_shareholder_ids = self.compliance_shareholder_ids
+            self.project_id.compliance_shareholder_ids = self.compliance_shareholder_ids
             self.message_post(body=_("Compliance shareholders transferred to project"))

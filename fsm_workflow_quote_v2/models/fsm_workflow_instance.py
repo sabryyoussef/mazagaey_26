@@ -38,12 +38,12 @@ class FSMWorkflowInstance(models.Model):
     quotation_amount = fields.Monetary(string='Quotation Amount', related='sale_order_id.amount_total', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='sale_order_id.currency_id', readonly=True)
     
-    # Checkpoint Integration (Optional)
-    checkpoint_ids = fields.One2many('project.task.checkpoint', 'project_id', 
-                                    string='Checkpoints', readonly=True)
-    total_checkpoints = fields.Integer(string='Total Checkpoints', compute='_compute_checkpoint_stats', store=True)
-    completed_checkpoints = fields.Integer(string='Completed Checkpoints', compute='_compute_checkpoint_stats', store=True)
-    checkpoint_progress = fields.Float(string='Checkpoint Progress (%)', compute='_compute_checkpoint_stats', store=True)
+    # Checkpoint Integration (Optional) - Temporarily disabled to fix loading issues
+    # checkpoint_ids = fields.One2many('project.task.checkpoint', 'compliance_project_id', 
+    #                                 string='Checkpoints', readonly=True)
+    total_checkpoints = fields.Integer(string='Total Checkpoints', default=0)
+    completed_checkpoints = fields.Integer(string='Completed Checkpoints', default=0)
+    checkpoint_progress = fields.Float(string='Checkpoint Progress (%)', default=0.0)
     
     # Quotation Details
     pricing_policy = fields.Selection([
@@ -96,25 +96,26 @@ class FSMWorkflowInstance(models.Model):
             else:
                 record.timesheet_hours = 0.0
 
-    @api.depends('checkpoint_ids', 'checkpoint_ids.is_reached')
-    def _compute_checkpoint_stats(self):
-        for record in self:
-            try:
-                if record.checkpoint_ids:
-                    total = len(record.checkpoint_ids)
-                    completed = len(record.checkpoint_ids.filtered(lambda c: c.is_reached))
-                    record.total_checkpoints = total
-                    record.completed_checkpoints = completed
-                    record.checkpoint_progress = (completed / total * 100) if total > 0 else 0.0
-                else:
-                    record.total_checkpoints = 0
-                    record.completed_checkpoints = 0
-                    record.checkpoint_progress = 0.0
-            except Exception as e:
-                _logger.warning(f"Error computing checkpoint stats for workflow {record.id}: {e}")
-                record.total_checkpoints = 0
-                record.completed_checkpoints = 0
-                record.checkpoint_progress = 0.0
+    # Temporarily disabled compute method to fix loading issues
+    # @api.depends('checkpoint_ids', 'checkpoint_ids.is_reached')
+    # def _compute_checkpoint_stats(self):
+    #     for record in self:
+    #         try:
+    #             if record.checkpoint_ids:
+    #                 total = len(record.checkpoint_ids)
+    #                 completed = len(record.checkpoint_ids.filtered(lambda c: c.is_reached))
+    #                 record.total_checkpoints = total
+    #                 record.completed_checkpoints = completed
+    #                 record.checkpoint_progress = (completed / total * 100) if total > 0 else 0.0
+    #             else:
+    #                 record.total_checkpoints = 0
+    #                 record.completed_checkpoints = 0
+    #                 record.checkpoint_progress = 0.0
+    #         except Exception as e:
+    #             _logger.warning(f"Error computing checkpoint stats for workflow {record.id}: {e}")
+    #             record.total_checkpoints = 0
+    #             record.completed_checkpoints = 0
+    #             record.checkpoint_progress = 0.0
 
     def action_open_project(self):
         """Open the linked project"""
@@ -176,8 +177,8 @@ class FSMWorkflowInstance(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.task.checkpoint',
                 'view_mode': 'list,form',
-                'domain': [('project_id', '=', self.project_id.id)],
-                'context': {'default_project_id': self.project_id.id},
+                'domain': [('compliance_project_id', '=', self.project_id.id)],
+                'context': {'default_compliance_project_id': self.project_id.id},
                 'target': 'current',
             }
         except Exception as e:
@@ -197,7 +198,7 @@ class FSMWorkflowInstance(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {
-                    'default_project_id': self.project_id.id,
+                    'default_compliance_project_id': self.project_id.id,
                     'default_name': 'New Checkpoint',
                 },
             }
