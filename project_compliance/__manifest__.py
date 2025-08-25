@@ -15,7 +15,6 @@
         'project',
         'mail',
         'unified_documents',
-        'project_handover_notes',
         'project_templates_basic',
         'project_checkpoints_basic'
     ],
