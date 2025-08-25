@@ -188,11 +188,18 @@
             </field>
         </record>
 
+        <!-- Compliance & Legal Main Menu -->
+        <menuitem id="menu_compliance_legal_root"
+                  name="Compliance and Legal"
+                  parent="project.menu_main_pm"
+                  sequence="50"
+                  groups="base.group_user"/>
+        
         <!-- Menu Item -->
         <menuitem id="menu_business_shareholder"
                   name="Business Shareholders"
-                  parent="project.menu_main_pm"
+                  parent="menu_compliance_legal_root"
                   action="action_business_shareholder"
-                  sequence="52"/>
+                  sequence="30"/>
     </data>
 </odoo>
