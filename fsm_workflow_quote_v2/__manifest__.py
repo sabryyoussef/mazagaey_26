@@ -49,9 +49,9 @@ Dependencies:
     'data': [
         'data/ir_sequence_data.xml',
         'security/ir.model.access.csv',
+        'reports/workflow_reports.xml',
         'views/fsm_workflow_instance_views.xml',
         'views/dashboard_views.xml',
-        'reports/workflow_reports.xml',
         'wizards/fsm_workflow_create_wizard_views.xml',
     ],
     'installable': True,
