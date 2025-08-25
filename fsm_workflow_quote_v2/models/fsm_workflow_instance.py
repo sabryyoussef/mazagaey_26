@@ -39,7 +39,7 @@ class FSMWorkflowInstance(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', related='sale_order_id.currency_id', readonly=True)
     
     # Checkpoint Integration (Optional)
-    checkpoint_ids = fields.One2many('project.task.checkpoint', 'compliance_project_id', 
+    checkpoint_ids = fields.One2many('project.task.checkpoint', 'project_id', 
                                     string='Checkpoints', readonly=True)
     total_checkpoints = fields.Integer(string='Total Checkpoints', compute='_compute_checkpoint_stats', store=True)
     completed_checkpoints = fields.Integer(string='Completed Checkpoints', compute='_compute_checkpoint_stats', store=True)
@@ -176,8 +176,8 @@ class FSMWorkflowInstance(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.task.checkpoint',
                 'view_mode': 'list,form',
-                'domain': [('compliance_project_id', '=', self.project_id.id)],
-                'context': {'default_compliance_project_id': self.project_id.id},
+                'domain': [('project_id', '=', self.project_id.id)],
+                'context': {'default_project_id': self.project_id.id},
                 'target': 'current',
             }
         except Exception as e:
@@ -197,7 +197,7 @@ class FSMWorkflowInstance(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {
-                    'default_compliance_project_id': self.project_id.id,
+                    'default_project_id': self.project_id.id,
                     'default_name': 'New Checkpoint',
                 },
             }

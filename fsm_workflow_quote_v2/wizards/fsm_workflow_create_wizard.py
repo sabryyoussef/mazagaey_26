@@ -117,7 +117,7 @@ class FSMWorkflowCreateWizard(models.TransientModel):
                     for line in checkpoint_template.line_ids:
                         self.env['project.task.checkpoint'].create({
                             'name': line.name,
-                            'compliance_project_id': project.id,
+                            'project_id': project.id,
                             'sequence': line.sequence,
                             'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
                             'notes': line.notes or '',
