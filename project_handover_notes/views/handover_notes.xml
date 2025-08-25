@@ -179,12 +179,14 @@
             </field>
         </record>
 
+
+        
         <!-- Menu Item -->
         <menuitem id="menu_project_handover_notes"
                   name="Handover Notes"
-                  parent="project.menu_main_pm"
+                  parent="project_compliance.menu_compliance_legal_root"
                   action="action_project_handover_notes"
-                  sequence="50"/>
+                  sequence="10"/>
 
         <!-- License Activity Views -->
         <record id="view_license_activity_form" model="ir.ui.view">
@@ -242,8 +244,8 @@
 
         <menuitem id="menu_license_activity"
                   name="License Activities"
-                  parent="project.menu_main_pm"
+                  parent="project_compliance.menu_compliance_legal_root"
                   action="action_license_activity"
-                  sequence="51"/>
+                  sequence="20"/>
     </data>
 </odoo>
