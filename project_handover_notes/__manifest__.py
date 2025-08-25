@@ -15,7 +15,8 @@
         'mail',
         'unified_documents',
         'project_templates_basic',
-        'project_checkpoints_basic'
+        'project_checkpoints_basic',
+        'project_compliance'
     ],
     'data': [
         'security/security.xml',

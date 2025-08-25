@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__init__.py - Unified Documents Module</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .file-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .file-info h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-item p {
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .code-editor {
+            background: #1e1e1e;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .editor-header {
+            background: #2d2d30;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .editor-title {
+            color: #cccccc;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .editor-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .control-btn.red { background: #ff5f56; }
+        .control-btn.yellow { background: #ffbd2e; }
+        .control-btn.green { background: #27ca3f; }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+
+        .code-line:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .line-number {
+            color: #858585;
+            margin-right: 15px;
+            user-select: none;
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+        }
+
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .number { color: #b5cea8; }
+        .operator { color: #d4d4d4; }
+
+        .back-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            color: #7f8c8d;
+        }
+
+        .section li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 __init__.py</h1>
+            <p>Module Initialization and Import File</p>
+        </div>
+
+        <div class="file-info">
+            <h2>📋 File Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>📁 File Type</h3>
+                    <p>Python Module Initializer</p>
+                </div>
+                <div class="info-item">
+                    <h3>🎯 Purpose</h3>
+                    <p>Module initialization and imports</p>
+                </div>
+                <div class="info-item">
+                    <h3>📊 Function</h3>
+                    <p>Loads all sub-modules</p>
+                </div>
+                <div class="info-item">
+                    <h3>🔗 Imports</h3>
+                    <p>models, wizard, services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-editor">
+            <div class="editor-header">
+                <div class="editor-title">__init__.py</div>
+                <div class="editor-controls">
+                    <button class="control-btn red"></button>
+                    <button class="control-btn yellow"></button>
+                    <button class="control-btn green"></button>
+                </div>
+            </div>
+            <div class="code-content">
+                <div class="code-line"><span class="line-number">1</span><span class="comment"># -*- coding: utf-8 -*-</span></div>
+                <div class="code-line"><span class="line-number">2</span></div>
+                <div class="code-line"><span class="line-number">3</span><span class="keyword">from</span> <span class="string">.</span> <span class="keyword">import</span> <span class="string">models</span></div>
+                <div class="code-line"><span class="line-number">4</span><span class="keyword">from</span> <span class="string">.</span> <span class="keyword">import</span> <span class="string">wizard</span></div>
+                <div class="code-line"><span class="line-number">5</span><span class="keyword">from</span> <span class="string">.</span> <span class="keyword">import</span> <span class="string">services</span></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔧 Module Loading Structure</h3>
+            <ul>
+                <li><strong>models:</strong> All business logic and data models</li>
+                <li><strong>wizard:</strong> Interactive wizards and user interfaces</li>
+                <li><strong>services:</strong> Core business logic and document services</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>📁 Import Hierarchy</h3>
+            <ul>
+                <li><strong>models/__init__.py:</strong> Loads core, integrations, and extensions</li>
+                <li><strong>wizard/__init__.py:</strong> Loads all wizard modules</li>
+                <li><strong>services/__init__.py:</strong> Loads document management services</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>🎯 Key Functions</h3>
+            <ul>
+                <li><strong>Module Discovery:</strong> Odoo uses this file to discover the module</li>
+                <li><strong>Import Management:</strong> Controls what gets loaded when module starts</li>
+                <li><strong>Dependency Resolution:</strong> Ensures proper loading order</li>
+                <li><strong>Namespace Management:</strong> Organizes module components</li>
+            </ul>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Module Index</a>
+    </div>
+</body>
+</html>

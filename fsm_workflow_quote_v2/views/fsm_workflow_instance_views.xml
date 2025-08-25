@@ -162,9 +162,5 @@
             action="action_fsm_workflow_instance"
             sequence="10"/>
 
-  <menuitem id="menu_fsm_workflow_create"
-            name="Create from Workflow"
-            parent="menu_fsm_workflow_root"
-            action="action_fsm_workflow_create_wizard"
-            sequence="5"/>
+
 </odoo>
