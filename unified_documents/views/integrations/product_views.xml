@@ -113,18 +113,6 @@
                             </div>
                         </button>
                         
-                        <!-- Copy from Project Template Smart Button -->
-                        <button name="action_copy_documents_from_project_template" type="object" 
-                                class="oe_stat_button" icon="fa-download"
-                                invisible="project_template_id == False"
-                                title="Copy Documents from Project Template">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <i class="fa fa-download"/>
-                                </span>
-                            </div>
-                        </button>
-                        
                         <!-- Fix Tags Smart Button -->
                         <button name="action_fix_document_tags" type="object" 
                                 class="oe_stat_button" icon="fa-tags"
@@ -136,38 +124,41 @@
                             </div>
                         </button>
                         
-                        <!-- Document Template Smart Button -->
-                        <button name="action_view_document_template" type="object" 
-                                class="oe_stat_button" icon="fa-file-text"
-                                invisible="document_template_id == False"
-                                title="View Document Template">
+                        <!-- Apply Template Smart Button -->
+                        <button name="action_apply_product_template" type="object" 
+                                class="oe_stat_button" icon="fa-magic"
+                                title="Apply Product Template"
+                                invisible="unified_product_template_id == False">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
-                                    <field name="document_template_id" readonly="1"/>
+                                    <i class="fa fa-magic"/>
                                 </span>
-                                <span class="o_stat_text">Template</span>
                             </div>
                         </button>
                         
-
+                        <!-- View Template Smart Button -->
+                        <button name="action_view_selected_template" type="object" 
+                                class="oe_stat_button" icon="fa-eye"
+                                title="View Selected Product Template"
+                                invisible="unified_product_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-eye"/>
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     
                     <group>
                         <group>
+                            <field name="unified_product_template_id" 
+                                   placeholder="Select a product template to add template documents"/>
                             <field name="required_document_count" readonly="1"/>
                             <field name="deliverable_document_count" readonly="1"/>
                         </group>
-                        <group>
-                            <field name="document_template_id" placeholder="Select a document template..."/>
-                        </group>
                     </group>
                     
-                    <!-- Document Template Actions -->
-                    <group string="Document Template Actions" invisible="document_template_id == False">
-                        <button name="action_apply_document_template" type="object"
-                                string="Apply Template Documents" class="btn-primary"
-                                icon="fa-magic"/>
-                    </group>
+
                     
                     <!-- Document List Section -->
                     <group string="Product Documents">
@@ -197,6 +188,8 @@
                     </group>
                     
                     <div class="alert alert-info" role="alert">
+                        <strong>Product Templates:</strong> Select a product template from the dropdown above to add template documents to this product. The template will be applied when you save the product, or you can use the "Apply Template" button to apply immediately.
+                        <br/><br/>
                         <strong>Smart Buttons:</strong> Use the smart buttons above to quickly access documents, create new ones, or copy to projects. Create document records above, then upload files using the Upload button in the document list.
                     </div>
                 </page>
@@ -281,9 +274,6 @@
                             <button name="action_create_custom_project_template" type="object" 
                                     string="Create Template" class="btn-primary"
                                     invisible="project_template_id != False"/>
-                            <button name="action_copy_documents_from_project_template" type="object" 
-                                    string="Copy Documents from Template" class="btn-info"
-                                    invisible="project_template_id == False"/>
                         </group>
                     </group>
                     
@@ -310,6 +300,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="unified_product_template_id"/>
                 <field name="document_count"/>
                 <field name="required_document_count"/>
                 <field name="deliverable_document_count"/>

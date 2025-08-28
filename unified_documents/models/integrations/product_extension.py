@@ -41,6 +41,13 @@ class ProductTemplate(models.Model):
         string='Deliverable Document Count'
     )
 
+    # Product Template Selection Field
+    unified_product_template_id = fields.Many2one(
+        'unified.product.template', 
+        string='Product Template',
+        help='Select a product template to automatically add template documents to this product'
+    )
+
     # Temporary fields for document creation
     new_document_name = fields.Char('Document Name')
     new_document_category = fields.Selection([
@@ -89,16 +96,6 @@ class ProductTemplate(models.Model):
         help='Number of task templates for this product'
     )
     
-    # Document Template Integration
-    document_template_id = fields.Many2one(
-        'project.document.template',
-        string='Document Template',
-        domain=[('active', '=', True)],
-        help='Select a document template to share documents with this product'
-    )
-    
-
-    
 
 
     @api.depends('document_ids', 'required_document_ids', 'deliverable_document_ids')
@@ -124,6 +121,18 @@ class ProductTemplate(models.Model):
                 product.task_template_count = len(product.project_template_id.task_ids)
             else:
                 product.task_template_count = 0
+
+    @api.onchange('unified_product_template_id')
+    def _onchange_unified_product_template_id(self):
+        """Show warning when a product template is selected"""
+        if self.unified_product_template_id:
+            # Don't apply template during onchange, just show a warning
+            return {
+                'warning': {
+                    'title': _('Template Selected'),
+                    'message': _('Product template "%s" has been selected. Save the product to apply the template documents, or use the "Apply Template" button to apply immediately.') % self.unified_product_template_id.name,
+                }
+            }
 
 
 
@@ -257,7 +266,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         
         return {
-            'name': _('Copy Documents from %s to Project') % self.name,
+            'name': _('Copy Documents to Project'),
             'type': 'ir.actions.act_window',
             'res_model': 'copy.documents.wizard',
             'view_mode': 'form',
@@ -265,7 +274,6 @@ class ProductTemplate(models.Model):
             'context': {
                 'default_source_model': 'product.template',
                 'default_source_id': self.id,
-                'default_source_product_id': self.id,
             }
         }
 
@@ -322,7 +330,38 @@ class ProductTemplate(models.Model):
             }
         }
 
-
+    def action_copy_documents_to_project(self):
+        """Copy documents from this product to a project"""
+        self.ensure_one()
+        
+        # Check if we have a target project in context
+        target_project_id = self.env.context.get('default_target_project_id')
+        if not target_project_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Target Project'),
+                    'message': _('Please select a target project first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        return {
+            'name': _('Copy Documents from %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'copy.documents.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_source_model': 'product.template',
+                'default_source_id': self.id,
+                'default_source_product_id': self.id,
+                'default_target_model': 'project.project',
+                'default_target_id': target_project_id,
+                'default_target_project_id': target_project_id,
+            }
+        }
 
     # Project Template Methods
     @api.model_create_multi
@@ -331,6 +370,9 @@ class ProductTemplate(models.Model):
         for record in records:
             if record.service_tracking == 'task_in_project' and record.create_project_template:
                 record._create_product_project_template()
+            # Apply template if selected
+            if record.unified_product_template_id:
+                record._apply_selected_template()
         return records
 
     def write(self, vals):
@@ -348,13 +390,11 @@ class ProductTemplate(models.Model):
                 if record.service_tracking == 'task_in_project' and not (hasattr(record, 'project_template_id') and record.project_template_id):
                     record._create_product_project_template()
         
-        # Check if project_template_id is being set and copy documents automatically
-        if vals.get('project_template_id'):
+        # Check if unified_product_template_id is being set
+        if vals.get('unified_product_template_id'):
             for record in self:
-                if record.project_template_id:
-                    # Use a safer approach - only copy if the product doesn't already have documents
-                    if not record.document_ids:
-                        record._copy_documents_from_project_template()
+                if record.unified_product_template_id:
+                    record._apply_selected_template()
         
         return result
 
@@ -618,6 +658,72 @@ class ProductTemplate(models.Model):
             },
         }
 
+    def action_apply_product_template(self):
+        """Apply the selected product template to this product"""
+        self.ensure_one()
+        
+        if not self.unified_product_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Template Selected'),
+                    'message': _('Please select a product template first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Apply the template
+        self.unified_product_template_id.action_apply_to_product(self)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Template Applied'),
+                'message': _('Product template "%s" has been applied successfully. Template documents have been added to this product.') % self.unified_product_template_id.name,
+                'type': 'success',
+            }
+        }
+
+    def action_view_selected_template(self):
+        """Open the selected product template"""
+        self.ensure_one()
+        
+        if not self.unified_product_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Template Selected'),
+                    'message': _('No product template is selected for this product.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'unified.product.template',
+            'res_id': self.unified_product_template_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def _apply_selected_template(self):
+        """Apply the selected template to this product"""
+        self.ensure_one()
+        
+        if not self.unified_product_template_id:
+            return
+        
+        try:
+            # Apply the template
+            self.unified_product_template_id.action_apply_to_product(self)
+            _logger.info(f"Template {self.unified_product_template_id.name} applied to product {self.name}")
+        except Exception as e:
+            _logger.error(f"Failed to apply template {self.unified_product_template_id.name} to product {self.name}: {e}")
+            # Don't raise the error to avoid breaking the save operation
+
     def action_test_document_copy(self):
         """Test method to simulate document copying when project is created"""
         self.ensure_one()
@@ -700,218 +806,3 @@ class ProductTemplate(models.Model):
                     'type': 'danger',
                 }
             }
-
-    def _copy_documents_from_project_template(self):
-        """Copy documents from the selected project template to this product"""
-        self.ensure_one()
-        
-        if not self.project_template_id:
-            return False
-        
-        project_template = self.project_template_id
-        
-        # Check if project template has documents
-        if not hasattr(project_template, 'document_ids') or not project_template.document_ids:
-            _logger.info(f"Project template {project_template.name} has no documents to copy")
-            return False
-        
-        # Use a safer approach with try-catch and transaction handling
-        try:
-            copied_count = 0
-            for doc in project_template.document_ids:
-                try:
-                    # Create a copy of the document linked to the product
-                    new_doc_vals = {
-                        'name': f"{doc.name} - {self.name}",
-                        'category': doc.category or 'reference',
-                        'status': doc.status or 'draft',
-                        'priority': doc.priority or '1',
-                        'description': doc.description or '',
-                        'notes': doc.notes or '',
-                        'tag_ids': [(6, 0, doc.tag_ids.ids)] if doc.tag_ids else False,
-                        'linked_product_id': self.id,  # Link to this product
-                        'res_model': 'product.template',
-                        'res_id': self.id,
-                    }
-                    
-                    # Copy attachment if exists and is valid
-                    if doc.attachment_id and doc.attachment_id.exists():
-                        new_doc_vals['attachment_id'] = doc.attachment_id.id
-                    
-                    # Create document with sudo to avoid permission issues
-                    new_doc = self.env['documents.document'].sudo().create(new_doc_vals)
-                    copied_count += 1
-                    
-                    _logger.info(f"Copied document '{doc.name}' from project template '{project_template.name}' to product '{self.name}'")
-                    
-                except Exception as e:
-                    _logger.warning(f"Failed to copy document '{doc.name}' from project template: {e}")
-                    continue
-            
-            # Invalidate cache to ensure product.document_ids is updated
-            if copied_count > 0:
-                self.invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
-                _logger.info(f"Invalidated cache for product {self.name} after copying {copied_count} documents from project template")
-            
-            _logger.info(f"Project template copy completed: {copied_count} documents copied from template {project_template.name} to product {self.name}")
-            return copied_count > 0
-            
-        except Exception as e:
-            _logger.error(f"Failed to copy documents from project template: {e}")
-            return False
-
-    def action_copy_documents_from_project_template(self):
-        """Manual action to copy documents from project template to product"""
-        self.ensure_one()
-        
-        if not self.project_template_id:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Project Template'),
-                    'message': _('Please select a project template first.'),
-                    'type': 'warning',
-                }
-            }
-        
-        # Use a safer approach with transaction handling
-        try:
-            copied = self._copy_documents_from_project_template()
-            
-            if copied:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('Documents Copied'),
-                        'message': _('Documents have been copied from the project template to this product successfully.'),
-                        'type': 'success',
-                    }
-                }
-            else:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('No Documents Copied'),
-                        'message': _('No documents were copied. The project template may not have any documents.'),
-                        'type': 'info',
-                    }
-                }
-        except Exception as e:
-            _logger.error(f"Error in action_copy_documents_from_project_template: {e}")
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Error'),
-                    'message': _('An error occurred while copying documents. Please try again.'),
-                    'type': 'error',
-                }
-            }
-
-    # Document Template Integration Methods
-    def action_apply_document_template(self):
-        """Apply documents from the selected document template to this product"""
-        self.ensure_one()
-
-        if not self.document_template_id:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Document Template Selected'),
-                    'message': _('Please select a document template first.'),
-                    'type': 'warning',
-                }
-            }
-
-        try:
-            # Create documents from template lines
-            created_count = 0
-            for line in self.document_template_id.document_template_line_ids:
-                # Check if document already exists
-                existing = self.env['documents.document'].search([
-                    ('linked_product_id', '=', self.id),
-                    ('name', '=', line.name)
-                ], limit=1)
-
-                if not existing:
-                    # Create document from template line
-                    doc_vals = {
-                        'name': line.name,
-                        'category': line.category or 'reference',
-                        'priority': line.priority or '1',
-                        'status': 'draft',
-                        'notes': line.notes or '',
-                        'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
-                        'linked_product_id': self.id,
-                        'res_model': 'product.template',
-                        'res_id': self.id,
-                    }
-
-                    self.env['documents.document'].create(doc_vals)
-                    created_count += 1
-
-            if created_count > 0:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('Documents Applied'),
-                        'message': _('Successfully created {} documents from the template.').format(created_count),
-                        'type': 'success',
-                    }
-                }
-            else:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('No New Documents'),
-                        'message': _('All documents from the template already exist for this product.'),
-                        'type': 'info',
-                    }
-                }
-        except Exception as e:
-            _logger.error(f"Error applying document template: {e}")
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('Error'),
-                    'message': _('An error occurred while applying the template.'),
-                    'type': 'error',
-                }
-            }
-
-    def action_view_document_template(self):
-        """View the selected document template with its documents"""
-        self.ensure_one()
-
-        if not self.document_template_id:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _('No Template Selected'),
-                    'message': _('Please select a document template first.'),
-                    'type': 'warning',
-                }
-            }
-
-        # Open the document template form view
-        return {
-            'name': _('Document Template: %s') % self.document_template_id.name,
-            'type': 'ir.actions.act_window',
-            'res_model': 'project.document.template',
-            'res_id': self.document_template_id.id,
-            'view_mode': 'form',
-            'target': 'current',
-            'context': {
-                'default_document_template_id': self.document_template_id.id,
-            }
-        }
-
-

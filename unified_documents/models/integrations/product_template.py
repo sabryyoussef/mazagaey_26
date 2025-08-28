@@ -64,25 +64,47 @@ class ProductTemplate(models.Model):
         """Apply this template to a specific product"""
         self.ensure_one()
         
-        # Create documents from template
-        for line in self.document_template_line_ids:
-            document_vals = {
-                'name': line.name,
-                'category': line.category,
-                'priority': line.priority,
-                'notes': line.notes,
-                'linked_product_id': product.id,
-                'status': 'draft',
-                'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
-            }
-            self.env['documents.document'].create(document_vals)
+        # Check if product is valid
+        if not product or not product.exists():
+            raise ValidationError(_('Invalid product provided for template application.'))
         
-        # Record usage
-        self.env['unified.product.template.usage'].create({
-            'template_id': self.id,
-            'product_id': product.id,
-            'applied_by': self.env.user.id,
-        })
+        # Create documents from template
+        created_docs = []
+        for line in self.document_template_line_ids:
+            try:
+                document_vals = {
+                    'name': line.name,
+                    'category': line.category,
+                    'priority': line.priority,
+                    'notes': line.notes,
+                    'linked_product_id': product.id,
+                    'status': 'draft',
+                    'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
+                }
+                new_doc = self.env['documents.document'].create(document_vals)
+                created_docs.append(new_doc)
+            except Exception as e:
+                _logger.warning(f"Failed to create document '{line.name}' for product {product.name}: {e}")
+                continue
+        
+        # Check if usage record already exists
+        existing_usage = self.env['unified.product.template.usage'].search([
+            ('template_id', '=', self.id),
+            ('product_id', '=', product.id)
+        ], limit=1)
+        
+        # Record usage only if it doesn't exist
+        if not existing_usage:
+            try:
+                usage_vals = {
+                    'template_id': self.id,
+                    'product_id': product.id,
+                    'applied_by': self.env.user.id,
+                    'notes': f"Template applied with {len(created_docs)} documents created"
+                }
+                self.env['unified.product.template.usage'].create(usage_vals)
+            except Exception as e:
+                _logger.warning(f"Failed to create usage record for template {self.name} and product {product.name}: {e}")
         
         return True
     
