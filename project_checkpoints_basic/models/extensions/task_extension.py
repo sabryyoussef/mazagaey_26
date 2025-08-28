@@ -129,6 +129,29 @@ class ProjectTask(models.Model):
                 self.stage_id = checkpoint.target_stage_id
                 return True
         return False
+
+    def _evaluate_checkpoint_rules(self):
+        """Evaluate checkpoint rules and advance stages if conditions are met"""
+        # This method is called when checkpoints change to evaluate any template rules
+        # For now, we'll implement basic functionality and can be extended later
+        
+        # Check if all checkpoints are reached and advance to final stage if configured
+        total_checkpoints = len(self.checkpoint_ids)
+        reached_checkpoints = len(self.checkpoint_ids.filtered(lambda c: c.is_reached))
+        
+        if total_checkpoints > 0 and reached_checkpoints == total_checkpoints:
+            # All checkpoints reached - check if there's a completion stage to advance to
+            project_stages = self.project_id.type_ids
+            if project_stages:
+                # Find a completion/done stage (usually the last one)
+                completion_stages = project_stages.filtered(lambda s: s.name.lower() in ['done', 'completed', 'finished'])
+                if completion_stages:
+                    # Only advance if current stage is before completion stage
+                    completion_stage = completion_stages[0]
+                    if self.stage_id.sequence < completion_stage.sequence:
+                        self.stage_id = completion_stage.id
+        
+        return True
     
     def write(self, vals):
         """Override write to handle checkpoint stage advancement"""
