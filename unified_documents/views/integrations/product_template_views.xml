@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="template_type"/>
                 <field name="service_tracking"/>
+                <field name="task_template_id"/>
                 <field name="document_count"/>
                 <field name="usage_count"/>
                 <field name="sequence" widget="handle"/>
@@ -93,6 +94,19 @@
                                 <span class="o_stat_text">Project Template</span>
                             </div>
                         </button>
+                        
+                        <!-- Task Template Smart Button -->
+                        <button name="action_view_selected_task_template" type="object" 
+                                class="oe_stat_button" icon="fa-tasks"
+                                title="View Task Template"
+                                invisible="task_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="task_template_id" readonly="1"/>
+                                </span>
+                                <span class="o_stat_text">Task Template</span>
+                            </div>
+                        </button>
                     </div>
                     
                     <group>
@@ -104,6 +118,7 @@
                         <group>
                             <field name="service_tracking"/>
                             <field name="project_template_id"/>
+                            <field name="task_template_id"/>
                             <field name="active"/>
                         </group>
                     </group>
@@ -124,6 +139,34 @@
                                     <field name="notes"/>
                                 </list>
                             </field>
+                        </page>
+                        
+                        <page string="Task Templates" name="task_templates">
+                            <group string="Task Template Configuration">
+                                <group>
+                                    <field name="task_template_id" 
+                                           placeholder="Select a task template for this product template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_task_template" type="object" 
+                                            string="Create New Task Template" class="btn-primary"
+                                            invisible="task_template_id != False"/>
+                                    <button name="action_view_selected_task_template" type="object" 
+                                            string="View Task Template" class="btn-secondary"
+                                            invisible="task_template_id == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Task Templates:</strong> Select a task template to associate with this product template. When products are created from this template, they will inherit the selected task template.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select an existing task template from the dropdown, or</li>
+                                    <li>Click "Create New Task Template" to create a new one</li>
+                                    <li>The task template will be applied to products created from this template</li>
+                                </ol>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>

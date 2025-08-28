@@ -51,6 +51,15 @@ class ProjectTaskTemplate(models.Model):
         'task_template_prerequisite_rel', 'task_id', 'prerequisite_id',
         string='Prerequisite Tasks')
 
+    # Template Integration
+    milestone_template_ids = fields.Many2many(
+        'project.milestone.template', 
+        'task_template_milestone_rel',
+        'task_template_id', 'milestone_template_id',
+        string='Milestone Templates',
+        help='Select milestone templates to associate with this task template'
+    )
+
     # Usage Tracking
     usage_count = fields.Integer('Usage Count', compute='_compute_usage_count', store=True)
 
@@ -136,6 +145,52 @@ class ProjectTaskTemplate(models.Model):
                 'default_allocated_hours': self.estimated_hours,
             },
             'target': 'new',
+        }
+
+
+
+    def action_view_milestone_templates(self):
+        """Open the selected milestone templates"""
+        self.ensure_one()
+        
+        if not self.milestone_template_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Milestone Templates Selected'),
+                    'message': _('No milestone templates are selected for this task template.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'name': _('Milestone Templates - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.milestone_template_ids.ids)],
+            'context': {
+                'default_name': f"Milestone Templates for {self.name}",
+            },
+        }
+
+
+
+    def action_create_milestone_template(self):
+        """Create a new milestone template for this task template"""
+        self.ensure_one()
+        
+        return {
+            'name': _('Create Milestone Template - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': f"{self.name} - Milestone Template",
+                'default_description': f"Milestone template for {self.name} task template",
+            },
         }
 
 

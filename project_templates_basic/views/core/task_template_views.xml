@@ -12,6 +12,8 @@
                 <field name="priority" widget="priority"/>
                 <field name="estimated_hours"/>
                 <field name="usage_count"/>
+
+                <field name="milestone_template_ids" widget="many2many_tags"/>
                 <field name="sequence" widget="handle"/>
                 <field name="active" invisible="1"/>
             </list>
@@ -42,6 +44,21 @@
                                     <field name="usage_count"/>
                                 </span>
                                 <span class="o_stat_text">Usage</span>
+                            </div>
+                        </button>
+                        
+
+                        
+                        <!-- Milestone Templates Smart Button -->
+                        <button name="action_view_milestone_templates" type="object" 
+                                class="oe_stat_button" icon="fa-flag"
+                                title="View Milestone Templates"
+                                invisible="milestone_template_ids == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-flag"/>
+                                </span>
+                                <span class="o_stat_text">Milestones</span>
                             </div>
                         </button>
                     </div>
@@ -93,6 +110,37 @@
                         <page string="Usage History" name="usage_history">
                             <field name="usage_count" readonly="1"/>
                             <p class="text-muted">Click "View Usage" button to see detailed usage history.</p>
+                        </page>
+                        
+
+                        
+                        <page string="Milestone Templates" name="milestone_templates">
+                            <group string="Milestone Template Configuration">
+                                <group>
+                                    <field name="milestone_template_ids" 
+                                           placeholder="Select milestone templates for this task template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_milestone_template" type="object" 
+                                            string="Create New Milestone Template" class="btn-primary"
+                                            invisible="milestone_template_ids != False"/>
+                                    <button name="action_view_milestone_templates" type="object" 
+                                            string="View Milestone Templates" class="btn-secondary"
+                                            invisible="milestone_template_ids == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Milestone Templates:</strong> Select milestone templates to associate with this task template. When this task template is applied, the associated milestone templates will also be applied.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select existing milestone templates from the dropdown, or</li>
+                                    <li>Click "Create New Milestone Template" to create a new one</li>
+                                    <li>Click "View Milestone Templates" to see selected templates</li>
+                                    <li>Milestone templates will be applied when this task template is used</li>
+                                </ol>
+                            </div>
                         </page>
                     </notebook>
                 </sheet>

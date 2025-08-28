@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_field_service_order_user,field.service.order.user,model_field_service_order,base.group_user,1,1,1,0
-access_field_service_order_manager,field.service.order.manager,model_field_service_order,base.group_system,1,1,1,1
-access_field_service_task_user,field.service.task.user,model_field_service_task,base.group_user,1,1,1,0
-access_field_service_task_manager,field.service.task.manager,model_field_service_task,base.group_system,1,1,1,1
-access_workflow_service_product_user,workflow.service.product.user,model_workflow_service_product,base.group_user,1,1,1,0
-access_workflow_service_product_manager,workflow.service.product.manager,model_workflow_service_product,base.group_system,1,1,1,1

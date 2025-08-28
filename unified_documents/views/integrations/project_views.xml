@@ -152,6 +152,56 @@
                                 </span>
                             </div>
                         </button>
+                        
+                        <!-- Task Template Smart Button (only visible for project templates) -->
+                        <button name="action_view_project_task_template" type="object" 
+                                class="oe_stat_button" icon="fa-tasks"
+                                title="View Task Template"
+                                invisible="not is_template or task_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-tasks"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+
+                        
+                        <!-- Milestone Templates Smart Button (only visible for project templates) -->
+                        <button name="action_view_project_milestone_templates" type="object" 
+                                class="oe_stat_button" icon="fa-flag"
+                                title="View Milestone Templates"
+                                invisible="not is_template or milestone_template_ids == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-flag"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Apply Document Template Smart Button -->
+                        <button name="action_apply_document_template" type="object" 
+                                class="oe_stat_button" icon="fa-magic"
+                                title="Apply Document Template"
+                                invisible="document_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-magic"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- View Document Template Smart Button -->
+                        <button name="action_view_selected_document_template" type="object" 
+                                class="oe_stat_button" icon="fa-eye"
+                                title="View Selected Document Template"
+                                invisible="document_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-eye"/>
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     
                     <group string="Documents Folder">
@@ -168,6 +218,8 @@
                     
                     <group>
                         <group>
+                            <field name="document_template_id" 
+                                   placeholder="Select a document template to add template documents"/>
                             <field name="required_document_count" readonly="1"/>
                             <field name="deliverable_document_count" readonly="1"/>
                         </group>
@@ -202,8 +254,8 @@
                         </field>
                     </group>
                     
-                    <!-- Project Folder Files Tree View -->
-                    <group string="Project Folder Files" invisible="not documents_folder_id">
+                    <!-- Project Uploaded Files Tree View -->
+                    <group string="Uploaded Files">
                         <field name="project_files_count" readonly="1"/>
                         <div class="d-flex justify-content-end mb-2">
                             <button name="action_refresh_project_files" type="object" 
@@ -215,8 +267,9 @@
                         </div>
                         <field name="project_folder_files" readonly="1">
                             <list>
-                                <field name="document_name" string="Document Name"/>
-                                <field name="document_category" string="Category"/>
+                                <!-- Temporarily disabled custom fields -->
+                                <!-- <field name="document_name" string="Document Name"/> -->
+                                <!-- <field name="document_category" string="Category"/> -->
                                 <field name="name" string="File Name"/>
                                 <field name="mimetype" string="File Type"/>
                                 <field name="file_size" widget="file_size"/>
@@ -226,7 +279,72 @@
                     </group>
                     
                     <div class="alert alert-info" role="alert">
+                        <strong>Document Templates:</strong> Select a document template from the dropdown above to add template documents to this project. The template will be applied when you save the project, or you can use the "Apply Template" button to apply immediately.
+                        <br/><br/>
                         <strong>Document Management:</strong> Create document records above, then upload files using the Upload button in the document list.
+                    </div>
+                </page>
+                
+                <!-- Task Templates Tab (only visible for project templates) -->
+                <page string="Task Templates" name="task_templates" 
+                      invisible="not is_template">
+                    <group string="Task Template Configuration">
+                        <group>
+                            <field name="task_template_id" 
+                                   placeholder="Select a task template for this project template"/>
+                        </group>
+                        <group>
+                            <button name="action_create_project_task_template" type="object" 
+                                    string="Create New Task Template" class="btn-primary"
+                                    invisible="task_template_id != False"/>
+                            <button name="action_view_project_task_template" type="object" 
+                                    string="View Task Template" class="btn-secondary"
+                                    invisible="task_template_id == False"/>
+                        </group>
+                    </group>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>Task Templates:</strong> Select a task template to associate with this project template. When projects are created from this template, they will inherit the selected task template.
+                        <br/><br/>
+                        <strong>Workflow:</strong>
+                        <ol>
+                            <li>Select an existing task template from the dropdown, or</li>
+                            <li>Click "Create New Task Template" to create a new one</li>
+                            <li>The task template will be applied to projects created from this template</li>
+                        </ol>
+                    </div>
+                </page>
+                
+
+                
+                <!-- Milestone Templates Tab (only visible for project templates) -->
+                <page string="Milestone Templates" name="milestone_templates" 
+                      invisible="not is_template">
+                    <group string="Milestone Template Configuration">
+                        <group>
+                            <field name="milestone_template_ids" 
+                                   placeholder="Select milestone templates for this project template"/>
+                        </group>
+                        <group>
+                            <button name="action_create_project_milestone_template" type="object" 
+                                    string="Create New Milestone Template" class="btn-primary"
+                                    invisible="milestone_template_ids != False"/>
+                            <button name="action_view_project_milestone_templates" type="object" 
+                                    string="View Milestone Templates" class="btn-secondary"
+                                    invisible="milestone_template_ids == False"/>
+                        </group>
+                    </group>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>Milestone Templates:</strong> Select milestone templates to associate with this project template. When projects are created from this template, they will inherit the selected milestone templates.
+                        <br/><br/>
+                        <strong>Workflow:</strong>
+                        <ol>
+                            <li>Select existing milestone templates from the dropdown, or</li>
+                            <li>Click "Create New Milestone Template" to create a new one</li>
+                            <li>Click "View Milestone Templates" to see selected templates</li>
+                            <li>Milestone templates will be applied to projects created from this template</li>
+                        </ol>
                     </div>
                 </page>
                 
@@ -242,6 +360,7 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="document_template_id"/>
                 <field name="document_count"/>
                 <field name="required_document_count"/>
                 <field name="deliverable_document_count"/>

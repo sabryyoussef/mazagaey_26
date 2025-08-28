@@ -66,6 +66,8 @@
                                         <field name="auto_advance_stage"/>
                                         <field name="target_stage_id"/>
                                         <field name="notes"/>
+                                        <button name="action_open_checkpoint_form" type="object" 
+                                                string="Edit Details" class="btn-link"/>
                                     </list>
                                 </field>
                             </page>
@@ -93,6 +95,111 @@
                     Milestone templates allow you to create predefined milestones with checkpoints
                     that can be applied to projects. This provides a consistent approach to
                     project milestone management.
+                </p>
+            </field>
+        </record>
+
+        <!-- Checkpoint Template Form View -->
+        <record id="view_project_milestone_template_checkpoint_form" model="ir.ui.view">
+            <field name="name">project.milestone.template.checkpoint.form</field>
+            <field name="model">project.milestone.template.checkpoint</field>
+            <field name="arch" type="xml">
+                <form string="Checkpoint Template">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <div class="oe_stat_button" icon="fa-list-ul">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="checklist_template_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Checklist Templates</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="template_id"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="auto_advance_stage"/>
+                                <field name="target_stage_id" invisible="not auto_advance_stage"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Checklist Templates" name="checklist_templates">
+                                <field name="checklist_template_line_ids" context="{'default_checkpoint_template_id': id}">
+                                    <list string="Checklist Template Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="is_required"/>
+                                        <field name="name_pattern"/>
+                                    </list>
+                                </field>
+                            </page>
+                            
+                            <page string="Configuration" name="configuration">
+                                <group>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                    <field name="notes"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Checkpoint Template List View -->
+        <record id="view_project_milestone_template_checkpoint_list" model="ir.ui.view">
+            <field name="name">project.milestone.template.checkpoint.list</field>
+            <field name="model">project.milestone.template.checkpoint</field>
+            <field name="arch" type="xml">
+                <list string="Checkpoint Templates">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="template_id"/>
+                    <field name="checklist_template_count"/>
+                    <field name="auto_advance_stage"/>
+                    <field name="target_stage_id"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Checkpoint Template Action -->
+        <record id="action_project_milestone_template_checkpoint" model="ir.actions.act_window">
+            <field name="name">Checkpoint Templates</field>
+            <field name="res_model">project.milestone.template.checkpoint</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first checkpoint template!
+                </p>
+                <p>
+                    Checkpoint templates define the structure and checklist items 
+                    that will be created when applying milestone templates.
+                </p>
+            </field>
+        </record>
+
+        <!-- Checklist Template Line Action -->
+        <record id="action_project_checkpoint_checklist_template_line" model="ir.actions.act_window">
+            <field name="name">Checkpoint Checklist Templates</field>
+            <field name="res_model">project.checkpoint.checklist.template.line</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('checkpoint_template_id', '=', active_id)]</field>
+            <field name="context">{'default_checkpoint_template_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first checklist template for this checkpoint!
+                </p>
+                <p>
+                    Checklist templates define the checklist items that will be 
+                    automatically created when this checkpoint template is applied.
                 </p>
             </field>
         </record>

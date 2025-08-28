@@ -13,7 +13,7 @@
         "documents",  # Odoo Enterprise Documents module
         "sale",  # For sale order automation support
         "sale_project",  # For project template support
-        "purchase"  # For purchase order automation support
+        "purchase",  # For purchase order automation support
     ],
     "data": [
         "security/security.xml",
@@ -43,7 +43,7 @@
         "wizard/copy_documents_wizard_views.xml",
         "wizard/documents_upload_wizard_views.xml",
         "wizard/create_product_from_template_wizard_views.xml",
-        "views/menu_views.xml"
+        "views/menu_views.xml",
     ],
     "application": False,
     "installable": True,
