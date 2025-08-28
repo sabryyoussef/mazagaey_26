@@ -14,15 +14,15 @@
               sequence="10"
               groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
 
-    <!-- 1. Product Templates (Planning Phase) -->
-    <menuitem id="menu_unified_product_template"
-              name="Product Templates"
+    <!-- Submenu for Document Copy Automations -->
+    <menuitem id="menu_unified_documents_automation"
+              name="Document Copy Automations"
               parent="menu_unified_documents_root"
-              action="action_unified_product_template"
+              action="action_unified_document_copy_automation"
               sequence="10"
               groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
 
-    <!-- 2. Document Management (Execution Phase) -->
+    <!-- Submenu for Document Management -->
     <menuitem id="menu_unified_documents_management"
               name="Document Management"
               parent="menu_unified_documents_root"
@@ -44,15 +44,15 @@
               sequence="20"
               groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
 
-    <!-- 3. Document Copy Automations (Automation Phase) -->
-    <menuitem id="menu_unified_documents_automation"
-              name="Document Copy Automations"
+    <!-- Submenu for Product Templates -->
+    <menuitem id="menu_unified_product_template"
+              name="Product Templates"
               parent="menu_unified_documents_root"
-              action="action_unified_document_copy_automation"
-              sequence="30"
+              action="action_unified_product_template"
+              sequence="20"
               groups="unified_documents.group_unified_documents_user,unified_documents.group_unified_documents_manager,unified_documents.group_unified_documents_admin"/>
 
-    <!-- 4. Settings (Configuration Phase) -->
+    <!-- Submenu for Settings -->
     <menuitem id="menu_unified_documents_settings"
               name="Settings"
               parent="menu_unified_documents_root"

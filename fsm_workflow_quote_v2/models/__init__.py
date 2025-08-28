@@ -1,3 +1,2 @@
 # -*- coding: utf-8 -*-
 from . import fsm_workflow_instance
-from . import dashboard

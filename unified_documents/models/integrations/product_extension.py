@@ -48,6 +48,20 @@ class ProductTemplate(models.Model):
         help='Select a product template to automatically add template documents to this product'
     )
 
+    # Task Template Selection Fields
+    task_template_ids = fields.Many2many(
+        'project.task.template', 
+        string='Task Templates',
+        help='Select task templates to automatically add template tasks to this product'
+    )
+    
+    # Keep the old field for backward compatibility
+    task_template_id = fields.Many2one(
+        'project.task.template', 
+        string='Task Template (Legacy)',
+        help='Legacy field - use Task Templates field above for multiple selection'
+    )
+
     # Temporary fields for document creation
     new_document_name = fields.Char('Document Name')
     new_document_category = fields.Selection([
@@ -131,6 +145,30 @@ class ProductTemplate(models.Model):
                 'warning': {
                     'title': _('Template Selected'),
                     'message': _('Product template "%s" has been selected. Save the product to apply the template documents, or use the "Apply Template" button to apply immediately.') % self.unified_product_template_id.name,
+                }
+            }
+
+    @api.onchange('task_template_ids')
+    def _onchange_task_template_ids(self):
+        """Show warning when task templates are selected"""
+        if self.task_template_ids:
+            template_names = ', '.join(self.task_template_ids.mapped('name'))
+            return {
+                'warning': {
+                    'title': _('Task Templates Selected'),
+                    'message': _('Task templates selected: %s. Save the product to apply the template tasks, or use the "Apply Task Templates" button to apply immediately.') % template_names,
+                }
+            }
+
+    @api.onchange('task_template_id')
+    def _onchange_task_template_id(self):
+        """Show warning when a task template is selected (legacy)"""
+        if self.task_template_id:
+            # Don't apply template during onchange, just show a warning
+            return {
+                'warning': {
+                    'title': _('Task Template Selected'),
+                    'message': _('Task template "%s" has been selected. Save the product to apply the template tasks, or use the "Apply Task Template" button to apply immediately.') % self.task_template_id.name,
                 }
             }
 
@@ -370,9 +408,14 @@ class ProductTemplate(models.Model):
         for record in records:
             if record.service_tracking == 'task_in_project' and record.create_project_template:
                 record._create_product_project_template()
-            # Apply template if selected
+            # Apply document template if selected
             if record.unified_product_template_id:
                 record._apply_selected_template()
+            # Apply task templates if selected
+            if record.task_template_ids:
+                record._apply_selected_task_templates()
+            elif record.task_template_id:
+                record._apply_selected_task_template()
         return records
 
     def write(self, vals):
@@ -395,6 +438,17 @@ class ProductTemplate(models.Model):
             for record in self:
                 if record.unified_product_template_id:
                     record._apply_selected_template()
+        
+        # Check if task_template_ids is being set
+        if vals.get('task_template_ids'):
+            for record in self:
+                if record.task_template_ids:
+                    record._apply_selected_task_templates()
+        # Check if task_template_id is being set (legacy)
+        elif vals.get('task_template_id'):
+            for record in self:
+                if record.task_template_id:
+                    record._apply_selected_task_template()
         
         return result
 
@@ -723,6 +777,355 @@ class ProductTemplate(models.Model):
         except Exception as e:
             _logger.error(f"Failed to apply template {self.unified_product_template_id.name} to product {self.name}: {e}")
             # Don't raise the error to avoid breaking the save operation
+
+    def get_combined_documents_from_templates(self):
+        """Collect documents from both product and project templates, preventing duplicates"""
+        self.ensure_one()
+        
+        combined_documents = {}
+        duplicates_resolved = []
+        
+        # Priority: Product Template > Project Template
+        
+        # 1. Collect documents from Product Template (Higher Priority)
+        if self.unified_product_template_id:
+            for line in self.unified_product_template_id.document_template_line_ids:
+                doc_key = line.name.lower().strip()
+                combined_documents[doc_key] = {
+                    'name': line.name,
+                    'category': line.category,
+                    'priority': line.priority,
+                    'notes': line.notes,
+                    'tag_ids': line.tag_ids.ids,
+                    'source': 'Product Template',
+                    'template_name': self.unified_product_template_id.name
+                }
+        
+        # 2. Collect documents from Project Template (Lower Priority)
+        if hasattr(self, 'project_template_id') and self.project_template_id:
+            for doc in self.project_template_id.document_ids:
+                doc_key = doc.name.lower().strip()
+                
+                if doc_key in combined_documents:
+                    # Duplicate found - keep product template version, but merge additional info
+                    existing_doc = combined_documents[doc_key]
+                    duplicates_resolved.append({
+                        'name': doc.name,
+                        'product_version': existing_doc,
+                        'project_version': {
+                            'name': doc.name,
+                            'category': doc.category,
+                            'priority': doc.priority,
+                            'notes': doc.notes,
+                            'tag_ids': doc.tag_ids.ids,
+                            'source': 'Project Template',
+                            'template_name': self.project_template_id.name
+                        }
+                    })
+                    
+                    # Merge tags if not already present
+                    existing_tags = set(existing_doc['tag_ids'])
+                    project_tags = set(doc.tag_ids.ids)
+                    merged_tags = list(existing_tags | project_tags)
+                    combined_documents[doc_key]['tag_ids'] = merged_tags
+                    
+                    # Merge notes if project template has additional info
+                    if doc.notes and not existing_doc['notes']:
+                        combined_documents[doc_key]['notes'] = doc.notes
+                    elif doc.notes and existing_doc['notes']:
+                        combined_documents[doc_key]['notes'] = f"{existing_doc['notes']}\n\nProject Template Notes: {doc.notes}"
+                        
+                else:
+                    # No duplicate - add project template document
+                    combined_documents[doc_key] = {
+                        'name': doc.name,
+                        'category': doc.category,
+                        'priority': doc.priority,
+                        'notes': doc.notes,
+                        'tag_ids': doc.tag_ids.ids,
+                        'source': 'Project Template',
+                        'template_name': self.project_template_id.name
+                    }
+        
+        return {
+            'documents': list(combined_documents.values()),
+            'duplicates_resolved': duplicates_resolved,
+            'total_documents': len(combined_documents),
+            'product_template_count': len([d for d in combined_documents.values() if d['source'] == 'Product Template']),
+            'project_template_count': len([d for d in combined_documents.values() if d['source'] == 'Project Template']),
+            'duplicates_count': len(duplicates_resolved)
+        }
+
+    def action_view_combined_template_documents(self):
+        """Show combined documents from both templates"""
+        self.ensure_one()
+        
+        combined_data = self.get_combined_documents_from_templates()
+        
+        if not combined_data['documents']:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Templates'),
+                    'message': _('No document templates are configured for this product.'),
+                    'type': 'info',
+                }
+            }
+        
+        # Build detailed message
+        message = f"Combined Document Analysis for {self.name}:\n\n"
+        message += f"📊 Summary:\n"
+        message += f"   • Total Documents: {combined_data['total_documents']}\n"
+        message += f"   • From Product Template: {combined_data['product_template_count']}\n"
+        message += f"   • From Project Template: {combined_data['project_template_count']}\n"
+        message += f"   • Duplicates Resolved: {combined_data['duplicates_count']}\n\n"
+        
+        if combined_data['duplicates_resolved']:
+            message += f"⚠️ Duplicates Resolved (Product Template Priority):\n"
+            for dup in combined_data['duplicates_resolved']:
+                message += f"   • {dup['name']} → Kept from Product Template\n"
+            message += "\n"
+        
+        message += f"📋 Final Document List:\n"
+        for doc in combined_data['documents']:
+            source_icon = "🟢" if doc['source'] == 'Product Template' else "🔵"
+            message += f"   {source_icon} {doc['name']} ({doc['category']}) - {doc['source']}\n"
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Combined Template Documents'),
+                'message': message,
+                'type': 'info',
+            }
+        }
+
+    def apply_combined_templates_to_product(self):
+        """Apply combined documents from both templates to this product"""
+        self.ensure_one()
+        
+        combined_data = self.get_combined_documents_from_templates()
+        
+        if not combined_data['documents']:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Documents'),
+                    'message': _('No documents found in the configured templates.'),
+                    'type': 'warning',
+                }
+            }
+        
+        created_count = 0
+        for doc_data in combined_data['documents']:
+            try:
+                # Check if document already exists
+                existing_doc = self.env['documents.document'].search([
+                    ('linked_product_id', '=', self.id),
+                    ('name', '=', doc_data['name'])
+                ], limit=1)
+                
+                if existing_doc:
+                    # Update existing document with merged data
+                    existing_doc.write({
+                        'category': doc_data['category'],
+                        'priority': doc_data['priority'],
+                        'notes': doc_data['notes'],
+                        'tag_ids': [(6, 0, doc_data['tag_ids'])]
+                    })
+                else:
+                    # Create new document
+                    document_vals = {
+                        'name': doc_data['name'],
+                        'category': doc_data['category'],
+                        'priority': doc_data['priority'],
+                        'notes': doc_data['notes'],
+                        'tag_ids': [(6, 0, doc_data['tag_ids'])],
+                        'linked_product_id': self.id,
+                        'status': 'draft',
+                    }
+                    self.env['documents.document'].create(document_vals)
+                
+                created_count += 1
+                
+            except Exception as e:
+                _logger.warning(f"Failed to create document '{doc_data['name']}' for product {self.name}: {e}")
+                continue
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Templates Applied'),
+                'message': _('Successfully applied %d documents from combined templates (Product Template Priority).') % created_count,
+                'type': 'success',
+            }
+        }
+
+    def _apply_selected_task_templates(self):
+        """Apply the selected task templates to this product"""
+        self.ensure_one()
+        
+        if not self.task_template_ids:
+            _logger.warning(f"No task templates selected for product {self.name}")
+            return
+        
+        applied_count = 0
+        errors = []
+        
+        for task_template in self.task_template_ids:
+            try:
+                self._apply_task_template_to_product(task_template)
+                applied_count += 1
+                _logger.info(f"Successfully applied task template '{task_template.name}' to product '{self.name}'")
+            except Exception as e:
+                error_msg = f"Error applying task template '{task_template.name}': {str(e)}"
+                _logger.error(error_msg)
+                errors.append(error_msg)
+        
+        if errors:
+            error_summary = '\n'.join(errors)
+            raise ValidationError(_('Some task templates failed to apply:\n%s') % error_summary)
+        
+        if applied_count > 0:
+            _logger.info(f"Successfully applied {applied_count} task templates to product '{self.name}'")
+
+    def _apply_selected_task_template(self):
+        """Apply the selected task template to this product (legacy)"""
+        self.ensure_one()
+        
+        if not self.task_template_id:
+            return
+        
+        try:
+            # Apply the task template
+            self._apply_task_template_to_product(self.task_template_id)
+            _logger.info(f"Task template {self.task_template_id.name} applied to product {self.name}")
+        except Exception as e:
+            _logger.error(f"Failed to apply task template {self.task_template_id.name} to product {self.name}: {e}")
+            # Don't raise the error to avoid breaking the save operation
+
+    def _apply_task_template_to_product(self, task_template):
+        """Apply a task template to this product"""
+        self.ensure_one()
+        
+        if not task_template or not task_template.exists():
+            raise ValidationError(_('Invalid task template provided.'))
+        
+        # For now, we'll store the task template reference
+        # The actual task creation will happen when a project is created from this product
+        # This ensures tasks are created in the correct project context
+        
+        _logger.info(f"Task template {task_template.name} linked to product {self.name}")
+        return True
+
+    def action_apply_task_templates(self):
+        """Apply the selected task templates to this product"""
+        self.ensure_one()
+        
+        if not self.task_template_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Templates Selected'),
+                    'message': _('Please select task templates first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Apply the task templates
+        self._apply_selected_task_templates()
+        
+        template_names = ', '.join(self.task_template_ids.mapped('name'))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Task Templates Applied'),
+                'message': _('Task templates "%s" have been applied successfully. Tasks will be created when a project is created from this product.') % template_names,
+                'type': 'success',
+            }
+        }
+
+    def action_apply_task_template(self):
+        """Apply the selected task template to this product (legacy)"""
+        self.ensure_one()
+        
+        if not self.task_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Template Selected'),
+                    'message': _('Please select a task template first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Apply the task template
+        self._apply_task_template_to_product(self.task_template_id)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Task Template Applied'),
+                'message': _('Task template "%s" has been applied successfully. Tasks will be created when a project is created from this product.') % self.task_template_id.name,
+                'type': 'success',
+            }
+        }
+
+    def action_view_selected_task_templates(self):
+        """Open the selected task templates"""
+        self.ensure_one()
+        
+        if not self.task_template_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Templates Selected'),
+                    'message': _('No task templates are selected for this product.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.task_template_ids.ids)],
+            'context': {
+                'default_name': f"Task Templates for {self.name}",
+            },
+        }
+
+    def action_view_selected_task_template(self):
+        """Open the selected task template (legacy)"""
+        self.ensure_one()
+        
+        if not self.task_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Template Selected'),
+                    'message': _('No task template is selected for this product.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'res_id': self.task_template_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     def action_test_document_copy(self):
         """Test method to simulate document copying when project is created"""

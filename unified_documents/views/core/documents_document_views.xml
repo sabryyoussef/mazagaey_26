@@ -80,12 +80,6 @@
                     </group>
                 </group>
                 
-                <!-- File Upload Section -->
-                <group string="File Upload" invisible="type == 'folder'">
-                    <field name="datas" filename="name" widget="binary"/>
-                    <field name="name" placeholder="Enter file name..."/>
-                </group>
-                
                 <notebook>
                     <page string="Notes" name="notes">
                         <field name="notes" placeholder="Add notes about this document..."/>

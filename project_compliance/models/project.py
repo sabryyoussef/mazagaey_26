@@ -49,9 +49,9 @@ class Project(models.Model):
     # Shareholding total
     shareholding_total = fields.Float(compute='_compute_shareholding_total', string='Total Shareholding (%)')
     
-    # Handover Integration - Temporarily disabled to fix loading issues
-    # handover_compliance_ids = fields.One2many('project.handover.notes', 'compliance_project_id', string='Compliance Handovers')
-    handover_compliance_count = fields.Integer(string='Compliance Handovers Count', default=0)
+    # Handover Integration
+    handover_compliance_ids = fields.One2many('project.handover.notes', 'compliance_project_id', string='Compliance Handovers')
+    handover_compliance_count = fields.Integer(compute='_compute_handover_compliance_count', string='Compliance Handovers Count')
     
     # Document Integration
     compliance_document_ids = fields.Many2many('ir.attachment', string='Compliance Documents', tracking=True)
@@ -68,24 +68,24 @@ class Project(models.Model):
     compliance_template_type = fields.Selection(related='compliance_template_id.template_category', readonly=True, store=True)
     compliance_template_description = fields.Text(related='compliance_template_id.template_description', readonly=True)
 
-    # Checkpoint Integration - Temporarily disabled to fix loading issues
-    # compliance_checkpoint_ids = fields.One2many(
-    #     'project.task.checkpoint',
-    #     'compliance_project_id',
-    #     string='Compliance Checkpoints',
-    #     help='Compliance-specific checkpoints for this project'
-    # )
+    # Checkpoint Integration
+    compliance_checkpoint_ids = fields.One2many(
+        'project.task.checkpoint',
+        'compliance_project_id',
+        string='Compliance Checkpoints',
+        help='Compliance-specific checkpoints for this project'
+    )
     compliance_checkpoint_count = fields.Integer(
-        string='Compliance Checkpoints Count',
-        default=0
+        compute='_compute_compliance_checkpoint_count',
+        string='Compliance Checkpoints Count'
     )
     compliance_checkpoint_reached_count = fields.Integer(
-        string='Reached Compliance Checkpoints Count',
-        default=0
+        compute='_compute_compliance_checkpoint_count',
+        string='Reached Compliance Checkpoints Count'
     )
     compliance_checkpoint_progress = fields.Float(
-        string='Compliance Checkpoint Progress (%)',
-        default=0.0
+        compute='_compute_compliance_checkpoint_count',
+        string='Compliance Checkpoint Progress (%)'
     )
 
     @api.depends('compliance_shareholder_ids')
@@ -99,32 +99,30 @@ class Project(models.Model):
             total = sum(record.compliance_shareholder_ids.mapped('shareholding'))
             record.shareholding_total = total
 
-    # Temporarily disabled compute method to fix loading issues
-    # @api.depends('handover_compliance_ids')
-    # def _compute_handover_compliance_count(self):
-    #     for record in self:
-    #         record.handover_compliance_count = len(record.handover_compliance_ids)
+    @api.depends('handover_compliance_ids')
+    def _compute_handover_compliance_count(self):
+        for record in self:
+            record.handover_compliance_count = len(record.handover_compliance_ids)
 
     @api.depends('compliance_document_ids')
     def _compute_compliance_document_count(self):
         for record in self:
             record.compliance_document_count = len(record.compliance_document_ids)
 
-    # Temporarily disabled compute method to fix loading issues
-    # @api.depends('compliance_checkpoint_ids', 'compliance_checkpoint_ids.is_reached')
-    # def _compute_compliance_checkpoint_count(self):
-    #     """Compute compliance checkpoint counts and progress"""
-    #     for record in self:
-    #         total_checkpoints = len(record.compliance_checkpoint_ids)
-    #         reached_checkpoints = len(record.compliance_checkpoint_ids.filtered(lambda c: c.is_reached))
-    #         
-    #         record.compliance_checkpoint_count = total_checkpoints
-    #         record.compliance_checkpoint_reached_count = reached_checkpoints
-    #         
-    #         if total_checkpoints > 0:
-    #             record.compliance_checkpoint_progress = (reached_checkpoints / total_checkpoints) * 100
-    #         else:
-    #             record.compliance_checkpoint_progress = 0.0
+    @api.depends('compliance_checkpoint_ids', 'compliance_checkpoint_ids.is_reached')
+    def _compute_compliance_checkpoint_count(self):
+        """Compute compliance checkpoint counts and progress"""
+        for record in self:
+            total_checkpoints = len(record.compliance_checkpoint_ids)
+            reached_checkpoints = len(record.compliance_checkpoint_ids.filtered(lambda c: c.is_reached))
+            
+            record.compliance_checkpoint_count = total_checkpoints
+            record.compliance_checkpoint_reached_count = reached_checkpoints
+            
+            if total_checkpoints > 0:
+                record.compliance_checkpoint_progress = (reached_checkpoints / total_checkpoints) * 100
+            else:
+                record.compliance_checkpoint_progress = 0.0
 
     @api.depends('is_complete_return_compliance', 'is_complete_compliance', 'is_confirm_compliance')
     def _compute_is_update_compliance_check(self):
@@ -558,7 +556,7 @@ class Project(models.Model):
                 for checkpoint_template in template.related_checkpoint_templates:
                     checkpoint_vals = {
                         'name': checkpoint_template.name,
-                        'project_id': self.id,
+                        'compliance_project_id': self.id,
                         'sequence': checkpoint_template.sequence,
                         'notes': checkpoint_template.notes,
                         'auto_advance_stage': True,  # Default value for compliance checkpoints
@@ -634,9 +632,9 @@ class Project(models.Model):
         """Smart button to view compliance checkpoints"""
         self.ensure_one()
         action = self.env.ref('project_checkpoints_basic.action_project_task_checkpoint').read()[0]
-        action['domain'] = [('project_id', '=', self.id)]
+        action['domain'] = [('compliance_project_id', '=', self.id)]
         action['context'] = {
-            'default_project_id': self.id,
+            'default_compliance_project_id': self.id,
             'default_name': f'Compliance Checkpoint - {self.name}',
         }
         return action
@@ -649,7 +647,7 @@ class Project(models.Model):
                 # Create checkpoint from template
                 checkpoint_vals = {
                     'name': template.name,
-                    'project_id': self.id,
+                    'compliance_project_id': self.id,
                     'sequence': template.sequence,
                     'notes': template.notes,
                     'auto_advance_stage': True,  # Default value for compliance checkpoints
@@ -671,7 +669,7 @@ class Project(models.Model):
             'view_mode': 'form',
             'res_model': 'project.task.checkpoint',
             'context': {
-                'default_project_id': self.id,
+                'default_compliance_project_id': self.id,
                 'default_name': f'Compliance Checkpoint - {self.name}',
             },
             'target': 'new',
@@ -725,7 +723,7 @@ class Project(models.Model):
         for checkpoint_data in compliance_checkpoints:
             checkpoint_vals = {
                 'name': checkpoint_data['name'],
-                'project_id': self.id,
+                'compliance_project_id': self.id,
                 'sequence': checkpoint_data['sequence'],
                 'notes': checkpoint_data['notes'],
                 'auto_advance_stage': checkpoint_data['auto_advance_stage'],

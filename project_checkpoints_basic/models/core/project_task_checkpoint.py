@@ -86,6 +86,36 @@ class ProjectTaskCheckpoint(models.Model):
         help='Additional notes about this checkpoint'
     )
     
+    # Checklist Items for this checkpoint
+    checklist_item_ids = fields.One2many(
+        'project.checkpoint.checklist.item',
+        'checkpoint_id',
+        string='Checklist Items',
+        help='Checklist items for this specific checkpoint'
+    )
+    
+    # Checklist statistics
+    checklist_total_count = fields.Integer(
+        string='Total Checklist Items',
+        compute='_compute_checklist_stats',
+        store=True,
+        help='Total number of checklist items for this checkpoint'
+    )
+    
+    checklist_completed_count = fields.Integer(
+        string='Completed Checklist Items',
+        compute='_compute_checklist_stats',
+        store=True,
+        help='Number of completed checklist items'
+    )
+    
+    checklist_completion_percentage = fields.Float(
+        string='Checklist Completion %',
+        compute='_compute_checklist_stats',
+        store=True,
+        help='Percentage of checklist items completed'
+    )
+    
     # Enhanced Checkpoint Management - Visibility Conditions
     visibility_condition = fields.Text(
         string='Visibility Condition',
@@ -210,3 +240,18 @@ class ProjectTaskCheckpoint(models.Model):
                 ) if checkpoint.prerequisite_ids else True
             else:
                 checkpoint.can_start = True
+    
+    @api.depends('checklist_item_ids', 'checklist_item_ids.is_completed')
+    def _compute_checklist_stats(self):
+        """Compute checklist statistics for this checkpoint"""
+        for checkpoint in self:
+            total_items = len(checkpoint.checklist_item_ids)
+            completed_items = len(checkpoint.checklist_item_ids.filtered(lambda item: item.is_completed))
+            
+            checkpoint.checklist_total_count = total_items
+            checkpoint.checklist_completed_count = completed_items
+            
+            if total_items > 0:
+                checkpoint.checklist_completion_percentage = (completed_items / total_items) * 100
+            else:
+                checkpoint.checklist_completion_percentage = 0.0

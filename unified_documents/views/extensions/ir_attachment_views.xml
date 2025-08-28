@@ -6,11 +6,9 @@
         <field name="model">ir.attachment</field>
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
+            <!-- Temporarily disabled - adding placeholder xpath to keep view valid -->
             <xpath expr="//field[@name='res_model']" position="after">
-                <field name="folder_id" 
-                       options="{'no_create': True}"
-                       placeholder="Select a folder to organize your file"
-                       help="Choose a folder to organize this file. Files in folders appear in the Documents app."/>
+                <!-- folder_id field temporarily disabled -->
             </xpath>
         </field>
     </record>
@@ -26,7 +24,8 @@
                 <field name="file_size" widget="file_size"/>
                 <field name="create_date"/>
                 <field name="res_name"/>
-                <field name="folder_id"/>
+                <!-- Temporarily disabled folder_id field -->
+                <!-- <field name="folder_id"/> -->
             </list>
         </field>
     </record>

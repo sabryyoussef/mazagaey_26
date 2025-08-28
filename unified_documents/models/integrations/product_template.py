@@ -43,6 +43,12 @@ class ProductTemplate(models.Model):
         help='Linked project template for this product template'
     )
     
+    # Task template relationship
+    task_template_id = fields.Many2one(
+        'project.task.template', string='Task Template',
+        help='Linked task template for this product template'
+    )
+    
     # Statistics
     document_count = fields.Integer('Document Count', compute='_compute_counts', store=True)
     usage_count = fields.Integer('Usage Count', compute='_compute_usage_count', store=True)
@@ -392,6 +398,45 @@ class ProductTemplate(models.Model):
                     'type': 'info',
                 }
             }
+
+    def action_view_selected_task_template(self):
+        """Open the selected task template"""
+        self.ensure_one()
+        
+        if not self.task_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Template Selected'),
+                    'message': _('No task template is selected for this product template.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'res_id': self.task_template_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_create_task_template(self):
+        """Create a new task template for this product template"""
+        self.ensure_one()
+        
+        return {
+            'name': _('Create Task Template - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': f"{self.name} - Task Template",
+                'default_description': f"Task template for {self.name} product template",
+            },
+        }
     
     def action_copy_documents_to_project_template(self):
         """Copy document template lines to the linked project template"""

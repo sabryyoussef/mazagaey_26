@@ -147,6 +147,30 @@
                                 </span>
                             </div>
                         </button>
+                        
+                        <!-- View Combined Templates Smart Button -->
+                        <button name="action_view_combined_template_documents" type="object" 
+                                class="oe_stat_button" icon="fa-list"
+                                title="View Combined Template Documents"
+                                invisible="unified_product_template_id == False and project_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-list"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Apply Combined Templates Smart Button -->
+                        <button name="apply_combined_templates_to_product" type="object" 
+                                class="oe_stat_button" icon="fa-magic"
+                                title="Apply Combined Templates (Prevent Duplicates)"
+                                invisible="unified_product_template_id == False and project_template_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-magic"/>
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     
                     <group>
@@ -189,6 +213,8 @@
                     
                     <div class="alert alert-info" role="alert">
                         <strong>Product Templates:</strong> Select a product template from the dropdown above to add template documents to this product. The template will be applied when you save the product, or you can use the "Apply Template" button to apply immediately.
+                        <br/><br/>
+                        <strong>Combined Templates:</strong> If you have both a product template and a project template, use the "View Combined" and "Apply Combined" buttons to collect documents from both templates while preventing duplicates. Product template documents have priority over project template documents.
                         <br/><br/>
                         <strong>Smart Buttons:</strong> Use the smart buttons above to quickly access documents, create new ones, or copy to projects. Create document records above, then upload files using the Upload button in the document list.
                     </div>
@@ -258,6 +284,22 @@
                         </button>
                     </div>
                     
+                    <!-- Task Template Configuration -->
+                    <group string="Task Template Configuration">
+                        <group>
+                            <field name="task_template_ids" 
+                                   placeholder="Select task templates to add template tasks"/>
+                        </group>
+                        <group>
+                            <button name="action_apply_task_templates" type="object" 
+                                    string="Apply Task Templates" class="btn-primary"
+                                    invisible="task_template_ids == False"/>
+                            <button name="action_view_selected_task_templates" type="object" 
+                                    string="View Task Templates" class="btn-secondary"
+                                    invisible="task_template_ids == False"/>
+                        </group>
+                    </group>
+                    
                     <!-- Project Template Configuration -->
                     <group string="Project Template Configuration">
                         <group>
@@ -278,10 +320,13 @@
                     </group>
                     
                     <div class="alert alert-info" role="alert">
-                        <strong>Task Templates:</strong> Define task templates for this product. When the product is added to a project with "Project and Task" service tracking, these templates will be used to create tasks automatically.
+                        <strong>Task Templates:</strong> Select multiple task templates from the dropdown above to add template tasks to this product. The task templates will be applied when you save the product, or you can use the "Apply Task Templates" button to apply immediately. Tasks will be created when a project is created from this product.
+                        <br/><br/>
+                        <strong>Project Templates:</strong> Define project templates for this product. When the product is added to a project with "Project and Task" service tracking, these templates will be used to create tasks automatically.
                         <br/><br/>
                         <strong>Workflow:</strong> 
                         <ol>
+                            <li>Select one or more task templates to apply to this product</li>
                             <li>Check "Auto-Create Project Template" to enable template creation</li>
                             <li>Optionally enter a custom "Project Template Name"</li>
                             <li>Save the product to automatically create the template, or use the "Create Template" button</li>
@@ -301,6 +346,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="unified_product_template_id"/>
+                <field name="task_template_ids"/>
                 <field name="document_count"/>
                 <field name="required_document_count"/>
                 <field name="deliverable_document_count"/>

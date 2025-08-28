@@ -15,6 +15,12 @@
                   action="action_project_milestone"
                   sequence="101"/>
         
+        <!-- Checkpoint Checklist Items Menu -->
+        <menuitem id="menu_checkpoint_checklist_items"
+                  name="Checkpoint Checklists"
+                  parent="project.menu_project_config"
+                  action="action_project_checkpoint_checklist_item_all"
+                  sequence="102"/>
 
     </data>
 </odoo>
