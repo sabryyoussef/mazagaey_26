@@ -4,3 +4,4 @@
 # from . import ir_attachment
 from . import ir_attachment_extension
 from . import task_extension
+from . import documents_document

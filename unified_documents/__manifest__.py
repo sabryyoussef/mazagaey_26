@@ -38,6 +38,7 @@
         "views/integrations/product_views.xml",
         "views/integrations/product_template_views.xml",
         "views/integrations/project_views.xml",
+        "views/integrations/document_upload_views.xml",
         "views/integrations/sale_order_views.xml",
         "views/integrations/sale_order_line_views.xml",
         "wizard/copy_documents_wizard_views.xml",
