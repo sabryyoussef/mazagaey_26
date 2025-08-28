@@ -46,10 +46,6 @@ class ProjectDocumentTemplate(models.Model):
     apply_to_projects = fields.Boolean('Apply to Projects', default=True)
     apply_to_tasks = fields.Boolean('Apply to Tasks', default=True)
     
-    
-    # Product integration (computed field to avoid dependency issues)
-    product_count = fields.Integer('Product Count', compute='_compute_product_count', store=True)
-    
     # Statistics
     document_count = fields.Integer('Document Count', compute='_compute_counts', store=True)
     checklist_count = fields.Integer('Checklist Count', compute='_compute_counts', store=True)
@@ -60,19 +56,6 @@ class ProjectDocumentTemplate(models.Model):
         for template in self:
             template.document_count = len(template.document_template_line_ids)
             template.checklist_count = len(template.checklist_template_line_ids)
-    
-    
-    def _compute_product_count(self):
-        for template in self:
-            # Search for products that use this template
-            try:
-                products = self.env['product.template'].search([
-                    ('document_template_id', '=', template.id)
-                ])
-                template.product_count = len(products)
-            except:
-                # Field doesn't exist yet
-                template.product_count = 0
     
     def _compute_usage_count(self):
         for template in self:

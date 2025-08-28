@@ -18,6 +18,7 @@
         # Core views (actions first)
         "views/core/checkpoint_views.xml",
         "views/core/checkpoint_tag_views.xml",
+        "views/core/checkpoint_checklist_views.xml",
         # Extension views (actions first)
         "views/extensions/task_views.xml",
         "views/extensions/product_views.xml",

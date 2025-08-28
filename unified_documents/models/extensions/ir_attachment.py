@@ -11,11 +11,12 @@ _logger = logging.getLogger(__name__)
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    # Add folder selection field
+    # Add folder selection field (with safety check)
     folder_id = fields.Many2one(
         'documents.folder',
         string='Documents Folder',
-        help='Select a folder to organize this attachment in the Documents module'
+        help='Select a folder to organize this attachment in the Documents module',
+        ondelete='set null'  # Prevent issues if folder is deleted
     )
     
     # Computed field to show document category

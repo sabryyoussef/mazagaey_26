@@ -7,16 +7,6 @@ _logger = logging.getLogger(__name__)
 class IrAttachmentExtension(models.Model):
     _inherit = 'ir.attachment'
 
-    # Add folder field for document organization (optional)
-    # Add folder field for document organization
-    folder_id = fields.Many2one(
-        'documents.document',
-        string='Folder',
-        domain=[('type', '=', 'folder')],
-        help='Folder to organize this attachment in the Documents app',
-        required=False
-    )
-
     @api.model_create_multi
     def create(self, vals_list):
         """Override create to handle document uploads"""
@@ -39,21 +29,29 @@ class IrAttachmentExtension(models.Model):
                 document = self.env['documents.document'].browse(upload_for_document)
                 if document.exists():
                     # Update document status if needed with preserve_linking context
-                    if document.status == 'draft':
+                    if hasattr(document, 'status') and document.status == 'draft':
                         document.with_context(preserve_linking=True).write({'status': 'in_progress'})
                     
-                    # Refresh parent caches
-                    if document.linked_project_id:
-                        document.linked_project_id._invalidate_cache([
-                            'document_ids', 'document_count', 'required_document_count', 
-                            'deliverable_document_count'
-                        ])
+                    # Refresh parent caches with safety checks
+                    if hasattr(document, 'linked_project_id') and document.linked_project_id:
+                        try:
+                            if document.linked_project_id.exists():
+                                document.linked_project_id._invalidate_cache([
+                                    'document_ids', 'document_count', 'required_document_count', 
+                                    'deliverable_document_count'
+                                ])
+                        except Exception as e:
+                            _logger.warning("Could not refresh project cache: %s", e)
                     
-                    if document.linked_product_id:
-                        document.linked_product_id._invalidate_cache([
-                            'document_ids', 'document_count', 'required_document_count', 
-                            'deliverable_document_count'
-                        ])
+                    if hasattr(document, 'linked_product_id') and document.linked_product_id:
+                        try:
+                            if document.linked_product_id.exists():
+                                document.linked_product_id._invalidate_cache([
+                                    'document_ids', 'document_count', 'required_document_count', 
+                                    'deliverable_document_count'
+                                ])
+                        except Exception as e:
+                            _logger.warning("Could not refresh product cache: %s", e)
                         
             except Exception as e:
                 _logger.error("Error refreshing document after upload: %s", e)

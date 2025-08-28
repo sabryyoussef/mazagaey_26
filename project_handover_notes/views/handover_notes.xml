@@ -179,12 +179,16 @@
             </field>
         </record>
 
+        <!-- Project Management Parent Menu -->
+        <menuitem id="menu_project_management_features"
+                  name="Project Management"
+                  parent="project.menu_main_pm"
+                  sequence="40"/>
 
-        
         <!-- Menu Item -->
         <menuitem id="menu_project_handover_notes"
                   name="Handover Notes"
-                  parent="project_compliance.menu_compliance_legal_root"
+                  parent="menu_project_management_features"
                   action="action_project_handover_notes"
                   sequence="10"/>
 
@@ -244,7 +248,7 @@
 
         <menuitem id="menu_license_activity"
                   name="License Activities"
-                  parent="project_compliance.menu_compliance_legal_root"
+                  parent="menu_project_management_features"
                   action="action_license_activity"
                   sequence="20"/>
     </data>

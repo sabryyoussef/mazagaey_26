@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -39,6 +40,13 @@ class ProjectProject(models.Model):
         compute='_compute_document_counts', 
         store=True,
         string='Deliverable Document Count'
+    )
+
+    # Document Template Selection Field
+    document_template_id = fields.Many2one(
+        'project.document.template', 
+        string='Document Template',
+        help='Select a document template to automatically add template documents to this project'
     )
 
     # Temporary fields for document creation
@@ -92,6 +100,24 @@ class ProjectProject(models.Model):
     
     # Note: Template functionality has been moved to project_templates_basic module
 
+    # Task Template Selection Field (for project templates)
+    task_template_id = fields.Many2one(
+        'project.task.template', 
+        string='Task Template',
+        help='Select a task template to automatically add template tasks to this project template'
+    )
+    
+
+    
+    # Milestone Template Selection Field (for project templates)
+    milestone_template_ids = fields.Many2many(
+        'project.milestone.template', 
+        'project_milestone_template_rel',
+        'project_id', 'milestone_template_id',
+        string='Milestone Templates',
+        help='Select milestone templates to automatically add template milestones to this project template'
+    )
+
     @api.depends('document_ids', 'required_document_ids', 'deliverable_document_ids')
     def _compute_document_counts(self):
         """Compute document counts for projects"""
@@ -100,40 +126,85 @@ class ProjectProject(models.Model):
             project.required_document_count = len(project.required_document_ids)
             project.deliverable_document_count = len(project.deliverable_document_ids)
 
+    @api.onchange('document_template_id')
+    def _onchange_document_template_id(self):
+        """Show warning when a document template is selected"""
+        if self.document_template_id:
+            # Don't apply template during onchange, just show a warning
+            return {
+                'warning': {
+                    'title': _('Template Selected'),
+                    'message': _('Document template "%s" has been selected. Save the project to apply the template documents, or use the "Apply Template" button to apply immediately.') % self.document_template_id.name,
+                }
+            }
 
 
-    @api.depends('documents_folder_id')
+
+    @api.depends('document_ids', 'documents_folder_id')
     def _compute_project_files_count(self):
-        """Compute the number of files in the project folder"""
+        """Compute the number of files linked to project documents or folder"""
         for project in self:
+            file_count = 0
+            
+            # First try to count files from project folder
             if project.documents_folder_id:
-                # Count attachments in the project folder
-                file_count = self.env['ir.attachment'].search_count([
-                    ('folder_id', '=', project.documents_folder_id.id),
-                    ('res_model', '=', 'documents.document')
+                folder_documents = self.env['documents.document'].search([
+                    ('folder_id', '=', project.documents_folder_id.id)
                 ])
-                project.project_files_count = file_count
-            else:
-                project.project_files_count = 0
-
-    @api.depends('documents_folder_id')
-    def _compute_project_folder_files(self):
-        """Compute the files in the project folder"""
-        for project in self:
-            if project.documents_folder_id:
-                # Get attachments in the project folder (both linked to documents and directly to project)
-                files = self.env['ir.attachment'].search([
-                    '|',
-                    ('folder_id', '=', project.documents_folder_id.id),
-                    '&',
+                if folder_documents:
+                    file_count = self.env['ir.attachment'].search_count([
+                        ('res_model', '=', 'documents.document'),
+                        ('res_id', 'in', folder_documents.ids)
+                    ])
+            
+            # Fallback to project documents
+            if file_count == 0 and project.document_ids:
+                file_count = self.env['ir.attachment'].search_count([
+                    ('res_model', '=', 'documents.document'),
+                    ('res_id', 'in', project.document_ids.ids)
+                ])
+            
+            # Final fallback to direct project attachments
+            if file_count == 0:
+                file_count = self.env['ir.attachment'].search_count([
                     ('res_model', '=', 'project.project'),
                     ('res_id', '=', project.id)
                 ])
-                # Force recomputation of computed fields on attachments
-                files._invalidate_cache(['document_name', 'document_category'])
-                project.project_folder_files = files
-            else:
-                project.project_folder_files = self.env['ir.attachment']
+                
+            project.project_files_count = file_count
+
+    @api.depends('document_ids', 'documents_folder_id')
+    def _compute_project_folder_files(self):
+        """Compute the files linked to project documents or folder"""
+        for project in self:
+            files = self.env['ir.attachment']
+            
+            # First try to get files from project folder
+            if project.documents_folder_id:
+                folder_documents = self.env['documents.document'].search([
+                    ('folder_id', '=', project.documents_folder_id.id)
+                ])
+                if folder_documents:
+                    files = self.env['ir.attachment'].search([
+                        ('res_model', '=', 'documents.document'),
+                        ('res_id', 'in', folder_documents.ids)
+                    ])
+            
+            # Fallback to project documents
+            if not files and project.document_ids:
+                files = self.env['ir.attachment'].search([
+                    ('res_model', '=', 'documents.document'),
+                    ('res_id', 'in', project.document_ids.ids)
+                ])
+            
+            # Final fallback to direct project attachments
+            if not files:
+                files = self.env['ir.attachment'].search([
+                    ('res_model', '=', 'project.project'),
+                    ('res_id', '=', project.id)
+                ])
+                
+            project.project_folder_files = files
 
     def action_refresh_project_files(self):
         """Refresh the project files list and recompute fields"""
@@ -214,7 +285,7 @@ class ProjectProject(models.Model):
             'res_id': self.id,
         }
         
-        # Add folder_id if project has a documents folder
+        # Add folder_id if project has a documents folder (for documents.document model)
         if self.documents_folder_id:
             document_vals['folder_id'] = self.documents_folder_id.id
         
@@ -356,8 +427,8 @@ class ProjectProject(models.Model):
                     'res_id': self.id,
                 }
                 
-                # Add folder_id only if folder was created successfully
-                if project_folder:
+                # Temporarily disabled folder assignment due to disabled folder_id field
+                if False:  # project_folder:
                     new_doc_vals['folder_id'] = project_folder.id
                 
                 self.env['documents.document'].create(new_doc_vals)
@@ -506,7 +577,12 @@ class ProjectProject(models.Model):
     def action_view_project_files(self):
         """View all files in the project's documents folder"""
         self.ensure_one()
+        # View files in the project's documents folder
         if self.documents_folder_id:
+            # Find documents in the project folder, then get their attachments
+            folder_documents = self.env['documents.document'].search([
+                ('folder_id', '=', self.documents_folder_id.id)
+            ])
             return {
                 'name': _('Project Files - %s') % self.name,
                 'type': 'ir.actions.act_window',
@@ -514,14 +590,10 @@ class ProjectProject(models.Model):
                 'view_mode': 'list',
                 'view_id': self.env.ref('unified_documents.view_ir_attachment_tree_project_files').id,
                 'domain': [
-                    '|',
-                    ('folder_id', '=', self.documents_folder_id.id),
-                    '&',
-                    ('res_model', '=', 'project.project'),
-                    ('res_id', '=', self.id)
+                    ('res_model', '=', 'documents.document'),
+                    ('res_id', 'in', folder_documents.ids)
                 ],
                 'context': {
-                    'default_folder_id': self.documents_folder_id.id,
                     'default_res_model': 'documents.document',
                 },
             }
@@ -579,20 +651,234 @@ class ProjectProject(models.Model):
     def action_upload_project_document(self):
         """Upload a new document for this project"""
         self.ensure_one()
+        # Ensure project has a documents folder first
+        if not self.documents_folder_id:
+            self.action_create_documents_folder()
+        
         return {
             'name': _('Upload Document for %s') % self.name,
             'type': 'ir.actions.act_window',
             'res_model': 'documents.document',
             'view_mode': 'form',
             'target': 'new',
+            'view_id': self.env.ref('documents.document_view_form').id,  # Use standard documents form view
             'context': {
                 'default_res_model': 'project.project',
                 'default_res_id': self.id,
                 'default_linked_project_id': self.id,
                 'default_name': 'New Document',
                 'default_category': 'required',
+                'default_folder_id': self.documents_folder_id.id if self.documents_folder_id else False,
+                'default_type': 'file',  # Ensure it's a file type
                 'form_view_initial_mode': 'edit',
+                'preserve_linking': True,  # Prevent unlinking during upload
             }
+        }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            # Apply template if selected
+            if record.document_template_id:
+                record._apply_selected_document_template()
+        return records
+
+    def write(self, vals):
+        result = super().write(vals)
+        
+        # Check if document_template_id is being set
+        if vals.get('document_template_id'):
+            for record in self:
+                if record.document_template_id:
+                    record._apply_selected_document_template()
+        
+        return result
+
+    def _apply_selected_document_template(self):
+        """Apply the selected document template to this project"""
+        self.ensure_one()
+        
+        if not self.document_template_id:
+            return
+        
+        try:
+            # Apply the template
+            self._apply_document_template_to_project(self.document_template_id)
+            _logger.info(f"Document template {self.document_template_id.name} applied to project {self.name}")
+        except Exception as e:
+            _logger.error(f"Failed to apply document template {self.document_template_id.name} to project {self.name}: {e}")
+            # Don't raise the error to avoid breaking the save operation
+
+    def _apply_document_template_to_project(self, template):
+        """Apply a document template to this project"""
+        self.ensure_one()
+        
+        if not template or not template.exists():
+            raise ValidationError(_('Invalid document template provided.'))
+        
+        # Create documents from template lines
+        created_docs = []
+        for line in template.document_template_line_ids:
+            try:
+                document_vals = {
+                    'name': line.name,
+                    'category': line.category,
+                    'priority': line.priority,
+                    'notes': line.notes,
+                    'res_model': 'project.project',
+                    'res_id': self.id,
+                    'linked_project_id': self.id,
+                    'status': 'draft',
+                    'tag_ids': [(6, 0, line.tag_ids.ids)] if line.tag_ids else False,
+                }
+                
+                # Add folder_id if project has a documents folder (for documents.document model)
+                if self.documents_folder_id:
+                    document_vals['folder_id'] = self.documents_folder_id.id
+                
+                new_doc = self.env['documents.document'].create(document_vals)
+                created_docs.append(new_doc)
+            except Exception as e:
+                _logger.warning(f"Failed to create document '{line.name}' for project {self.name}: {e}")
+                continue
+        
+        return created_docs
+
+    def action_apply_document_template(self):
+        """Apply the selected document template to this project"""
+        self.ensure_one()
+        
+        if not self.document_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Template Selected'),
+                    'message': _('Please select a document template first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Apply the template
+        created_docs = self._apply_document_template_to_project(self.document_template_id)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Template Applied'),
+                'message': _('Document template "%s" has been applied successfully. %d documents have been added to this project.') % (self.document_template_id.name, len(created_docs)),
+                'type': 'success',
+            }
+        }
+
+    def action_view_selected_document_template(self):
+        """Open the selected document template"""
+        self.ensure_one()
+        
+        if not self.document_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Template Selected'),
+                    'message': _('No document template is selected for this project.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.document.template',
+            'res_id': self.document_template_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_view_project_task_template(self):
+        """Open the selected task template (for project templates)"""
+        self.ensure_one()
+        
+        if not self.task_template_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Task Template Selected'),
+                    'message': _('No task template is selected for this project template.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'res_id': self.task_template_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_create_project_task_template(self):
+        """Create a new task template for this project template"""
+        self.ensure_one()
+        
+        return {
+            'name': _('Create Task Template - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': f"{self.name} - Task Template",
+                'default_description': f"Task template for {self.name} project template",
+            },
+        }
+
+
+
+    def action_view_project_milestone_templates(self):
+        """Open the selected milestone templates (for project templates)"""
+        self.ensure_one()
+        
+        if not self.milestone_template_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Milestone Templates Selected'),
+                    'message': _('No milestone templates are selected for this project template.'),
+                    'type': 'info',
+                }
+            }
+        
+        return {
+            'name': _('Milestone Templates - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.milestone_template_ids.ids)],
+            'context': {
+                'default_name': f"Milestone Templates for {self.name}",
+            },
+        }
+
+
+
+    def action_create_project_milestone_template(self):
+        """Create a new milestone template for this project template"""
+        self.ensure_one()
+        
+        return {
+            'name': _('Create Milestone Template - %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.milestone.template',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': f"{self.name} - Milestone Template",
+                'default_description': f"Milestone template for {self.name} project template",
+            },
         }
 
     def action_test_document_linking(self):
