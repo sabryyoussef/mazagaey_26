@@ -661,15 +661,16 @@ class ProjectProject(models.Model):
             'res_model': 'documents.document',
             'view_mode': 'form',
             'target': 'new',
-            'view_id': self.env.ref('documents.document_view_form').id,  # Use standard documents form view
+            'view_id': self.env.ref('unified_documents.view_documents_document_upload_form').id,
             'context': {
                 'default_res_model': 'project.project',
                 'default_res_id': self.id,
                 'default_linked_project_id': self.id,
-                'default_name': 'New Document',
+                'default_name': f'New Document - {self.name}',
                 'default_category': 'required',
                 'default_folder_id': self.documents_folder_id.id if self.documents_folder_id else False,
                 'default_type': 'file',  # Ensure it's a file type
+                'default_owner_id': self.env.user.id,
                 'form_view_initial_mode': 'edit',
                 'preserve_linking': True,  # Prevent unlinking during upload
             }
