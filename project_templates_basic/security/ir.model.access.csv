@@ -4,6 +4,8 @@ access_project_template_base_manager,project.template.base.manager,model_project
 access_project_template_application_user,project.template.application.user,model_project_template_application,base.group_user,1,1,1,0
 access_project_template_application_manager,project.template.application.manager,model_project_template_application,base.group_system,1,1,1,1
 access_project_checkpoint_template_user,project.checkpoint.template.user,model_project_checkpoint_template,base.group_user,1,1,1,0
+access_project_checkpoint_template_project_user,project.checkpoint.template.project.user,model_project_checkpoint_template,project.group_project_user,1,1,1,0
+access_project_checkpoint_template_project_manager,project.checkpoint.template.project.manager,model_project_checkpoint_template,project.group_project_manager,1,1,1,1
 access_project_checkpoint_template_manager,project.checkpoint.template.manager,model_project_checkpoint_template,base.group_system,1,1,1,1
 access_project_checkpoint_template_line_user,project.checkpoint.template.line.user,model_project_checkpoint_template_line,base.group_user,1,1,1,0
 access_project_checkpoint_template_line_manager,project.checkpoint.template.line.manager,model_project_checkpoint_template_line,base.group_system,1,1,1,1
@@ -20,6 +22,8 @@ access_project_checklist_item_manager,project.checklist.item.manager,model_proje
 access_task_template_selection_wizard_user,task.template.selection.wizard.user,model_task_template_selection_wizard,base.group_user,1,1,1,0
 access_task_template_selection_wizard_manager,task.template.selection.wizard.manager,model_task_template_selection_wizard,base.group_system,1,1,1,1
 access_project_task_template_user,project.task.template.user,model_project_task_template,base.group_user,1,1,1,0
+access_project_task_template_project_user,project.task.template.project.user,model_project_task_template,project.group_project_user,1,1,1,0
+access_project_task_template_project_manager,project.task.template.project.manager,model_project_task_template,project.group_project_manager,1,1,1,1
 access_project_task_template_manager,project.task.template.manager,model_project_task_template,base.group_system,1,1,1,1
 access_project_task_template_usage_user,project.task.template.usage.user,model_project_task_template_usage,base.group_user,1,1,1,0
 access_project_task_template_usage_manager,project.task.template.usage.manager,model_project_task_template_usage,base.group_system,1,1,1,1
@@ -36,6 +40,8 @@ access_workflow_milestone_template_wizard_manager,workflow.milestone.template.wi
 access_workflow_template_user,workflow.template.user,model_workflow_template,base.group_user,1,1,1,0
 access_workflow_template_manager,workflow.template.manager,model_workflow_template,base.group_system,1,1,1,1
 access_project_milestone_template_user,project.milestone.template.user,model_project_milestone_template,base.group_user,1,1,1,0
+access_project_milestone_template_project_user,project.milestone.template.project.user,model_project_milestone_template,project.group_project_user,1,1,1,0
+access_project_milestone_template_project_manager,project.milestone.template.project.manager,model_project_milestone_template,project.group_project_manager,1,1,1,1
 access_project_milestone_template_manager,project.milestone.template.manager,model_project_milestone_template,base.group_system,1,1,1,1
 access_project_milestone_template_checkpoint_user,project.milestone.template.checkpoint.user,model_project_milestone_template_checkpoint,base.group_user,1,1,1,0
 access_project_milestone_template_checkpoint_manager,project.milestone.template.checkpoint.manager,model_project_milestone_template_checkpoint,base.group_system,1,1,1,1
