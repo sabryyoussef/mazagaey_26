@@ -51,6 +51,14 @@ class ProjectProject(models.Model):
 
     # Temporary fields for document creation
     new_document_name = fields.Char('Document Name')
+    
+    # Document name field for compatibility with other modules
+    document_name = fields.Char(
+        string='Document Name', 
+        compute='_compute_document_name',
+        store=False,
+        help='Document name for compatibility with other modules'
+    )
     new_document_category = fields.Selection([
         ('required', 'Required'),
         ('deliverable', 'Deliverable'),
@@ -139,6 +147,17 @@ class ProjectProject(models.Model):
             }
 
 
+
+    @api.depends('new_document_name', 'document_ids')
+    def _compute_document_name(self):
+        """Compute document name for compatibility with other modules"""
+        for project in self:
+            if project.new_document_name:
+                project.document_name = project.new_document_name
+            elif project.document_ids:
+                project.document_name = project.document_ids[0].name
+            else:
+                project.document_name = project.name or ''
 
     @api.depends('document_ids', 'documents_folder_id')
     def _compute_project_files_count(self):
