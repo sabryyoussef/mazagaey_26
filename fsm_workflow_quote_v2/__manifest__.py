@@ -2,7 +2,24 @@
     'name': 'FSM Workflow → Quotation v2',
     'version': '18.0.1.0.0',
     'summary': 'FSM Workflow Quotation System',
+    'description': """
+        FSM Workflow Quotation System v2
+        ================================
+        
+        This module provides a comprehensive Field Service Management (FSM) workflow 
+        system integrated with quotations and project management.
+        
+        Key Features:
+        * FSM Workflow Instances
+        * Integrated Quotation System  
+        * Project and Checkpoint Management
+        * Time & Materials or Fixed Price workflows
+        * Handover Notes Integration
+        
+    """,
     'author': 'Sabry',
+    'website': 'https://github.com/sabryyoussef/mazagawy',
+    'category': 'Services',
     'license': 'LGPL-3',
     'depends': [
         'base', 
@@ -18,5 +35,5 @@
         'wizards/fsm_workflow_create_wizard_views.xml',
     ],
     'installable': True,
-    'application': False,
+    'application': True,
 }
