@@ -73,6 +73,21 @@
     <field name="view_mode">list,form</field>
   </record>
 
-  <menuitem id="menu_fsm_workflow_root" name="FSM Workflow" parent="project.menu_main_pm" sequence="50"/>
-  <menuitem id="menu_fsm_workflow_instance" name="Instances" parent="menu_fsm_workflow_root" action="action_fsm_workflow_instance" sequence="10"/>
+  <!-- Root menu for FSM Workflow - appears on dashboard -->
+  <menuitem id="menu_fsm_workflow_root" 
+            name="FSM Workflow" 
+            web_icon="fsm_workflow_quote_v2,static/description/icon.png"
+            sequence="50"/>
+  
+  <!-- Submenu items -->
+  <menuitem id="menu_fsm_workflow_instance" 
+            name="Workflow Instances" 
+            parent="menu_fsm_workflow_root" 
+            action="action_fsm_workflow_instance" 
+            sequence="10"/>
+            
+  <menuitem id="menu_fsm_workflow_quotations"
+            name="Quotations"
+            parent="menu_fsm_workflow_root"
+            sequence="20"/>
 </odoo>
