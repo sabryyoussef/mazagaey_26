@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
 from odoo import models, fields, api, _
+
+_logger = logging.getLogger(__name__)
 
 class ProjectMilestone(models.Model):
     _inherit = 'project.milestone'
@@ -33,6 +36,26 @@ class ProjectMilestone(models.Model):
         help='Progress percentage of completed checkpoints'
     )
     
+    # Quotation Integration
+    create_quotation_on_reach = fields.Boolean(
+        string='Create Quotation on Reach',
+        default=False,
+        help='Automatically create a quotation when this milestone is reached'
+    )
+    
+    quotation_template_id = fields.Many2one(
+        'sale.order.template',
+        string='Quotation Template',
+        help='Template to use when creating quotation from this milestone',
+        ondelete='set null',
+        required=False
+    )
+    
+    quotation_notes = fields.Text(
+        string='Quotation Notes',
+        help='Additional notes to include in the quotation'
+    )
+    
     @api.depends('checkpoint_ids', 'checkpoint_ids.is_reached')
     def _compute_checkpoint_counts(self):
         """Compute checkpoint counts and progress"""
@@ -53,6 +76,9 @@ class ProjectMilestone(models.Model):
         if all(self.checkpoint_ids.mapped('is_reached')):
             if not self.is_reached:
                 self.is_reached = True
+                # Create quotation if configured
+                if self.create_quotation_on_reach:
+                    self._create_quotation_on_reach()
                 return True
         else:
             # If not all checkpoints are reached, milestone should not be reached
@@ -73,6 +99,75 @@ class ProjectMilestone(models.Model):
                         milestone._advance_milestone_on_checkpoint(checkpoint)
         
         return result
+    
+    def _create_quotation_on_reach(self):
+        """Create quotation when milestone is reached"""
+        self.ensure_one()
+        
+        # Find the workflow instance through the project
+        workflow_instance = None
+        if self.project_id:
+            workflow_instance = self.env['fsm.workflow.instance'].search([
+                ('project_id', '=', self.project_id.id)
+            ], limit=1)
+        
+        if not workflow_instance:
+            _logger.warning(f"No workflow instance found for milestone {self.name}")
+            return False
+        
+        # Create quotation with milestone context
+        context = {
+            'default_workflow_instance_id': workflow_instance.id,
+            'milestone_trigger': True,
+            'milestone_name': self.name,
+        }
+        
+        # Create the quotation
+        sale_order = workflow_instance.with_context(context).create_milestone_quotation(
+            milestone_name=self.name
+        )
+        
+        if sale_order:
+            # Add quotation notes if provided
+            if self.quotation_notes:
+                sale_order.message_post(
+                    body=f"📝 **Milestone Notes**: {self.quotation_notes}",
+                    subject=f"Milestone Notes - {self.name}"
+                )
+            
+            # Apply template if specified
+            if self.quotation_template_id and 'sale.order.template' in self.env:
+                try:
+                    # Use the correct method for applying sale order templates
+                    if hasattr(self.quotation_template_id, '_generate_quotation_lines'):
+                        self.quotation_template_id._generate_quotation_lines(sale_order)
+                    else:
+                        # Fallback: manually add template lines
+                        for line in self.quotation_template_id.sale_order_template_line_ids:
+                            self.env['sale.order.line'].create({
+                                'order_id': sale_order.id,
+                                'name': line.name,
+                                'product_id': line.product_id.id if line.product_id else False,
+                                'product_uom_qty': line.product_uom_qty,
+                                'price_unit': line.price_unit,
+                            })
+                except Exception as e:
+                    _logger.error(f"Error applying quotation template: {e}")
+                    # Final fallback: create basic line
+                    try:
+                        self.env['sale.order.line'].create({
+                            'order_id': sale_order.id,
+                            'name': f'Milestone: {self.name}',
+                            'product_uom_qty': 1.0,
+                            'price_unit': 1000.0,
+                        })
+                    except Exception as fallback_error:
+                        _logger.error(f"Error in final fallback template application: {fallback_error}")
+            
+            _logger.info(f"Quotation created for milestone {self.name}: {sale_order.name}")
+            return sale_order
+        
+        return False
     
     def apply_milestone_template(self, template):
         """Apply milestone template to create milestone with checkpoints"""
