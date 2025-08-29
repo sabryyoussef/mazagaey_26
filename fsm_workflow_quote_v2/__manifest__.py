@@ -28,11 +28,16 @@
         'hr_timesheet',
         'project_templates_basic',  # Provides workflow.template model
         'project_checkpoints_basic',  # Provides checkpoint functionality
+        'sale',  # Ensure sale module is loaded
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/fsm_workflow_instance_views.xml',
+        'views/sale_order_views.xml',
         'wizards/fsm_workflow_create_wizard_views.xml',
+    ],
+    'demo': [
+        'data/demo_data.xml',
     ],
     'installable': True,
     'application': True,

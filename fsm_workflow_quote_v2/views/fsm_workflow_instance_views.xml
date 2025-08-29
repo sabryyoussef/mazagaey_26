@@ -61,6 +61,12 @@
               <field name="project_id" invisible="1"/>
               <field name="partner_id" invisible="1"/>
             </button>
+            <button name="action_create_quotation" type="object" class="oe_stat_button" icon="fa-file-text-o" string="Create Quotation">
+              <field name="partner_id" invisible="1"/>
+            </button>
+            <button name="action_open_quotations" type="object" class="oe_stat_button" icon="fa-list" string="All Quotations">
+              <field name="id" invisible="1"/>
+            </button>
           </div>
         </sheet>
       </form>

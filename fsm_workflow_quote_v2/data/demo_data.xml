@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Partners -->
+        <record id="demo_partner_construction" model="res.partner">
+            <field name="name">ABC Construction Corp</field>
+            <field name="email">info@abcconstruction.com</field>
+            <field name="phone">+1-555-0123</field>
+            <field name="street">123 Building Ave</field>
+            <field name="city">Construction City</field>
+            <field name="zip">12345</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="is_company" eval="True"/>
+        </record>
+
+        <record id="demo_partner_software" model="res.partner">
+            <field name="name">TechStart Solutions</field>
+            <field name="email">contact@techstart.com</field>
+            <field name="phone">+1-555-0456</field>
+            <field name="street">456 Innovation Blvd</field>
+            <field name="city">Tech City</field>
+            <field name="zip">67890</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="is_company" eval="True"/>
+        </record>
+
+        <!-- Demo Products -->
+        <record id="demo_product_foundation" model="product.product">
+            <field name="name">Foundation Work</field>
+            <field name="type" eval="'service'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="150000.0"/>
+            <field name="standard_price" eval="120000.0"/>
+            <field name="default_code">FOUND-001</field>
+        </record>
+
+        <record id="demo_product_structural" model="product.product">
+            <field name="name">Structural Framework</field>
+            <field name="type" eval="'service'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="200000.0"/>
+            <field name="standard_price" eval="160000.0"/>
+            <field name="default_code">STRUCT-001</field>
+        </record>
+
+        <record id="demo_product_materials" model="product.product">
+            <field name="name">Construction Materials</field>
+            <field name="type" eval="'product'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="75000.0"/>
+            <field name="standard_price" eval="60000.0"/>
+            <field name="default_code">MAT-001</field>
+        </record>
+
+        <record id="demo_product_inspection" model="product.product">
+            <field name="name">Safety Inspection</field>
+            <field name="type" eval="'service'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="15000.0"/>
+            <field name="standard_price" eval="12000.0"/>
+            <field name="default_code">INSP-001</field>
+        </record>
+
+        <record id="demo_product_software_dev" model="product.product">
+            <field name="name">Software Development</field>
+            <field name="type" eval="'service'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="50000.0"/>
+            <field name="standard_price" eval="40000.0"/>
+            <field name="default_code">SW-001</field>
+        </record>
+
+        <record id="demo_product_testing" model="product.product">
+            <field name="name">Software Testing</field>
+            <field name="type" eval="'service'"/>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price" eval="25000.0"/>
+            <field name="standard_price" eval="20000.0"/>
+            <field name="default_code">TEST-001</field>
+        </record>
+
+        <!-- Demo Quotation Templates -->
+        <record id="demo_template_foundation" model="sale.order.template">
+            <field name="name">Foundation Work Template</field>
+            <field name="sale_order_template_line_ids" eval="[
+                (0, 0, {
+                    'name': 'Site Preparation and Excavation',
+                    'product_id': ref('demo_product_foundation'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 150000.0,
+                }),
+                (0, 0, {
+                    'name': 'Safety Inspection',
+                    'product_id': ref('demo_product_inspection'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 15000.0,
+                })
+            ]"/>
+        </record>
+
+        <record id="demo_template_structural" model="sale.order.template">
+            <field name="name">Structural Framework Template</field>
+            <field name="sale_order_template_line_ids" eval="[
+                (0, 0, {
+                    'name': 'Steel Framework Installation',
+                    'product_id': ref('demo_product_structural'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 200000.0,
+                }),
+                (0, 0, {
+                    'name': 'Materials and Equipment',
+                    'product_id': ref('demo_product_materials'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 75000.0,
+                })
+            ]"/>
+        </record>
+
+        <record id="demo_template_software" model="sale.order.template">
+            <field name="name">Software Development Template</field>
+            <field name="sale_order_template_line_ids" eval="[
+                (0, 0, {
+                    'name': 'Development Phase',
+                    'product_id': ref('demo_product_software_dev'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 50000.0,
+                }),
+                (0, 0, {
+                    'name': 'Testing and Quality Assurance',
+                    'product_id': ref('demo_product_testing'),
+                    'product_uom_qty': 1.0,
+                    'price_unit': 25000.0,
+                })
+            ]"/>
+        </record>
+
+        <!-- Demo Workflow Instances -->
+        <record id="demo_workflow_construction" model="fsm.workflow.instance">
+            <field name="name">ABC Construction - Office Building Project</field>
+            <field name="partner_id" ref="demo_partner_construction"/>
+            <field name="pricing_policy" eval="'fixed'"/>
+            <field name="state" eval="'running'"/>
+        </record>
+
+        <record id="demo_workflow_software" model="fsm.workflow.instance">
+            <field name="name">TechStart - E-commerce Platform</field>
+            <field name="partner_id" ref="demo_partner_software"/>
+            <field name="pricing_policy" eval="'tm'"/>
+            <field name="state" eval="'running'"/>
+        </record>
+
+        <!-- Demo Projects -->
+        <record id="demo_project_construction" model="project.project">
+            <field name="name">ABC Construction - Office Building</field>
+            <field name="partner_id" ref="demo_partner_construction"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="privacy_visibility" eval="'employees'"/>
+        </record>
+
+        <record id="demo_project_software" model="project.project">
+            <field name="name">TechStart - E-commerce Platform</field>
+            <field name="partner_id" ref="demo_partner_software"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="privacy_visibility" eval="'employees'"/>
+        </record>
+
+        <!-- Link projects to workflow instances -->
+        <record id="demo_workflow_construction" model="fsm.workflow.instance">
+            <field name="project_id" ref="demo_project_construction"/>
+        </record>
+
+        <record id="demo_workflow_software" model="fsm.workflow.instance">
+            <field name="project_id" ref="demo_project_software"/>
+        </record>
+
+        <!-- Demo Milestones -->
+        <record id="demo_milestone_foundation" model="project.milestone">
+            <field name="name">Foundation Complete</field>
+            <field name="project_id" ref="demo_project_construction"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_foundation"/>
+            <field name="quotation_notes">Foundation work completed - ready for structural work</field>
+        </record>
+
+        <record id="demo_milestone_structural" model="project.milestone">
+            <field name="name">Structural Framework Complete</field>
+            <field name="project_id" ref="demo_project_construction"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_structural"/>
+            <field name="quotation_notes">Steel framework erected and secured</field>
+        </record>
+
+        <record id="demo_milestone_software_auth" model="project.milestone">
+            <field name="name">Authentication System Complete</field>
+            <field name="project_id" ref="demo_project_software"/>
+            <field name="deadline" eval="(DateTime.now() + timedelta(days=14)).strftime('%Y-%m-%d')"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_software"/>
+            <field name="quotation_notes">User authentication system ready for testing</field>
+        </record>
+
+        <!-- Demo Checkpoints -->
+        <record id="demo_checkpoint_site_prep" model="project.task.checkpoint">
+            <field name="name">Site Preparation</field>
+            <field name="sequence" eval="10"/>
+            <field name="milestone_id" ref="demo_milestone_foundation"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="False"/>
+            <field name="notes">Site cleared and prepared for excavation</field>
+        </record>
+
+        <record id="demo_checkpoint_excavation" model="project.task.checkpoint">
+            <field name="name">Excavation Complete</field>
+            <field name="sequence" eval="20"/>
+            <field name="milestone_id" ref="demo_milestone_foundation"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="False"/>
+            <field name="notes">Excavation completed to specifications</field>
+        </record>
+
+        <record id="demo_checkpoint_foundation_pour" model="project.task.checkpoint">
+            <field name="name">Foundation Poured</field>
+            <field name="sequence" eval="30"/>
+            <field name="milestone_id" ref="demo_milestone_foundation"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_foundation"/>
+            <field name="quotation_notes">Concrete foundation poured and cured</field>
+        </record>
+
+        <record id="demo_checkpoint_foundation_inspection" model="project.task.checkpoint">
+            <field name="name">Foundation Inspection Passed</field>
+            <field name="sequence" eval="40"/>
+            <field name="milestone_id" ref="demo_milestone_foundation"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_foundation"/>
+            <field name="quotation_notes">Foundation inspection passed by city inspector</field>
+        </record>
+
+        <record id="demo_checkpoint_steel_delivery" model="project.task.checkpoint">
+            <field name="name">Steel Materials Delivered</field>
+            <field name="sequence" eval="10"/>
+            <field name="milestone_id" ref="demo_milestone_structural"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_structural"/>
+            <field name="quotation_notes">Steel materials delivered and inspected</field>
+        </record>
+
+        <record id="demo_checkpoint_steel_erection" model="project.task.checkpoint">
+            <field name="name">Steel Framework Erected</field>
+            <field name="sequence" eval="20"/>
+            <field name="milestone_id" ref="demo_milestone_structural"/>
+            <field name="compliance_project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_reach" eval="False"/>
+            <field name="notes">Steel framework erected and secured</field>
+        </record>
+
+        <record id="demo_checkpoint_software_design" model="project.task.checkpoint">
+            <field name="name">Database Schema Design</field>
+            <field name="sequence" eval="10"/>
+            <field name="milestone_id" ref="demo_milestone_software_auth"/>
+            <field name="compliance_project_id" ref="demo_project_software"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_software"/>
+            <field name="quotation_notes">User database schema designed and implemented</field>
+        </record>
+
+        <record id="demo_checkpoint_software_auth" model="project.task.checkpoint">
+            <field name="name">Authentication System Built</field>
+            <field name="sequence" eval="20"/>
+            <field name="milestone_id" ref="demo_milestone_software_auth"/>
+            <field name="compliance_project_id" ref="demo_project_software"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_software"/>
+            <field name="quotation_notes">User registration and login system completed</field>
+        </record>
+
+        <record id="demo_checkpoint_software_testing" model="project.task.checkpoint">
+            <field name="name">Security Testing Complete</field>
+            <field name="sequence" eval="30"/>
+            <field name="milestone_id" ref="demo_milestone_software_auth"/>
+            <field name="compliance_project_id" ref="demo_project_software"/>
+            <field name="create_quotation_on_reach" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_software"/>
+            <field name="quotation_notes">Security testing completed - no vulnerabilities found</field>
+        </record>
+
+    </data>
+</odoo>

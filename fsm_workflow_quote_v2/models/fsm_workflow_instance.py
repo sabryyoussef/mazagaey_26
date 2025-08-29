@@ -163,3 +163,89 @@ class FSMWorkflowInstance(models.Model):
             }
         except Exception:
             return {}
+
+    def action_create_quotation(self):
+        """Create a new quotation for this workflow instance"""
+        self.ensure_one()
+        if not self.partner_id:
+            return {}
+        
+        return {
+            'name': _('Create Quotation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'sale.order',
+            'context': {
+                'default_partner_id': self.partner_id.id,
+                'default_workflow_instance_id': self.id,
+                'default_name': f'Quotation - {self.name}',
+            },
+            'target': 'new',
+        }
+
+    def create_milestone_quotation(self, milestone_name=None, checkpoint_name=None):
+        """
+        Create a quotation triggered by milestone or checkpoint completion
+        
+        Args:
+            milestone_name (str): Name of the milestone that triggered the quotation
+            checkpoint_name (str): Name of the checkpoint that triggered the quotation
+        """
+        self.ensure_one()
+        if not self.partner_id:
+            return False
+        
+        # Create quotation name based on trigger
+        if milestone_name:
+            quotation_name = f'Milestone Quotation - {milestone_name} - {self.name}'
+        elif checkpoint_name:
+            quotation_name = f'Checkpoint Quotation - {checkpoint_name} - {self.name}'
+        else:
+            quotation_name = f'Workflow Quotation - {self.name}'
+        
+        # Create the sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_id.id,
+            'workflow_instance_id': self.id,
+            'name': quotation_name,
+            'date_order': fields.Datetime.now(),
+            'pricelist_id': self.partner_id.property_product_pricelist.id if self.partner_id.property_product_pricelist else False,
+        })
+        
+        # Update the workflow instance with the new quotation
+        self.sale_order_id = sale_order.id
+        
+        # Log the quotation creation
+        self.message_post(
+            body=f"📋 **Quotation Created**: {quotation_name}<br/>"
+                 f"<strong>Trigger:</strong> {'Milestone: ' + milestone_name if milestone_name else 'Checkpoint: ' + checkpoint_name if checkpoint_name else 'Manual'}<br/>"
+                 f"<strong>Quotation:</strong> {sale_order.name}<br/>"
+                 f"<strong>Amount:</strong> {sale_order.currency_id.symbol}{sale_order.amount_total:.2f}",
+            subject=f"Quotation Created - {quotation_name}"
+        )
+        
+        return sale_order
+
+    def action_open_quotations(self):
+        """Open all quotations for this workflow instance"""
+        self.ensure_one()
+        
+        # Find all quotations related to this workflow instance
+        quotations = self.env['sale.order'].search([
+            ('workflow_instance_id', '=', self.id)
+        ])
+        
+        if not quotations:
+            return {}
+        
+        return {
+            'name': _('Workflow Quotations'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', quotations.ids)],
+            'context': {
+                'default_workflow_instance_id': self.id,
+                'default_partner_id': self.partner_id.id if self.partner_id else False,
+            },
+        }
