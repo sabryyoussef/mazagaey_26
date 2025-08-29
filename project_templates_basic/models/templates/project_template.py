@@ -98,6 +98,26 @@ class ProjectTemplate(models.Model):
         help='Compliance requirements for this project template'
     )
     
+    # Quotation Integration for Templates
+    quotation_template_id = fields.Many2one(
+        'sale.order.template',
+        string='Default Quotation Template',
+        help='Default quotation template to use when creating quotations from this project template',
+        ondelete='set null',
+        required=False
+    )
+    
+    auto_create_quotations = fields.Boolean(
+        string='Auto-Create Quotations',
+        default=False,
+        help='Automatically create quotations when milestones/checkpoints are reached'
+    )
+    
+    quotation_notes = fields.Text(
+        string='Default Quotation Notes',
+        help='Default notes to include in quotations created from this template'
+    )
+    
     @api.depends('is_template')
     def _compute_usage_count(self):
         """Compute usage count for template projects"""

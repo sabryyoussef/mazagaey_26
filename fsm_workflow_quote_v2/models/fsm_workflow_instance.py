@@ -183,13 +183,15 @@ class FSMWorkflowInstance(models.Model):
             'target': 'new',
         }
 
-    def create_milestone_quotation(self, milestone_name=None, checkpoint_name=None):
+    def create_milestone_quotation(self, milestone_name=None, checkpoint_name=None, task_name=None, project_name=None):
         """
-        Create a quotation triggered by milestone or checkpoint completion
+        Create a quotation triggered by milestone, checkpoint, task, or project completion
         
         Args:
             milestone_name (str): Name of the milestone that triggered the quotation
             checkpoint_name (str): Name of the checkpoint that triggered the quotation
+            task_name (str): Name of the task that triggered the quotation
+            project_name (str): Name of the project that triggered the quotation
         """
         self.ensure_one()
         if not self.partner_id:
@@ -200,6 +202,10 @@ class FSMWorkflowInstance(models.Model):
             quotation_name = f'Milestone Quotation - {milestone_name} - {self.name}'
         elif checkpoint_name:
             quotation_name = f'Checkpoint Quotation - {checkpoint_name} - {self.name}'
+        elif task_name:
+            quotation_name = f'Task Quotation - {task_name} - {self.name}'
+        elif project_name:
+            quotation_name = f'Project Quotation - {project_name} - {self.name}'
         else:
             quotation_name = f'Workflow Quotation - {self.name}'
         
@@ -216,9 +222,10 @@ class FSMWorkflowInstance(models.Model):
         self.sale_order_id = sale_order.id
         
         # Log the quotation creation
+        trigger_type = 'Milestone: ' + milestone_name if milestone_name else 'Checkpoint: ' + checkpoint_name if checkpoint_name else 'Task: ' + task_name if task_name else 'Project: ' + project_name if project_name else 'Manual'
         self.message_post(
             body=f"📋 **Quotation Created**: {quotation_name}<br/>"
-                 f"<strong>Trigger:</strong> {'Milestone: ' + milestone_name if milestone_name else 'Checkpoint: ' + checkpoint_name if checkpoint_name else 'Manual'}<br/>"
+                 f"<strong>Trigger:</strong> {trigger_type}<br/>"
                  f"<strong>Quotation:</strong> {sale_order.name}<br/>"
                  f"<strong>Amount:</strong> {sale_order.currency_id.symbol}{sale_order.amount_total:.2f}",
             subject=f"Quotation Created - {quotation_name}"

@@ -24,6 +24,7 @@
         "views/extensions/task_views.xml",
         "views/extensions/product_views.xml",
         "views/extensions/milestone_views.xml",
+        "views/extensions/project_views.xml",
         # Template views
         "views/templates/milestone_template_views.xml",
         # Menu views (load last after all actions are defined)
