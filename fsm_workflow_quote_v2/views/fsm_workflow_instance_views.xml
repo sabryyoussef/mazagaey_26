@@ -77,6 +77,7 @@
   <menuitem id="menu_fsm_workflow_root" 
             name="FSM Workflow" 
             web_icon="fsm_workflow_quote_v2,static/description/icon.png"
+            action="action_fsm_workflow_instance"
             sequence="50"/>
   
   <!-- Submenu items -->
