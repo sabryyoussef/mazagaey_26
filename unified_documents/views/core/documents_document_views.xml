@@ -65,15 +65,19 @@
             <xpath expr="//sheet" position="inside">
                 <group>
                     <group>
-                        <field name="category"/>
-                        <field name="status"/>
+                        <field name="category" invisible="type == 'folder'"/>
+                        <field name="status" invisible="type == 'folder'"/>
+                        <field name="folder_category_summary" readonly="1" invisible="type != 'folder'"/>
+                        <field name="folder_status_summary" readonly="1" invisible="type != 'folder'"/>
                         <field name="priority"/>
                         <field name="expiry_date"/>
                         <field name="reminder_days"/>
                     </group>
                     <group>
-                        <field name="is_expired"/>
-                        <field name="is_verified"/>
+                        <field name="is_expired" invisible="type == 'folder'"/>
+                        <field name="is_verified" invisible="type == 'folder'"/>
+                        <field name="folder_expired_summary" readonly="1" invisible="type != 'folder'"/>
+                        <field name="folder_verified_summary" readonly="1" invisible="type != 'folder'"/>
                         <field name="verification_date"/>
                         <field name="verified_by"/>
                         <field name="tag_ids" widget="many2many_tags"/>
@@ -83,6 +87,96 @@
                 <notebook>
                     <page string="Notes" name="notes">
                         <field name="notes" placeholder="Add notes about this document..."/>
+                    </page>
+                    
+                    <!-- Folder Contents Page - Only visible for folders -->
+                    <page string="📁 Folder Contents" name="folder_contents" 
+                          invisible="type != 'folder'">
+                                        <div class="oe_button_box" name="button_box">
+                    <button name="action_refresh_folder_contents" type="object" 
+                            class="oe_stat_button" icon="fa-refresh"
+                            title="Refresh Folder Contents"/>
+                    <button name="action_upload_to_folder" type="object" 
+                            class="oe_stat_button" icon="fa-upload"
+                            title="Upload Document to Folder"/>
+                    <button name="action_create_subfolder" type="object" 
+                            class="oe_stat_button" icon="fa-folder-plus"
+                            title="Create Subfolder"/>
+                    <button name="action_upload_attachment" type="object" 
+                            class="oe_stat_button" icon="fa-paperclip"
+                            title="Add Attachment to Folder"/>
+                </div>
+                        
+                        <group>
+                            <group>
+                                <field name="folder_document_count" readonly="1" string="Total Documents"/>
+                                <field name="folder_subfolder_count" readonly="1" string="Subfolders"/>
+                            </group>
+                            <group>
+                                <field name="folder_size_total" readonly="1" string="Total Size"/>
+                                <field name="last_modified_date" readonly="1" string="Last Modified"/>
+                            </group>
+                        </group>
+                        
+                        <!-- Documents List with Preview -->
+                        <field name="folder_document_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="file_size" widget="file_size"/>
+                                <field name="create_date"/>
+                                <field name="owner_id"/>
+                                <field name="category"/>
+                                <field name="status"/>
+                                <field name="priority" widget="priority"/>
+                                <field name="is_expired" widget="boolean_toggle"/>
+                                <field name="is_verified" widget="boolean_toggle"/>
+                                <button name="action_upload_attachment_to_document" type="object" 
+                                        string="Add Att." icon="fa-paperclip" 
+                                        class="btn-sm btn-warning"
+                                        title="Add Attachment to Document"/>
+                                <button name="action_preview_document" type="object" 
+                                        string="Preview" icon="fa-eye" 
+                                        class="btn-sm btn-info"
+                                        invisible="type == 'folder'"/>
+                                <button name="action_download_document" type="object" 
+                                        string="Download" icon="fa-download" 
+                                        class="btn-sm btn-primary"
+                                        invisible="type != 'binary'"/>
+                                <button name="action_open_document" type="object" 
+                                        string="Open" icon="fa-external-link" 
+                                        class="btn-sm btn-success"/>
+                            </list>
+                        </field>
+                        
+                                        <!-- Document Preview Section -->
+                <group string="Document Preview" name="document_preview_section">
+                    <div class="oe_button_box" name="preview_button_box">
+                        <button name="action_refresh_preview" type="object" 
+                                class="oe_stat_button" icon="fa-refresh"
+                                title="Refresh Preview"
+                                invisible="not selected_document_id"/>
+                        <button name="action_clear_preview" type="object" 
+                                class="oe_stat_button" icon="fa-times"
+                                title="Clear Preview"
+                                invisible="not selected_document_id"/>
+                    </div>
+                    <field name="selected_document_id" invisible="1"/>
+                    <field name="document_preview_text" readonly="1" 
+                           string="Selected Document"/>
+                    <field name="document_preview_metadata" readonly="1" 
+                           string="Document Metadata"/>
+                    <field name="document_preview" widget="image" 
+                           string="Document Image"
+                           options="{'preview_image': 'document_preview'}"/>
+                    <field name="document_preview_content" readonly="1" 
+                           string="Document Content"
+                           widget="text"/>
+                    <div class="alert alert-info" role="alert" 
+                         invisible="selected_document_id">
+                        <strong>No Document Selected:</strong> Click the "Preview" button next to any document in the list above to view its details here.
+                    </div>
+                </group>
                     </page>
                 </notebook>
             </xpath>
