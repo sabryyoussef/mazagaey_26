@@ -22,6 +22,8 @@ class SaleOrderExtension(models.Model):
         ('manual', 'Manual'),
         ('milestone', 'Milestone Reached'),
         ('checkpoint', 'Checkpoint Reached'),
+        ('task', 'Task Completed'),
+        ('project', 'Project Completed'),
         ('automatic', 'Automatic'),
     ], string='Workflow Trigger', default='manual', copy=False,
        help='Type of trigger that created this quotation')
@@ -65,6 +67,12 @@ class SaleOrderExtension(models.Model):
             elif self.env.context.get('checkpoint_trigger'):
                 vals['workflow_trigger_type'] = 'checkpoint'
                 vals['workflow_trigger_name'] = self.env.context.get('checkpoint_name')
+            elif self.env.context.get('task_trigger'):
+                vals['workflow_trigger_type'] = 'task'
+                vals['workflow_trigger_name'] = self.env.context.get('task_name')
+            elif self.env.context.get('project_trigger'):
+                vals['workflow_trigger_type'] = 'project'
+                vals['workflow_trigger_name'] = self.env.context.get('project_name')
             else:
                 vals['workflow_trigger_type'] = 'manual'
         

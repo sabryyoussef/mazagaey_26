@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Template Form View Extension - Quotation Integration -->
+        <record id="view_project_template_form_quotation" model="ir.ui.view">
+            <field name="name">project.project.template.form.quotation</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Quotation Integration" name="quotation_integration" invisible="not is_template">
+                        <group>
+                            <field name="auto_create_quotations"/>
+                            <field name="quotation_template_id" invisible="not auto_create_quotations"/>
+                            <field name="quotation_notes" invisible="not auto_create_quotations"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Quotation Templates for Integration -->
+        <record id="demo_template_task_completion" model="sale.order.template">
+            <field name="name">Task Completion Template</field>
+            <field name="description">Standard template for task completion quotations</field>
+        </record>
+        
+        <record id="demo_template_project_completion" model="sale.order.template">
+            <field name="name">Project Completion Template</field>
+            <field name="description">Standard template for project completion quotations</field>
+        </record>
+        
+        <record id="demo_template_template_default" model="sale.order.template">
+            <field name="name">Template Default Quotation</field>
+            <field name="description">Default quotation template for project templates</field>
+        </record>
+        
+        <!-- Demo Tasks with Quotation Integration -->
+        <record id="demo_task_with_quotation" model="project.task">
+            <field name="name">Complete Foundation Inspection</field>
+            <field name="project_id" ref="demo_project_construction"/>
+            <field name="create_quotation_on_completion" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_task_completion"/>
+            <field name="quotation_notes">Foundation inspection completed - all standards met</field>
+        </record>
+        
+        <record id="demo_task_software_testing" model="project.task">
+            <field name="name">Complete Software Testing</field>
+            <field name="project_id" ref="demo_project_software"/>
+            <field name="create_quotation_on_completion" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_task_completion"/>
+            <field name="quotation_notes">Software testing phase completed - ready for deployment</field>
+        </record>
+        
+        <!-- Demo Projects with Quotation Integration -->
+        <record id="demo_project_construction_quotation" model="project.project">
+            <field name="name">Construction Project - Quotation Demo</field>
+            <field name="partner_id" ref="demo_partner_construction"/>
+            <field name="create_quotation_on_completion" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_project_completion"/>
+            <field name="quotation_notes">Full construction project completed - ready for handover</field>
+        </record>
+        
+        <record id="demo_project_software_quotation" model="project.project">
+            <field name="name">Software Development - Quotation Demo</field>
+            <field name="partner_id" ref="demo_partner_software"/>
+            <field name="create_quotation_on_completion" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_project_completion"/>
+            <field name="quotation_notes">Software development project completed - system deployed</field>
+        </record>
+        
+        <!-- Demo Project Templates with Quotation Integration -->
+        <record id="demo_project_template_quotation" model="project.project">
+            <field name="name">Construction Project Template - Quotation</field>
+            <field name="is_template" eval="True"/>
+            <field name="template_category" eval="'general'"/>
+            <field name="template_description">Template for construction projects with quotation integration</field>
+            <field name="auto_create_quotations" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_template_default"/>
+            <field name="quotation_notes">Standard quotation notes for construction projects</field>
+        </record>
+        
+        <record id="demo_project_template_software_quotation" model="project.project">
+            <field name="name">Software Development Template - Quotation</field>
+            <field name="is_template" eval="True"/>
+            <field name="template_category" eval="'general'"/>
+            <field name="template_description">Template for software development projects with quotation integration</field>
+            <field name="auto_create_quotations" eval="True"/>
+            <field name="quotation_template_id" ref="demo_template_template_default"/>
+            <field name="quotation_notes">Standard quotation notes for software development projects</field>
+        </record>
+    </data>
+</odoo>
