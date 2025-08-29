@@ -632,16 +632,40 @@ Description: {project_description}
             if not self.product_name:
                 raise ValidationError(_('Product template name is required when not using an existing template.'))
             
+            # Ensure we have a product category (required field)
+            category_id = self.product_category.id if self.product_category else self._get_default_product_category()
+            
             product_vals = {
                 'name': self.product_name,
                 'description': self.product_description,
-                'categ_id': self.product_category.id if self.product_category else False,
+                'categ_id': category_id,
                 'type': self.product_type,
                 'service_tracking': 'project_only',  # Changed from 'task_global_project'
             }
             
             product_template = self.env['product.template'].create(product_vals)
             return product_template
+
+    def _get_default_product_category(self):
+        """Get or create a default product category for services"""
+        # Try to find a 'Services' category first
+        service_category = self.env['product.category'].search([
+            ('name', 'ilike', 'service')
+        ], limit=1)
+        
+        if service_category:
+            return service_category.id
+        
+        # If no service category found, get the default category
+        default_category = self.env['product.category'].search([], limit=1)
+        if default_category:
+            return default_category.id
+        
+        # As last resort, create a default category
+        new_category = self.env['product.category'].create({
+            'name': 'Services',
+        })
+        return new_category.id
 
     def _create_project_template(self):
         """Create or use existing project template"""
@@ -705,16 +729,24 @@ Description: {project_description}
             checkpoint_templates = []
             
             for checkpoint_wizard in self.checkpoint_template_ids:
+                # Only use fields that exist in project.checkpoint.template model
                 checkpoint_vals = {
                     'name': checkpoint_wizard.name,
-                    'description': checkpoint_wizard.description,
-                    'checkpoint_type': checkpoint_wizard.checkpoint_type,
-                    'is_mandatory': checkpoint_wizard.is_mandatory,
-                    'estimated_days': checkpoint_wizard.estimated_days,
                     'sequence': checkpoint_wizard.sequence,
                 }
                 
                 checkpoint_template = self.env['project.checkpoint.template'].create(checkpoint_vals)
+                
+                # Create checkpoint lines with the additional details
+                if checkpoint_wizard.description:
+                    line_vals = {
+                        'name': checkpoint_wizard.name,
+                        'template_id': checkpoint_template.id,
+                        'sequence': checkpoint_wizard.sequence,
+                        'notes': checkpoint_wizard.description,  # Use notes field for description
+                    }
+                    self.env['project.checkpoint.template.line'].create(line_vals)
+                
                 checkpoint_templates.append(checkpoint_template)
             
             return checkpoint_templates
