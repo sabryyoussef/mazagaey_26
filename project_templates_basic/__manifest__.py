@@ -11,7 +11,8 @@
         "project",
         "product",
         "documents",  # For document templates
-        "project_checkpoints_basic"  # For milestone templates
+        "project_checkpoints_basic",  # For milestone templates
+        "sale_management"  # For quotation templates
     ],
     "data": [
         # Security
@@ -27,6 +28,7 @@
         "views/templates/milestone_template_views.xml",
         "views/templates/project_template_views.xml",
         "views/templates/document_template_views.xml",
+        "views/template_quotation_views.xml",
         
         # Views - Tasks
         "views/tasks/task_views.xml",

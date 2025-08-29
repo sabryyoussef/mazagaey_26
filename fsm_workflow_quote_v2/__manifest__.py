@@ -38,6 +38,7 @@
     ],
     'demo': [
         'data/demo_data.xml',
+        'data/quotation_integration_demo.xml',
     ],
     'installable': True,
     'application': True,

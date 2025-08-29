@@ -14,6 +14,7 @@
         "sale",  # For sale order automation support
         "sale_project",  # For project template support
         "purchase",  # For purchase order automation support
+        "project_templates_basic",  # For project template support with is_template field
     ],
     "data": [
         "security/security.xml",

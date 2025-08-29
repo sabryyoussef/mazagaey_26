@@ -224,13 +224,13 @@ class ProjectTaskCheckpoint(models.Model):
         
         # Find the workflow instance through the project
         workflow_instance = None
-        if self.compliance_project_id:
+        if self.compliance_project_id and 'fsm.workflow.instance' in self.env:
             workflow_instance = self.env['fsm.workflow.instance'].search([
                 ('project_id', '=', self.compliance_project_id.id)
             ], limit=1)
         
         if not workflow_instance:
-            _logger.warning(f"No workflow instance found for checkpoint {self.name}")
+            _logger.warning(f"No workflow instance found for checkpoint {self.name} - FSM workflow module may not be installed")
             return False
         
         # Create quotation with checkpoint context
