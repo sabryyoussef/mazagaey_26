@@ -224,6 +224,401 @@ class ProjectProject(models.Model):
                 ])
                 
             project.project_folder_files = files
+    
+    def action_fix_document_linking(self):
+        """Fix document linking for documents in project folder that are not properly linked"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Find documents in the folder that are not linked to this project
+        unlinked_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            '|',
+            ('linked_project_id', '=', False),
+            ('linked_project_id', '!=', self.id),
+            ('type', '!=', 'folder')  # Exclude the folder itself
+        ])
+        
+        # Also get all documents in folder for comparison
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        linked_docs = all_folder_docs.filtered(lambda d: d.linked_project_id == self)
+        
+        if not unlinked_docs:
+            # Show detailed analysis even if no unlinked docs found
+            analysis_msg = f"""
+All documents in folder: {len(all_folder_docs)}
+Linked to this project: {len(linked_docs)}
+Unlinked documents: {len(unlinked_docs)}
+
+Linked documents:
+{chr(10).join([f"  - {doc.name} (linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in linked_docs])}
+
+Unlinked documents:
+{chr(10).join([f"  - {doc.name} (linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in unlinked_docs])}
+            """
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Document Linking Analysis'),
+                    'message': analysis_msg,
+                    'type': 'info',
+                }
+            }
+        
+        # Link the documents to this project
+        linked_count = 0
+        for doc in unlinked_docs:
+            doc.write({
+                'linked_project_id': self.id,
+                'res_model': 'project.project',
+                'res_id': self.id
+            })
+            linked_count += 1
+        
+        # Invalidate cache to refresh counts
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Documents Linked'),
+                'message': _('Successfully linked %d documents to this project.') % linked_count,
+                'type': 'success',
+            }
+        }
+    
+    def action_force_link_all_folder_documents(self):
+        """Force link ALL documents in the folder to this project"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get ALL documents in the folder (excluding the folder itself)
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        # Link ALL documents to this project
+        linked_count = 0
+        for doc in all_folder_docs:
+            if doc.linked_project_id != self:
+                doc.write({
+                    'linked_project_id': self.id,
+                    'res_model': 'project.project',
+                    'res_id': self.id
+                })
+                linked_count += 1
+        
+        # Invalidate cache to refresh counts
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('All Documents Linked'),
+                'message': _('Successfully linked ALL %d documents in the folder to this project.') % linked_count,
+                'type': 'success',
+            }
+        }
+    
+    def action_debug_document_counts(self):
+        """Debug method to show detailed document count information"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get all documents in the folder
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id)
+        ])
+        
+        # Get documents linked to this project
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Get documents in folder that are not folders (what folder_document_ids shows)
+        folder_docs_not_folders = all_folder_docs.filtered(lambda d: d.type != 'folder')
+        
+        # Get documents linked to project that are not folders
+        linked_docs_not_folders = linked_docs.filtered(lambda d: d.type != 'folder')
+        
+        # Build debug message
+        debug_info = f"""
+Project: {self.name}
+Folder: {self.documents_folder_id.name}
+
+📊 Count Analysis:
+• All documents in folder: {len(all_folder_docs)}
+• Documents in folder (not folders): {len(folder_docs_not_folders)}
+• Documents linked to project: {len(linked_docs)}
+• Documents linked to project (not folders): {len(linked_docs_not_folders)}
+
+📋 Folder Documents (not folders):
+{chr(10).join([f"  - {doc.name} (type: {doc.type}, linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in folder_docs_not_folders])}
+
+🔗 Linked Documents (not folders):
+{chr(10).join([f"  - {doc.name} (type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in linked_docs_not_folders])}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document Count Debug'),
+                'message': debug_info,
+                'type': 'info',
+            }
+        }
+    
+    def action_debug_project_document_ids(self):
+        """Debug the project's document_ids field specifically"""
+        self.ensure_one()
+        
+        # Get documents directly linked to this project
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Get the actual document_ids field value
+        actual_document_ids = self.document_ids
+        
+        # Get documents in folder
+        folder_docs = []
+        if self.documents_folder_id:
+            folder_docs = self.env['documents.document'].search([
+                ('folder_id', '=', self.documents_folder_id.id),
+                ('type', '!=', 'folder')
+            ])
+        
+        debug_info = f"""
+Project: {self.name}
+Project ID: {self.id}
+
+🔍 Document Analysis:
+
+📋 Direct Search (linked_project_id = {self.id}):
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in linked_docs])}
+Count: {len(linked_docs)}
+
+📋 Project document_ids Field:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in actual_document_ids])}
+Count: {len(actual_document_ids)}
+
+📋 Documents in Folder:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in folder_docs])}
+Count: {len(folder_docs)}
+
+🔍 Differences:
+• Direct search vs document_ids field: {len(linked_docs)} vs {len(actual_document_ids)}
+• Folder docs vs linked docs: {len(folder_docs)} vs {len(linked_docs)}
+
+🔍 Missing from project document_ids:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id})" for doc in linked_docs if doc not in actual_document_ids])}
+
+🔍 Missing from linked search:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id})" for doc in actual_document_ids if doc not in linked_docs])}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Project Document IDs Debug'),
+                'message': debug_info,
+                'type': 'info',
+            }
+        }
+    
+    def action_force_refresh_document_ids(self):
+        """Force refresh the document_ids One2many field specifically"""
+        self.ensure_one()
+        
+        # Get all documents that should be linked
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Check the actual database state
+        self.env.cr.execute("""
+            SELECT id, name, linked_project_id, res_model, res_id, type 
+            FROM documents_document 
+            WHERE linked_project_id = %s
+            ORDER BY id
+        """, (self.id,))
+        db_docs = self.env.cr.fetchall()
+        
+        # Get the One2many field value
+        field_docs = self.document_ids
+        
+        # Fix documents with wrong res_model/res_id
+        fixed_count = 0
+        for row in db_docs:
+            doc_id, name, linked_project_id, res_model, res_id, doc_type = row
+            if res_model != 'project.project' or res_id != self.id:
+                # Fix the document's res_model and res_id
+                self.env.cr.execute("""
+                    UPDATE documents_document 
+                    SET res_model = 'project.project', res_id = %s
+                    WHERE id = %s
+                """, (self.id, doc_id))
+                fixed_count += 1
+        
+        # Invalidate all caches
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        # Force recomputation
+        self._compute_document_counts()
+        
+        # Get the refreshed document_ids
+        refreshed_docs = self.document_ids
+        
+        debug_info = f"""
+Database Analysis for Project {self.name} (ID: {self.id}):
+
+📋 Database Records (linked_project_id = {self.id}):
+{chr(10).join([f"  - ID: {row[0]}, Name: {row[1]}, linked_project_id: {row[2]}, res_model: {row[3]}, res_id: {row[4]}, type: {row[5]}" for row in db_docs])}
+Count: {len(db_docs)}
+
+📋 One2many Field Value (document_ids):
+{chr(10).join([f"  - ID: {doc.id}, Name: {doc.name}, linked_project_id: {doc.linked_project_id.id if doc.linked_project_id else 'None'}, res_model: {doc.res_model}, res_id: {doc.res_id}, type: {doc.type}" for doc in field_docs])}
+Count: {len(field_docs)}
+
+📋 After Fix and Refresh:
+{chr(10).join([f"  - ID: {doc.id}, Name: {doc.name}, linked_project_id: {doc.linked_project_id.id if doc.linked_project_id else 'None'}, res_model: {doc.res_model}, res_id: {doc.res_id}, type: {doc.type}" for doc in refreshed_docs])}
+Count: {len(refreshed_docs)}
+
+🔍 Fix Results:
+• Documents fixed: {fixed_count}
+• Before vs After: {len(field_docs)} vs {len(refreshed_docs)}
+• Should be equal now: {len(db_docs)} == {len(refreshed_docs)}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document IDs Fixed'),
+                'message': debug_info,
+                'type': 'success',
+            }
+        }
+    
+    def action_fix_and_refresh_view(self):
+        """Fix document linking and refresh the form view"""
+        self.ensure_one()
+        
+        # First fix the documents
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Fix documents with wrong res_model/res_id
+        fixed_count = 0
+        for doc in linked_docs:
+            if doc.res_model != 'project.project' or doc.res_id != self.id:
+                doc.write({
+                    'res_model': 'project.project',
+                    'res_id': self.id
+                })
+                fixed_count += 1
+        
+        # Invalidate all caches
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        # Force recomputation
+        self._compute_document_counts()
+        
+        # Return action to refresh the form view
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True}},
+        }
+    
+    def action_refresh_all_counts(self):
+        """Force refresh all computed document counts"""
+        self.ensure_one()
+        
+        # Force recompute all document count fields
+        self._compute_document_counts()
+        self._compute_project_files_count()
+        self._compute_project_folder_files()
+        
+        # Invalidate cache for all related fields
+        self._invalidate_cache([
+            'document_ids', 'document_count', 'required_document_count', 
+            'deliverable_document_count', 'project_files_count', 'project_folder_files'
+        ])
+        
+        # Force refresh the One2many field by triggering a write
+        # This ensures the document_ids field is properly refreshed
+        self.write({'id': self.id})
+        
+        # Also refresh folder counts if folder exists
+        if self.documents_folder_id:
+            self.documents_folder_id._compute_folder_counts()
+            self.documents_folder_id._compute_folder_summary()
+            self.documents_folder_id._invalidate_cache([
+                'folder_document_ids', 'folder_document_count', 'folder_subfolder_count',
+                'folder_category_summary', 'folder_status_summary', 'folder_expired_summary', 'folder_verified_summary'
+            ])
+        
+        # Force a final recomputation after cache invalidation
+        self._compute_document_counts()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Counts Refreshed'),
+                'message': _('All document counts have been refreshed. Project: %d, Folder: %d') % (
+                    self.document_count, 
+                    self.documents_folder_id.folder_document_count if self.documents_folder_id else 0
+                ),
+                'type': 'success',
+            }
+        }
 
     def action_refresh_project_files(self):
         """Refresh the project files list and recompute fields"""

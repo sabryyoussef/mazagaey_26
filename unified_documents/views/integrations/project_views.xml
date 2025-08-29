@@ -79,6 +79,87 @@
                             </div>
                         </button>
                         
+                        <!-- Fix and Refresh View Smart Button (Main Fix Button) -->
+                        <button name="action_fix_and_refresh_view" type="object" 
+                                class="oe_stat_button" icon="fa-magic"
+                                invisible="not documents_folder_id"
+                                title="Fix Documents and Refresh View">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-magic"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- DEBUG BUTTONS (Commented Out - Uncomment if needed for troubleshooting) -->
+                        <!--
+                        <button name="action_fix_document_linking" type="object" 
+                                class="oe_stat_button" icon="fa-link"
+                                invisible="not documents_folder_id"
+                                title="Fix Document Linking">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-link"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <button name="action_debug_document_counts" type="object" 
+                                class="oe_stat_button" icon="fa-bug"
+                                invisible="not documents_folder_id"
+                                title="Debug Document Counts">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-bug"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <button name="action_debug_project_document_ids" type="object" 
+                                class="oe_stat_button" icon="fa-search"
+                                invisible="not documents_folder_id"
+                                title="Debug Project Document IDs">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-search"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <button name="action_force_refresh_document_ids" type="object" 
+                                class="oe_stat_button" icon="fa-refresh"
+                                invisible="not documents_folder_id"
+                                title="Force Refresh Document IDs">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-refresh"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <button name="action_refresh_all_counts" type="object" 
+                                class="oe_stat_button" icon="fa-refresh"
+                                invisible="not documents_folder_id"
+                                title="Refresh All Counts">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-refresh"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <button name="action_force_link_all_folder_documents" type="object" 
+                                class="oe_stat_button" icon="oe_stat_button" icon="fa-chain"
+                                invisible="not documents_folder_id"
+                                title="Force Link All Documents">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-chain"/>
+                                </span>
+                            </div>
+                        </button>
+                        -->
+                        
                         
                         <!-- Required Documents Smart Button -->
                         <button name="action_view_required_documents" type="object" 
@@ -131,7 +212,8 @@
                             </div>
                         </button>
                         
-                        <!-- Fix Tags Smart Button -->
+                        <!-- DEBUG BUTTONS (Commented Out - Uncomment if needed for troubleshooting) -->
+                        <!--
                         <button name="action_fix_document_tags" type="object" 
                                 class="oe_stat_button" icon="fa-tags"
                                 title="Fix Document Tags Display">
@@ -142,7 +224,6 @@
                             </div>
                         </button>
                         
-                        <!-- Test Document Linking Smart Button -->
                         <button name="action_test_document_linking" type="object" 
                                 class="oe_stat_button" icon="fa-bug"
                                 title="Test Document Linking">
@@ -152,6 +233,7 @@
                                 </span>
                             </div>
                         </button>
+                        -->
                         
                         <!-- Task Template Smart Button (only visible for project templates) -->
                         <button name="action_view_project_task_template" type="object" 
