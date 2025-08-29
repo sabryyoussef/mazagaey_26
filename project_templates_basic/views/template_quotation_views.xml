@@ -8,12 +8,28 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="Quotation Integration" name="quotation_integration" invisible="not is_template">
-                        <group>
-                            <field name="auto_create_quotations"/>
-                            <field name="quotation_template_id" invisible="not auto_create_quotations"/>
-                            <field name="quotation_notes" invisible="not auto_create_quotations"/>
-                        </group>
+                    <page string="💼 Template Business" name="template_business" invisible="not is_template">
+                        <notebook>
+                            <!-- Template Quotations Sub-tab -->
+                            <page string="💼 Template Quotations" name="template_quotations_sub">
+                                <group>
+                                    <field name="auto_create_quotations"/>
+                                    <field name="quotation_template_id" invisible="not auto_create_quotations"/>
+                                    <field name="quotation_notes" invisible="not auto_create_quotations"/>
+                                </group>
+                                
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Template Quotations:</strong> Configure automatic quotation creation for projects created from this template.
+                                    <br/><br/>
+                                    <strong>Features:</strong>
+                                    <ul>
+                                        <li>Automatically create quotations for new projects</li>
+                                        <li>Use quotation templates for consistent pricing</li>
+                                        <li>Add template-specific notes to quotations</li>
+                                    </ul>
+                                </div>
+                            </page>
+                        </notebook>
                     </page>
                 </xpath>
             </field>

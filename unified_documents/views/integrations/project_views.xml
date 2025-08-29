@@ -30,7 +30,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Documents" name="documents">
+                <page string="📄 Documents &amp; Deliverables" name="documents_deliverables">
                     <div class="oe_button_box" name="button_box">
                         <!-- Documents Smart Button -->
                         <button name="action_view_documents" type="object" 
@@ -285,67 +285,101 @@
                     </div>
                 </page>
                 
-                <!-- Task Templates Tab (only visible for project templates) -->
-                <page string="Task Templates" name="task_templates" 
+                <!-- Templates Tab with Sub-tabs (only visible for project templates) -->
+                <page string="🔄 Templates" name="templates" 
                       invisible="not is_template">
-                    <group string="Task Template Configuration">
-                        <group>
-                            <field name="task_template_id" 
-                                   placeholder="Select a task template for this project template"/>
-                        </group>
-                        <group>
-                            <button name="action_create_project_task_template" type="object" 
-                                    string="Create New Task Template" class="btn-primary"
-                                    invisible="task_template_id != False"/>
-                            <button name="action_view_project_task_template" type="object" 
-                                    string="View Task Template" class="btn-secondary"
-                                    invisible="task_template_id == False"/>
-                        </group>
-                    </group>
-                    
-                    <div class="alert alert-info" role="alert">
-                        <strong>Task Templates:</strong> Select a task template to associate with this project template. When projects are created from this template, they will inherit the selected task template.
-                        <br/><br/>
-                        <strong>Workflow:</strong>
-                        <ol>
-                            <li>Select an existing task template from the dropdown, or</li>
-                            <li>Click "Create New Task Template" to create a new one</li>
-                            <li>The task template will be applied to projects created from this template</li>
-                        </ol>
-                    </div>
-                </page>
-                
+                    <notebook>
+                        <!-- Task Templates Sub-tab -->
+                        <page string="📋 Task Templates" name="task_templates_sub">
+                            <group string="Task Template Configuration">
+                                <group>
+                                    <field name="task_template_id" 
+                                           placeholder="Select a task template for this project template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_project_task_template" type="object" 
+                                            string="Create New Task Template" class="btn-primary"
+                                            invisible="task_template_id != False"/>
+                                    <button name="action_view_project_task_template" type="object" 
+                                            string="View Task Template" class="btn-secondary"
+                                            invisible="task_template_id == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Task Templates:</strong> Select a task template to associate with this project template. When projects are created from this template, they will inherit the selected task template.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select an existing task template from the dropdown, or</li>
+                                    <li>Click "Create New Task Template" to create a new one</li>
+                                    <li>The task template will be applied to projects created from this template</li>
+                                </ol>
+                            </div>
+                        </page>
+                        
+                        <!-- Milestone Templates Sub-tab -->
+                        <page string="🎯 Milestone Templates" name="milestone_templates_sub">
+                            <group string="Milestone Template Configuration">
+                                <group>
+                                    <field name="milestone_template_ids" 
+                                           placeholder="Select milestone templates for this project template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_project_milestone_template" type="object" 
+                                            string="Create New Milestone Template" class="btn-primary"
+                                            invisible="milestone_template_ids != False"/>
+                                    <button name="action_view_project_milestone_templates" type="object" 
+                                            string="View Milestone Templates" class="btn-secondary"
+                                            invisible="milestone_template_ids == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Milestone Templates:</strong> Select milestone templates to associate with this project template. When projects are created from this template, they will inherit the selected milestone templates.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select existing milestone templates from the dropdown, or</li>
+                                    <li>Click "Create New Milestone Template" to create a new one</li>
+                                    <li>Click "View Milestone Templates" to see selected templates</li>
+                                    <li>Milestone templates will be applied to projects created from this template</li>
+                                </ol>
+                            </div>
+                        </page>
+                        
+                        <!-- Document Templates Sub-tab -->
+                        <page string="📄 Document Templates" name="document_templates_sub">
+                            <group string="Document Template Configuration">
+                                <group>
+                                    <field name="document_template_id" 
+                                           placeholder="Select a document template for this project template"/>
+                                </group>
+                                <group>
+                                    <button name="action_apply_document_template" type="object" 
+                                            string="Apply Document Template" class="btn-primary"
+                                            invisible="document_template_id == False"/>
+                                    <button name="action_view_selected_document_template" type="object" 
+                                            string="View Document Template" class="btn-secondary"
+                                            invisible="document_template_id == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Document Templates:</strong> Select a document template to associate with this project template. When projects are created from this template, they will inherit the selected document template.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select an existing document template from the dropdown</li>
+                                    <li>Click "Apply Document Template" to apply immediately</li>
+                                    <li>Click "View Document Template" to see template details</li>
+                                    <li>The document template will be applied to projects created from this template</li>
+                                </ol>
+                            </div>
+                        </page>
+                        
 
-                
-                <!-- Milestone Templates Tab (only visible for project templates) -->
-                <page string="Milestone Templates" name="milestone_templates" 
-                      invisible="not is_template">
-                    <group string="Milestone Template Configuration">
-                        <group>
-                            <field name="milestone_template_ids" 
-                                   placeholder="Select milestone templates for this project template"/>
-                        </group>
-                        <group>
-                            <button name="action_create_project_milestone_template" type="object" 
-                                    string="Create New Milestone Template" class="btn-primary"
-                                    invisible="milestone_template_ids != False"/>
-                            <button name="action_view_project_milestone_templates" type="object" 
-                                    string="View Milestone Templates" class="btn-secondary"
-                                    invisible="milestone_template_ids == False"/>
-                        </group>
-                    </group>
-                    
-                    <div class="alert alert-info" role="alert">
-                        <strong>Milestone Templates:</strong> Select milestone templates to associate with this project template. When projects are created from this template, they will inherit the selected milestone templates.
-                        <br/><br/>
-                        <strong>Workflow:</strong>
-                        <ol>
-                            <li>Select existing milestone templates from the dropdown, or</li>
-                            <li>Click "Create New Milestone Template" to create a new one</li>
-                            <li>Click "View Milestone Templates" to see selected templates</li>
-                            <li>Milestone templates will be applied to projects created from this template</li>
-                        </ol>
-                    </div>
+                    </notebook>
                 </page>
                 
                 <!-- Note: Task Templates functionality has been moved to project_templates_basic module -->

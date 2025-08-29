@@ -23,6 +23,26 @@
         </field>
     </record>
 
+    <!-- Product Search View for Document Copy Selection -->
+    <record id="view_product_template_search_copy_selection" model="ir.ui.view">
+        <field name="name">product.template.search.copy.selection</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="type"/>
+                <filter string="Quotation Products" name="quotation_products" 
+                        domain="[('id', 'in', context.get('quotation_product_ids', []))]"/>
+                <filter string="Has Documents" name="has_documents" 
+                        domain="[('document_count', '>', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product Type" name="group_by_type" context="{'group_by': 'type'}"/>
+                    <filter string="Document Count" name="group_by_documents" context="{'group_by': 'document_count'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Product List View for Document Copy Selection -->
     <record id="view_product_template_list_copy_selection" model="ir.ui.view">
         <field name="name">product.template.list.copy.selection</field>

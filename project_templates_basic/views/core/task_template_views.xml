@@ -14,6 +14,8 @@
                 <field name="usage_count"/>
 
                 <field name="milestone_template_ids" widget="many2many_tags"/>
+                <field name="document_template_ids" widget="many2many_tags"/>
+                <field name="checkpoint_template_ids" widget="many2many_tags"/>
                 <field name="sequence" widget="handle"/>
                 <field name="active" invisible="1"/>
             </list>
@@ -59,6 +61,32 @@
                                     <i class="fa fa-flag"/>
                                 </span>
                                 <span class="o_stat_text">Milestones</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Document Templates Smart Button -->
+                        <button name="action_view_document_templates" type="object" 
+                                class="oe_stat_button" icon="fa-file-text"
+                                title="View Document Templates"
+                                invisible="document_template_ids == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-file-text"/>
+                                </span>
+                                <span class="o_stat_text">Documents</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Checkpoint Templates Smart Button -->
+                        <button name="action_view_checkpoint_templates" type="object" 
+                                class="oe_stat_button" icon="fa-check-square-o"
+                                title="View Checkpoint Templates"
+                                invisible="checkpoint_template_ids == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-check-square-o"/>
+                                </span>
+                                <span class="o_stat_text">Checkpoints</span>
                             </div>
                         </button>
                     </div>
@@ -140,6 +168,79 @@
                                     <li>Click "View Milestone Templates" to see selected templates</li>
                                     <li>Milestone templates will be applied when this task template is used</li>
                                 </ol>
+                            </div>
+                        </page>
+                        
+                        <page string="Document Templates" name="document_templates">
+                            <group string="Document Template Configuration">
+                                <group>
+                                    <field name="document_template_ids" 
+                                           placeholder="Select document templates for this task template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_document_template" type="object" 
+                                            string="Create New Document Template" class="btn-primary"
+                                            invisible="document_template_ids != False"/>
+                                    <button name="action_view_document_templates" type="object" 
+                                            string="View Document Templates" class="btn-secondary"
+                                            invisible="document_template_ids == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Document Templates:</strong> Select document templates to associate with this task template. When this task template is applied, the associated document templates will also be applied.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select existing document templates from the dropdown, or</li>
+                                    <li>Click "Create New Document Template" to create a new one</li>
+                                    <li>Click "View Document Templates" to see selected templates</li>
+                                    <li>Document templates will be applied when this task template is used</li>
+                                </ol>
+                                <br/>
+                                <strong>Document Template Types:</strong>
+                                <ul>
+                                    <li><strong>Document-Based:</strong> Templates with predefined document structures</li>
+                                    <li><strong>Checklist-Based:</strong> Templates with task-oriented checklists</li>
+                                    <li><strong>Hybrid:</strong> Templates with both documents and checklists</li>
+                                </ul>
+                            </div>
+                        </page>
+                        
+                        <page string="Checkpoint Templates" name="checkpoint_templates">
+                            <group string="Checkpoint Template Configuration">
+                                <group>
+                                    <field name="checkpoint_template_ids" 
+                                           placeholder="Select checkpoint templates for this task template"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_checkpoint_template" type="object" 
+                                            string="Create New Checkpoint Template" class="btn-primary"
+                                            invisible="checkpoint_template_ids != False"/>
+                                    <button name="action_view_checkpoint_templates" type="object" 
+                                            string="View Checkpoint Templates" class="btn-secondary"
+                                            invisible="checkpoint_template_ids == False"/>
+                                </group>
+                            </group>
+                            
+                            <div class="alert alert-info" role="alert">
+                                <strong>Checkpoint Templates:</strong> Select checkpoint templates to associate with this task template. When this task template is applied, the associated checkpoint templates will also be applied.
+                                <br/><br/>
+                                <strong>Workflow:</strong>
+                                <ol>
+                                    <li>Select existing checkpoint templates from the dropdown, or</li>
+                                    <li>Click "Create New Checkpoint Template" to create a new one</li>
+                                    <li>Click "View Checkpoint Templates" to see selected templates</li>
+                                    <li>Checkpoint templates will be applied when this task template is used</li>
+                                </ol>
+                                <br/>
+                                <strong>Checkpoint Features:</strong>
+                                <ul>
+                                    <li><strong>Progress Tracking:</strong> Monitor task completion through checkpoints</li>
+                                    <li><strong>Quality Control:</strong> Ensure all requirements are met before proceeding</li>
+                                    <li><strong>Checklist Integration:</strong> Each checkpoint can have its own checklist items</li>
+                                    <li><strong>Status Management:</strong> Track checkpoint completion status</li>
+                                </ul>
                             </div>
                         </page>
                     </notebook>

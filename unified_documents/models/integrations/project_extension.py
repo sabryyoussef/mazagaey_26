@@ -481,12 +481,14 @@ class ProjectProject(models.Model):
         """Open wizard to copy documents from a selected product to this project"""
         self.ensure_one()
         
-        # Find products that have documents
+        # Find products that have documents AND are used in quotations (sale orders)
         products_with_documents = self.env['product.template'].search([
             ('id', 'in', self.env['documents.document'].search([
                 ('res_model', '=', 'product.template'),
                 ('active', '=', True)
-            ]).mapped('res_id'))
+            ]).mapped('res_id')),
+            # Filter to only products that are used in sale order lines (quotations)
+            ('id', 'in', self.env['sale.order.line'].search([]).mapped('product_template_id').ids)
         ])
         
         if not products_with_documents:
@@ -494,8 +496,8 @@ class ProjectProject(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('No Products with Documents'),
-                    'message': _('No products found with documents to copy.'),
+                    'title': _('No Quotation Products with Documents'),
+                    'message': _('No quotation products found with documents to copy. Only products that are used in sale orders and have documents will be shown.'),
                     'type': 'warning',
                 }
             }
@@ -520,7 +522,7 @@ class ProjectProject(models.Model):
         
         # If multiple products, show selection dialog
         return {
-            'name': _('Select Product to Copy Documents From'),
+            'name': _('Select Quotation Product to Copy Documents From'),
             'type': 'ir.actions.act_window',
             'res_model': 'product.template',
             'view_mode': 'list',
@@ -529,6 +531,8 @@ class ProjectProject(models.Model):
             'domain': [('id', 'in', products_with_documents.ids)],
             'context': {
                 'default_target_project_id': self.id,
+                'quotation_product_ids': products_with_documents.ids,
+                'search_default_quotation_products': 1,  # Apply quotation products filter by default
             }
         }
 
