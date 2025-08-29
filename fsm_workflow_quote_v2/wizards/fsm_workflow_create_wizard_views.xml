@@ -6,15 +6,56 @@
     <field name="arch" type="xml">
       <form string="Create FSM from Workflow Template">
         <sheet>
+          <!-- Success message when template is created -->
+          <div class="alert alert-success" role="alert" invisible="not context.get('template_created_success')">
+            <strong>Success!</strong> Workflow template has been created and selected automatically.
+            You can now proceed to create your FSM workflow instance.
+          </div>
+          
+          <group>
+            <field name="creation_mode" widget="radio"/>
+          </group>
+          
           <group>
             <field name="partner_id" options="{'no_create_edit': True}"/>
-            <field name="template_id" options="{'no_create_edit': True}"/>
             <field name="project_name"/>
             <field name="pricing_policy"/>
           </group>
+          
+          <!-- Existing Template Section -->
+          <group string="Existing Template" invisible="creation_mode != 'existing'">
+            <field name="template_id" options="{'no_create_edit': True}" required="creation_mode == 'existing'"/>
+          </group>
+          
+          <!-- New Template Creation Section -->
+          <group string="Create New Template" invisible="creation_mode != 'create'">
+            <field name="template_name"/>
+            <field name="template_category"/>
+            <field name="template_description"/>
+            <div colspan="2">
+              <p class="text-muted">
+                Click "Create Template" to open the comprehensive workflow template wizard where you can configure:
+                <br/>• Product Template (with documents, specifications)
+                <br/>• Project Template (with settings, configurations)
+                <br/>• Task Templates (with dependencies, assignments)
+                <br/>• Milestone Templates (with checkpoints, deliverables)
+                <br/>• Checkpoint Templates (with compliance, validations)
+                <br/>• Complete workflow integration
+              </p>
+            </div>
+          </group>
+          
         </sheet>
         <footer>
-          <button string="Create" name="action_create" type="object" class="btn-primary"/>
+          <button string="Create Template" 
+                  name="action_create_template" 
+                  type="object" 
+                  class="btn-secondary"
+                  invisible="creation_mode != 'create'"/>
+          <button string="Create Workflow" 
+                  name="action_create" 
+                  type="object" 
+                  class="btn-primary"/>
           <button string="Cancel" special="cancel"/>
         </footer>
       </form>
@@ -33,5 +74,5 @@
             name="Create from Workflow" 
             parent="menu_fsm_workflow_root" 
             action="action_fsm_workflow_create_wizard" 
-            sequence="5"/>
+            sequence="30"/>
 </odoo>
