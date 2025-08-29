@@ -120,6 +120,14 @@
                                     </list>
                                 </field>
                             </page>
+                            
+                            <page string="Quotation Integration" name="quotation_integration">
+                                <group>
+                                    <field name="create_quotation_on_reach"/>
+                                    <field name="quotation_template_id" invisible="not create_quotation_on_reach"/>
+                                    <field name="quotation_notes" invisible="not create_quotation_on_reach"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>

@@ -161,6 +161,26 @@ class ProjectTaskCheckpoint(models.Model):
         help='Whether this checkpoint can be started based on prerequisites'
     )
     
+    # Quotation Integration
+    create_quotation_on_reach = fields.Boolean(
+        string='Create Quotation on Reach',
+        default=False,
+        help='Automatically create a quotation when this checkpoint is reached'
+    )
+    
+    quotation_template_id = fields.Many2one(
+        'sale.order.template',
+        string='Quotation Template',
+        help='Template to use when creating quotation from this checkpoint',
+        ondelete='set null',
+        required=False
+    )
+    
+    quotation_notes = fields.Text(
+        string='Quotation Notes',
+        help='Additional notes to include in the quotation'
+    )
+    
     @api.onchange('is_reached')
     def _onchange_is_reached(self):
         """Handle checkpoint reached state change"""
@@ -176,6 +196,10 @@ class ProjectTaskCheckpoint(models.Model):
             # Milestone auto-advancement logic (works for both checking and unchecking)
             if checkpoint.milestone_id:
                 checkpoint.milestone_id._advance_milestone_on_checkpoint(checkpoint)
+            
+            # Quotation creation logic
+            if checkpoint.is_reached and checkpoint.create_quotation_on_reach:
+                checkpoint._create_quotation_on_reach()
     
     @api.depends('visibility_condition', 'task_id', 'milestone_id', 'visibility_depends_on')
     def _compute_visibility(self):
@@ -194,6 +218,75 @@ class ProjectTaskCheckpoint(models.Model):
             else:
                 checkpoint.is_visible = True
     
+    def _create_quotation_on_reach(self):
+        """Create quotation when checkpoint is reached"""
+        self.ensure_one()
+        
+        # Find the workflow instance through the project
+        workflow_instance = None
+        if self.compliance_project_id:
+            workflow_instance = self.env['fsm.workflow.instance'].search([
+                ('project_id', '=', self.compliance_project_id.id)
+            ], limit=1)
+        
+        if not workflow_instance:
+            _logger.warning(f"No workflow instance found for checkpoint {self.name}")
+            return False
+        
+        # Create quotation with checkpoint context
+        context = {
+            'default_workflow_instance_id': workflow_instance.id,
+            'checkpoint_trigger': True,
+            'checkpoint_name': self.name,
+        }
+        
+        # Create the quotation
+        sale_order = workflow_instance.with_context(context).create_milestone_quotation(
+            checkpoint_name=self.name
+        )
+        
+        if sale_order:
+            # Add quotation notes if provided
+            if self.quotation_notes:
+                sale_order.message_post(
+                    body=f"📝 **Checkpoint Notes**: {self.quotation_notes}",
+                    subject=f"Checkpoint Notes - {self.name}"
+                )
+            
+            # Apply template if specified
+            if self.quotation_template_id and 'sale.order.template' in self.env:
+                try:
+                    # Use the correct method for applying sale order templates
+                    if hasattr(self.quotation_template_id, '_generate_quotation_lines'):
+                        self.quotation_template_id._generate_quotation_lines(sale_order)
+                    else:
+                        # Fallback: manually add template lines
+                        for line in self.quotation_template_id.sale_order_template_line_ids:
+                            self.env['sale.order.line'].create({
+                                'order_id': sale_order.id,
+                                'name': line.name,
+                                'product_id': line.product_id.id if line.product_id else False,
+                                'product_uom_qty': line.product_uom_qty,
+                                'price_unit': line.price_unit,
+                            })
+                except Exception as e:
+                    _logger.error(f"Error applying quotation template: {e}")
+                    # Final fallback: create basic line
+                    try:
+                        self.env['sale.order.line'].create({
+                            'order_id': sale_order.id,
+                            'name': f'Checkpoint: {self.name}',
+                            'product_uom_qty': 1.0,
+                            'price_unit': 1000.0,
+                        })
+                    except Exception as fallback_error:
+                        _logger.error(f"Error in final fallback template application: {fallback_error}")
+            
+            _logger.info(f"Quotation created for checkpoint {self.name}: {sale_order.name}")
+            return sale_order
+        
+        return False
+
     def _evaluate_condition(self, condition, checkpoint):
         """Safely evaluate visibility condition"""
         try:

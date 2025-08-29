@@ -10,7 +10,8 @@
         "base",
         "project",
         "product",
-        "documents"  # For document integration
+        "documents",  # For document integration
+        "sale_management"  # For quotation templates
     ],
     "data": [
         # Security (load first)
