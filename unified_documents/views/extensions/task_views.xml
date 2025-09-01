@@ -1,21 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Extend Project Task Form View -->
-    <record id="view_unified_project_task_form_template_inherit" model="ir.ui.view">
-        <field name="name">unified.project.task.form.template.inherit</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_form2"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-file-text" title="View Documents">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <i class="fa fa-file-text"/>
-                        </span>
-                        <span class="o_stat_text">Documents</span>
-                    </div>
-                </button>
-            </xpath>
-        </field>
-    </record>
+    <data>
+        
+        <!-- Task Form View - Document Processing Tab -->
+        <record id="view_task_form_document_processing" model="ir.ui.view">
+            <field name="name">project.task.form.document.processing</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Document Processing" name="document_processing" 
+                          invisible="parent_id == False">
+                        
+                        <group>
+                            <group string="Document Stage">
+                                <field name="document_processing_stage" widget="badge" 
+                                       decoration-info="document_processing_stage == 'upload'"
+                                       decoration-warning="document_processing_stage == 'review'"
+                                       decoration-success="document_processing_stage == 'approval'"
+                                       decoration-primary="document_processing_stage == 'delivery'"
+                                       decoration-muted="document_processing_stage == 'completed'"/>
+                                
+                                <field name="document_upload_date" readonly="1"/>
+                                <field name="document_review_date" readonly="1"/>
+                                <field name="document_approval_date" readonly="1"/>
+                                <field name="document_delivery_date" readonly="1"/>
+                            </group>
+                            
+                            <group string="Document Checklist">
+                                <field name="document_uploaded" readonly="1"/>
+                                <field name="document_reviewed" readonly="1"/>
+                                <field name="document_approved" readonly="1"/>
+                                <field name="document_delivered" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Document Actions">
+                            <button name="action_mark_document_uploaded" type="object" 
+                                    string="Mark as Uploaded" 
+                                    class="btn-primary"
+                                    invisible="document_uploaded == True"/>
+                            
+                            <button name="action_mark_document_reviewed" type="object" 
+                                    string="Mark as Reviewed" 
+                                    class="btn-warning"
+                                    invisible="document_reviewed == True or document_uploaded == False"/>
+                            
+                            <button name="action_mark_document_approved" type="object" 
+                                    string="Mark as Approved" 
+                                    class="btn-success"
+                                    invisible="document_approved == True or document_reviewed == False"/>
+                            
+                            <button name="action_mark_document_delivered" type="object" 
+                                    string="Mark as Delivered" 
+                                    class="btn-info"
+                                    invisible="document_delivered == True or document_approved == False"/>
+                        </group>
+                        
+                        <group string="Approval Integration">
+                            <field name="approval_request_id" readonly="1" 
+                                   invisible="approval_request_id == False"/>
+                            
+                            <button name="action_view_approval_request" type="object" 
+                                    string="View Approval Request" 
+                                    class="btn-secondary"
+                                    invisible="approval_request_id == False"/>
+                            
+                            <button name="action_create_approval_request" type="object" 
+                                    string="Create Approval Request" 
+                                    class="btn-outline-secondary"
+                                    invisible="approval_request_id != False"/>
+                        </group>
+                        
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Task List View - Document Processing Columns -->
+        <record id="view_task_list_document_processing" model="ir.ui.view">
+            <field name="name">project.task.list.document.processing</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="document_processing_stage" widget="badge" 
+                           decoration-info="document_processing_stage == 'upload'"
+                           decoration-warning="document_processing_stage == 'review'"
+                           decoration-success="document_processing_stage == 'approval'"
+                           decoration-primary="document_processing_stage == 'delivery'"
+                           decoration-muted="document_processing_stage == 'completed'"/>
+                    
+                    <field name="document_uploaded" widget="boolean_toggle"/>
+                    <field name="document_reviewed" widget="boolean_toggle"/>
+                    <field name="document_approved" widget="boolean_toggle"/>
+                    <field name="document_delivered" widget="boolean_toggle"/>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
 </odoo>

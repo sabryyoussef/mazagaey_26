@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 import logging
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -1381,3 +1382,239 @@ Count: {len(refreshed_docs)}
                 'type': 'info',
             }
         }
+
+    def action_create_document_tasks_with_approval(self):
+        """Create document management tasks with approval integration"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Documents Folder'),
+                    'message': _('This project does not have a documents folder. Create one first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get all documents in the folder
+        folder_documents = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        if not folder_documents:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Documents'),
+                    'message': _('No documents found in the project folder.'),
+                    'type': 'info',
+                }
+            }
+        
+        # Create main document management task
+        main_task = self.env['project.task'].create({
+            'name': f'Document Management - {self.name}',
+            'project_id': self.id,
+            'description': f'Manage all documents for project: {self.name}',
+            'priority': '1',  # Normal priority
+            'user_ids': [(6, 0, [self.user_id.id])] if self.user_id else False,
+        })
+        
+        created_tasks = []
+        created_approvals = []
+        
+        # Create subtasks for each document
+        for doc in folder_documents:
+            # Create document task
+            doc_task = self.env['project.task'].create({
+                'name': f'Process {doc.name}',
+                'project_id': self.id,
+                'parent_id': main_task.id,  # Make it a subtask
+                'description': f'Process document: {doc.name}\nCategory: {doc.category}\nStatus: {doc.status}',
+                'priority': '1',
+                'user_ids': [(6, 0, [self.user_id.id])] if self.user_id else False,
+            })
+            created_tasks.append(doc_task)
+            
+            # Create approval request for document verification (if approvals module is available)
+            try:
+                if 'approval.request' in self.env:
+                    category = self._get_document_approval_category()
+                    if category:
+                        approval_request = self.env['approval.request'].create({
+                            'name': f'Document Approval - {doc.name}',
+                            'category_id': category.id,
+                            'request_owner_id': self.user_id.id if self.user_id else self.env.user.id,
+                            'request_status': 'pending',
+                            'date_start': fields.Date.today(),
+                            'date_end': fields.Date.today() + relativedelta(days=7),
+                            'reference': f'Project: {self.name} | Document: {doc.name}',
+                        })
+                        created_approvals.append(approval_request)
+                        
+                        # Link approval to task
+                        doc_task.write({
+                            'approval_request_id': approval_request.id,
+                        })
+            except Exception as e:
+                _logger.warning(f"Could not create approval request: {e}")
+                # Continue without approval integration
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document Tasks Created'),
+                'message': _('Successfully created:\n• 1 main task\n• %d document subtasks\n• %d approval requests') % (len(created_tasks), len(created_approvals)),
+                'type': 'success',
+            }
+        }
+    
+    def _get_document_approval_category(self):
+        """Get or create document approval category"""
+        try:
+            if 'approval.category' not in self.env:
+                return False
+                
+            category = self.env['approval.category'].search([
+                ('name', 'ilike', 'document')
+            ], limit=1)
+            
+            if not category:
+                # Create a new document approval category
+                category = self.env['approval.category'].create({
+                    'name': 'Document Approval',
+                    'description': 'Document review and approval workflow',
+                    'approval_minimum': 1,
+                    'has_product': False,
+                    'has_reference': True,
+                    'has_date': True,
+                    'has_period': False,
+                    'has_quantity': False,
+                    'has_amount': False,
+                    'has_tax': False,
+                    'has_partner': False,
+                    'has_payment_method': False,
+                    'has_location': False,
+                    'has_delivery_address': False,
+                })
+            
+            return category
+        except Exception as e:
+            _logger.warning(f"Could not get/create approval category: {e}")
+            return False
+    
+    def action_view_document_processing_tasks(self):
+        """View all document processing tasks for this project"""
+        self.ensure_one()
+        
+        document_tasks = self.env['project.task'].search([
+            ('project_id', '=', self.id),
+            ('document_id', '!=', False)
+        ])
+        
+        return {
+            'name': f'Document Processing Tasks - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task',
+            'view_mode': 'list,form,kanban',
+            'domain': [('id', 'in', document_tasks.ids)],
+            'context': {
+                'default_project_id': self.id,
+                'search_default_document_tasks': 1,
+                'search_default_group_document_category': 1,
+            },
+        }
+    
+    def action_view_document_processing_dashboard(self):
+        """View document processing dashboard for this project"""
+        self.ensure_one()
+        
+        # Calculate statistics
+        document_tasks = self.env['project.task'].search([
+            ('project_id', '=', self.id),
+            ('document_id', '!=', False)
+        ])
+        
+        if not document_tasks:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Document Processing Tasks'),
+                    'message': _('This project has no document processing tasks yet.'),
+                    'type': 'info',
+                }
+            }
+        
+        # Group by processing stage
+        stage_stats = {}
+        for stage in ['upload', 'review', 'approval', 'delivery', 'completed']:
+            stage_stats[stage] = len(document_tasks.filtered(
+                lambda t: t.document_processing_stage == stage
+            ))
+        
+        # Group by document category
+        category_stats = {}
+        for category in ['required', 'compliance', 'deliverable', 'reference']:
+            category_tasks = document_tasks.filtered(
+                lambda t: t.document_category == category
+            )
+            category_stats[category] = {
+                'total': len(category_tasks),
+                'completed': len(category_tasks.filtered(
+                    lambda t: t.document_processing_stage == 'completed'
+                ))
+            }
+        
+        # Calculate overall progress
+        total_tasks = len(document_tasks)
+        completed_tasks = stage_stats.get('completed', 0)
+        progress = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+        
+        # Build dashboard message
+        dashboard_msg = f"""
+Document Processing Dashboard - {self.name}
+
+📊 Overall Progress: {progress:.1f}% ({completed_tasks}/{total_tasks} tasks completed)
+
+📋 Processing Stages:
+• Upload: {stage_stats.get('upload', 0)} tasks
+• Review: {stage_stats.get('review', 0)} tasks  
+• Approval: {stage_stats.get('approval', 0)} tasks
+• Delivery: {stage_stats.get('delivery', 0)} tasks
+• Completed: {stage_stats.get('completed', 0)} tasks
+
+📂 Document Categories:
+• Required: {category_stats.get('required', {}).get('completed', 0)}/{category_stats.get('required', {}).get('total', 0)} completed
+• Compliance: {category_stats.get('compliance', {}).get('completed', 0)}/{category_stats.get('compliance', {}).get('total', 0)} completed
+• Deliverable: {category_stats.get('deliverable', {}).get('completed', 0)}/{category_stats.get('deliverable', {}).get('total', 0)} completed
+• Reference: {category_stats.get('reference', {}).get('completed', 0)}/{category_stats.get('reference', {}).get('total', 0)} completed
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Document Processing Dashboard',
+                'message': dashboard_msg,
+                'type': 'info',
+            }
+        }
+
+    def _onchange_documents_folder_id(self):
+        """Automatically create document tasks when documents are added to folder"""
+        if self.documents_folder_id and self.documents_folder_id.folder_document_count > 0:
+            # Check if document tasks already exist
+            existing_tasks = self.env['project.task'].search([
+                ('project_id', '=', self.id),
+                ('name', 'ilike', 'Document Management')
+            ])
+            
+            if not existing_tasks:
+                # Auto-create document tasks
+                self.action_create_document_tasks_with_approval()

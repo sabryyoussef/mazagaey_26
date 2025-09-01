@@ -32,6 +32,30 @@
             <xpath expr="//notebook" position="inside">
                 <page string="📄 Documents &amp; Deliverables" name="documents_deliverables">
                     <div class="oe_button_box" name="button_box">
+                        <!-- Document Processing Tasks Smart Button -->
+                        <button name="action_view_document_processing_tasks" type="object" 
+                                class="oe_stat_button" icon="fa-tasks"
+                                title="View Document Processing Tasks">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-tasks"/>
+                                </span>
+                                <span class="o_stat_text">Doc Tasks</span>
+                            </div>
+                        </button>
+                        
+                        <!-- Document Processing Dashboard Smart Button -->
+                        <button name="action_view_document_processing_dashboard" type="object" 
+                                class="oe_stat_button" icon="fa-dashboard"
+                                title="View Document Processing Dashboard">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-dashboard"/>
+                                </span>
+                                <span class="o_stat_text">Dashboard</span>
+                            </div>
+                        </button>
+                        
                         <!-- Documents Smart Button -->
                         <button name="action_view_documents" type="object" 
                                 class="oe_stat_button" icon="fa-file-text"
@@ -87,6 +111,18 @@
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <i class="fa fa-magic"/>
+                                </span>
+                            </div>
+                        </button>
+                        
+                        <!-- Create Document Tasks with Approval Smart Button -->
+                        <button name="action_create_document_tasks_with_approval" type="object" 
+                                class="oe_stat_button" icon="fa-tasks"
+                                invisible="not documents_folder_id"
+                                title="Create Document Tasks with Approval">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <i class="fa fa-tasks"/>
                                 </span>
                             </div>
                         </button>

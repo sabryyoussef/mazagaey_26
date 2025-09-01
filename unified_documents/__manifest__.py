@@ -42,6 +42,7 @@
         "views/integrations/document_upload_views.xml",
         "views/integrations/sale_order_views.xml",
         "views/integrations/sale_order_line_views.xml",
+        "views/extensions/task_document_processing_views.xml",
         "wizard/copy_documents_wizard_views.xml",
         "wizard/documents_upload_wizard_views.xml",
         "wizard/create_product_from_template_wizard_views.xml",

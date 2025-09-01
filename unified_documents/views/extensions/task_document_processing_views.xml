@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Enhanced Task Form View for Document Processing -->
+    <record id="view_task_form_document_processing" model="ir.ui.view">
+        <field name="name">project.task.form.document.processing</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <!-- Add document processing stage statusbar to header -->
+            <xpath expr="//header" position="inside">
+                <field name="document_processing_stage" widget="statusbar" 
+                       statusbar_visible="upload,review,approval,delivery,completed"
+                       invisible="document_id == False"/>
+            </xpath>
+            
+            <!-- Add document processing buttons to header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_complete_upload" type="object" 
+                        string="Complete Upload" class="btn-success"
+                        invisible="document_processing_stage != 'upload' or document_id == False"/>
+                        
+                <button name="action_complete_review" type="object" 
+                        string="Complete Review" class="btn-warning"
+                        invisible="document_processing_stage != 'review' or document_id == False"/>
+                        
+                <button name="action_complete_approval" type="object" 
+                        string="Complete Approval" class="btn-info"
+                        invisible="document_processing_stage != 'approval' or document_id == False"/>
+                        
+                <button name="action_complete_delivery" type="object" 
+                        string="Complete Delivery" class="btn-primary"
+                        invisible="document_processing_stage != 'delivery' or document_id == False"/>
+            </xpath>
+            
+            <!-- Add smart buttons for document processing -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- Document Processing Progress Button -->
+                <button name="action_view_document_checkpoints" type="object" 
+                        class="oe_stat_button" icon="fa-tasks"
+                        invisible="document_id == False"
+                        title="View Document Processing Checkpoints">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="document_checkpoint_progress" widget="percentage"/>
+                        </span>
+                        <span class="o_stat_text">Progress</span>
+                    </div>
+                </button>
+                
+                <!-- Checkpoints Count Button -->
+                <button name="action_view_document_checkpoints" type="object" 
+                        class="oe_stat_button" icon="fa-check-circle"
+                        invisible="document_id == False"
+                        title="View Document Checkpoints">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="document_checkpoint_reached_count"/>/<field name="document_checkpoint_count"/>
+                        </span>
+                        <span class="o_stat_text">Checkpoints</span>
+                    </div>
+                </button>
+                
+                <!-- View Approval Request Button -->
+                <button name="action_view_approval_request" type="object" 
+                        class="oe_stat_button" icon="fa-thumbs-up"
+                        invisible="approval_request_id == False"
+                        title="View Approval Request">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-thumbs-up"/>
+                        </span>
+                        <span class="o_stat_text">Approval</span>
+                    </div>
+                </button>
+                
+                <!-- View Related Document Button -->
+                <button name="action_view_documents" type="object" 
+                        class="oe_stat_button" icon="fa-file-text"
+                        invisible="document_id == False"
+                        title="View Related Document">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-file-text"/>
+                        </span>
+                        <span class="o_stat_text">Document</span>
+                    </div>
+                </button>
+                
+                <!-- Refresh Checkpoint Statistics Button -->
+                <button name="action_refresh_checkpoint_stats" type="object" 
+                        class="oe_stat_button" icon="fa-refresh"
+                        invisible="document_id == False"
+                        title="Refresh Checkpoint Statistics">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-refresh"/>
+                        </span>
+                        <span class="o_stat_text">Refresh</span>
+                    </div>
+                </button>
+                
+                <!-- Debug Checkpoint Statistics Button -->
+                <button name="action_debug_checkpoint_stats" type="object" 
+                        class="oe_stat_button" icon="fa-bug"
+                        invisible="document_id == False"
+                        title="Debug Checkpoint Statistics">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-bug"/>
+                        </span>
+                        <span class="o_stat_text">Debug</span>
+                    </div>
+                </button>
+                
+                <!-- Force Refresh All Stats Button -->
+                <button name="action_force_refresh_all_stats" type="object" 
+                        class="oe_stat_button" icon="fa-sync"
+                        invisible="document_id == False"
+                        title="Force Refresh All Statistics">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-sync"/>
+                        </span>
+                        <span class="o_stat_text">Force Refresh</span>
+                    </div>
+                </button>
+                
+                <!-- Fix Checkpoint Data Button -->
+                <button name="action_fix_checkpoint_data" type="object" 
+                        class="oe_stat_button" icon="fa-wrench"
+                        invisible="document_id == False"
+                        title="Fix Checkpoint Data Inconsistencies">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                        <span class="o_stat_text">Fix Data</span>
+                    </div>
+                </button>
+                
+                <!-- Bulk Fix All Invalid Progress Button -->
+                <button name="action_fix_all_invalid_progress" type="object" 
+                        class="oe_stat_button" icon="fa-magic"
+                        invisible="document_id == False"
+                        title="Fix All Tasks with Invalid Progress Values">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <i class="fa fa-magic"/>
+                        </span>
+                        <span class="o_stat_text">Bulk Fix</span>
+                    </div>
+                </button>
+            </xpath>
+            
+            <!-- Add Document Processing tab to notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Document Processing" name="document_processing" 
+                      invisible="document_id == False">
+                    
+                    <!-- Document Information Group -->
+                    <group string="Document Information">
+                        <group>
+                            <field name="document_id" readonly="1"/>
+                            <field name="document_category" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="document_processing_stage" readonly="1"/>
+                            <field name="approval_request_id" readonly="1" 
+                                   invisible="approval_request_id == False"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Processing Progress Tracking -->
+                    <group string="Processing Progress">
+                        <group string="Upload Stage">
+                            <field name="document_uploaded" readonly="1"/>
+                            <field name="document_upload_date" readonly="1"/>
+                        </group>
+                        <group string="Review Stage">
+                            <field name="document_reviewed" readonly="1"/>
+                            <field name="document_review_date" readonly="1"/>
+                        </group>
+                        <group string="Approval Stage">
+                            <field name="document_approved" readonly="1"/>
+                            <field name="document_approval_date" readonly="1"/>
+                        </group>
+                        <group string="Delivery Stage">
+                            <field name="document_delivered" readonly="1"/>
+                            <field name="document_delivery_date" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Checkpoints Section -->
+                    <group string="Document Processing Checkpoints">
+                        <field name="document_checkpoint_ids" nolabel="1">
+                            <list>
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="is_reached" widget="boolean_toggle"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+                    
+                    <!-- Stage Action Buttons (Large) -->
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <button name="action_complete_upload" type="object" 
+                                    string="Complete Upload" class="btn btn-success btn-lg btn-block"
+                                    invisible="document_processing_stage != 'upload'"
+                                    icon="fa-upload"/>
+                        </div>
+                        <div class="col-md-3">
+                            <button name="action_complete_review" type="object" 
+                                    string="Complete Review" class="btn btn-warning btn-lg btn-block"
+                                    invisible="document_processing_stage != 'review'"
+                                    icon="fa-search"/>
+                        </div>
+                        <div class="col-md-3">
+                            <button name="action_complete_approval" type="object" 
+                                    string="Complete Approval" class="btn btn-info btn-lg btn-block"
+                                    invisible="document_processing_stage != 'approval'"
+                                    icon="fa-check"/>
+                        </div>
+                        <div class="col-md-3">
+                            <button name="action_complete_delivery" type="object" 
+                                    string="Complete Delivery" class="btn btn-primary btn-lg btn-block"
+                                    invisible="document_processing_stage != 'delivery'"
+                                    icon="fa-truck"/>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Text -->
+                    <div class="alert alert-info mt-3" role="alert">
+                        <strong>Document Processing Workflow:</strong>
+                        <br/>Follow the 4-stage workflow to process this document:
+                        <br/>1. <strong>Upload:</strong> Ensure the document file is uploaded and verified
+                        <br/>2. <strong>Review:</strong> Review document content for accuracy and compliance
+                        <br/>3. <strong>Approval:</strong> Get required approvals through the approval workflow
+                        <br/>4. <strong>Delivery:</strong> Deliver the final document to the client/stakeholder
+                        <br/><br/>
+                        <strong>Checkpoints:</strong> Complete each checkpoint to track progress and ensure quality.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Enhanced Task List View with Document Processing Info -->
+    <record id="view_task_list_document_processing" model="ir.ui.view">
+        <field name="name">project.task.list.document.processing</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="document_id" optional="hide"/>
+                <field name="document_category" optional="hide"/>
+                <field name="document_processing_stage" optional="show"/>
+                <field name="document_checkpoint_progress" widget="percentage" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Document Processing Tasks Kanban View - Temporarily disabled due to XPath issues -->
+    <!-- TODO: Re-enable once kanban view structure is confirmed -->
+    <!--
+    <record id="view_task_kanban_document_processing" model="ir.ui.view">
+        <field name="name">project.task.kanban.document.processing</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+                <div t-if="record.document_id.raw_value" class="o_kanban_inline_block mt-1">
+                    <i class="fa fa-file-text text-muted" title="Document Processing Task"/>
+                    <span class="text-muted small">
+                        <t t-esc="record.document_category.value"/>
+                    </span>
+                    <span class="badge ms-1" 
+                          t-attf-class="badge-{{ 
+                              record.document_processing_stage.raw_value == 'upload' and 'secondary' or
+                              record.document_processing_stage.raw_value == 'review' and 'warning' or  
+                              record.document_processing_stage.raw_value == 'approval' and 'info' or
+                              record.document_processing_stage.raw_value == 'delivery' and 'primary' or
+                              record.document_processing_stage.raw_value == 'completed' and 'success' or 'light'
+                          }}">
+                        <t t-esc="record.document_processing_stage.value"/>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    -->
+    
+    <!-- Document Processing Task Search View -->
+    <record id="view_task_search_document_processing" model="ir.ui.view">
+        <field name="name">project.task.search.document.processing</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="document_id"/>
+                <field name="document_category"/>
+                <field name="document_processing_stage"/>
+                
+                <filter string="Document Processing Tasks" name="document_tasks" 
+                        domain="[('document_id', '!=', False)]"/>
+                <filter string="Upload Stage" name="upload_stage" 
+                        domain="[('document_processing_stage', '=', 'upload')]"/>
+                <filter string="Review Stage" name="review_stage" 
+                        domain="[('document_processing_stage', '=', 'review')]"/>
+                <filter string="Approval Stage" name="approval_stage" 
+                        domain="[('document_processing_stage', '=', 'approval')]"/>
+                <filter string="Delivery Stage" name="delivery_stage" 
+                        domain="[('document_processing_stage', '=', 'delivery')]"/>
+                <filter string="Completed" name="completed_stage" 
+                        domain="[('document_processing_stage', '=', 'completed')]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Document Category" name="group_document_category" 
+                            context="{'group_by': 'document_category'}"/>
+                    <filter string="Processing Stage" name="group_processing_stage" 
+                            context="{'group_by': 'document_processing_stage'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
