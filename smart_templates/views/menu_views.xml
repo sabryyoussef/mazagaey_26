@@ -58,4 +58,20 @@
               action="action_smart_document_template" 
               groups="smart_templates.group_smart_templates_user"
               sequence="40"/>
+
+    <!-- Checkpoint Templates Menu -->
+    <menuitem id="menu_smart_templates_checkpoint_templates" 
+              name="Checkpoint Templates" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_checkpoint_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="50"/>
+
+    <!-- Milestone Templates Menu -->
+    <menuitem id="menu_smart_templates_milestone_templates" 
+              name="Milestone Templates" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_milestone_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="60"/>
 </odoo>

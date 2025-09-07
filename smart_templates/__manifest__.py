@@ -26,6 +26,8 @@
         "views/core/project_template_views.xml",
         "views/core/task_template_views.xml",
         "views/core/document_template_views.xml",
+        "views/core/checkpoint_template_views.xml",
+        "views/core/milestone_template_views.xml",
         "views/menu_views.xml",
         
         # Data

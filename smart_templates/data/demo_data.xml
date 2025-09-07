@@ -408,6 +408,441 @@
         </record>
         
         <!-- ======================================== -->
+        <!-- CHECKPOINT TEMPLATES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Quality Gate Checkpoints -->
+        <record id="demo_checkpoint_template_code_review" model="smart.checkpoint.template">
+            <field name="name">Code Review Checkpoint</field>
+            <field name="description">Comprehensive code review checkpoint to ensure code quality, standards compliance, and best practices adherence before merging to main branch.</field>
+            <field name="checkpoint_type">quality_gate</field>
+            <field name="validation_level">standard</field>
+            <field name="complexity_level">medium</field>
+            <field name="validation_method">manual</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="validation_criteria">1. Code follows established coding standards, 2. All unit tests pass, 3. No critical security vulnerabilities, 4. Performance benchmarks met, 5. Documentation updated</field>
+            <field name="success_criteria">Code approved by senior developer, all tests passing, security scan clean, performance within acceptable limits</field>
+            <field name="failure_actions">Return to developer for fixes, schedule follow-up review, escalate to technical lead if needed</field>
+            <field name="required_documents">Code review checklist, test results, security scan report, performance metrics</field>
+            <field name="required_skills">Code Review, Software Engineering, Quality Assurance, Security Analysis</field>
+            <field name="prerequisites">Code committed to feature branch, unit tests written, documentation updated</field>
+            <field name="estimated_duration_hours">4.0</field>
+            <field name="estimated_duration_days">1</field>
+            <field name="deadline_buffer_days">1</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_validate">false</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Testing Completion Checkpoint -->
+        <record id="demo_checkpoint_template_testing_completion" model="smart.checkpoint.template">
+            <field name="name">Testing Completion Checkpoint</field>
+            <field name="description">Comprehensive testing checkpoint to ensure all testing phases are completed successfully before deployment.</field>
+            <field name="checkpoint_type">quality_gate</field>
+            <field name="validation_level">advanced</field>
+            <field name="complexity_level">complex</field>
+            <field name="validation_method">hybrid</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="validation_criteria">1. Unit tests coverage > 80%, 2. Integration tests pass, 3. User acceptance tests completed, 4. Performance tests meet requirements, 5. Security tests pass</field>
+            <field name="success_criteria">All test suites passing, coverage requirements met, UAT approval received, performance benchmarks achieved</field>
+            <field name="failure_actions">Fix failing tests, improve coverage, address performance issues, re-run UAT if needed</field>
+            <field name="required_documents">Test execution report, coverage report, UAT results, performance test results, security test results</field>
+            <field name="required_skills">Test Automation, Quality Assurance, Performance Testing, Security Testing, User Acceptance Testing</field>
+            <field name="prerequisites">All code implemented, test environment ready, test data prepared, stakeholders available for UAT</field>
+            <field name="estimated_duration_hours">16.0</field>
+            <field name="estimated_duration_days">2</field>
+            <field name="deadline_buffer_days">2</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_validate">true</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Compliance Checkpoints -->
+        <record id="demo_checkpoint_template_gdpr_compliance" model="smart.checkpoint.template">
+            <field name="name">GDPR Compliance Checkpoint</field>
+            <field name="description">GDPR compliance validation checkpoint to ensure data protection and privacy requirements are met.</field>
+            <field name="checkpoint_type">compliance</field>
+            <field name="validation_level">expert</field>
+            <field name="complexity_level">complex</field>
+            <field name="validation_method">manual</field>
+            <field name="compliance_required">true</field>
+            <field name="approval_required">true</field>
+            <field name="compliance_standards">GDPR (General Data Protection Regulation), Data Protection Act, Privacy by Design principles</field>
+            <field name="validation_criteria">1. Data processing lawful basis documented, 2. Privacy notices updated, 3. Data subject rights implemented, 4. Data retention policies in place, 5. Security measures adequate</field>
+            <field name="success_criteria">GDPR compliance audit passed, legal review completed, privacy impact assessment approved</field>
+            <field name="failure_actions">Address compliance gaps, update privacy policies, implement missing controls, re-audit if necessary</field>
+            <field name="required_documents">Privacy Impact Assessment, Data Processing Agreement, Privacy Policy, Consent Management documentation</field>
+            <field name="required_skills">GDPR Compliance, Data Protection Law, Privacy Engineering, Legal Review, Security Assessment</field>
+            <field name="prerequisites">Data mapping completed, privacy policies drafted, legal review scheduled, compliance team available</field>
+            <field name="estimated_duration_hours">24.0</field>
+            <field name="estimated_duration_days">3</field>
+            <field name="deadline_buffer_days">3</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_validate">false</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Security Audit Checkpoint -->
+        <record id="demo_checkpoint_template_security_audit" model="smart.checkpoint.template">
+            <field name="name">Security Audit Checkpoint</field>
+            <field name="description">Comprehensive security audit checkpoint to identify and address security vulnerabilities before deployment.</field>
+            <field name="checkpoint_type">security</field>
+            <field name="validation_level">expert</field>
+            <field name="complexity_level">complex</field>
+            <field name="validation_method">hybrid</field>
+            <field name="compliance_required">true</field>
+            <field name="approval_required">true</field>
+            <field name="compliance_standards">ISO 27001, OWASP Top 10, NIST Cybersecurity Framework, SOC 2</field>
+            <field name="validation_criteria">1. Vulnerability scan completed, 2. Penetration testing performed, 3. Security code review done, 4. Access controls verified, 5. Encryption implemented</field>
+            <field name="success_criteria">No critical vulnerabilities, security controls implemented, audit report approved, remediation plan completed</field>
+            <field name="failure_actions">Address critical vulnerabilities, implement missing security controls, re-scan and re-audit, security team review</field>
+            <field name="required_documents">Vulnerability assessment report, penetration test results, security code review, access control matrix, encryption documentation</field>
+            <field name="required_skills">Cybersecurity, Penetration Testing, Vulnerability Assessment, Security Architecture, Risk Management</field>
+            <field name="prerequisites">Application deployed to test environment, security tools configured, test data prepared, security team available</field>
+            <field name="estimated_duration_hours">32.0</field>
+            <field name="estimated_duration_days">4</field>
+            <field name="deadline_buffer_days">2</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_validate">true</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Approval Checkpoints -->
+        <record id="demo_checkpoint_template_client_approval" model="smart.checkpoint.template">
+            <field name="name">Client Approval Checkpoint</field>
+            <field name="description">Client approval checkpoint to ensure project deliverables meet client requirements and expectations.</field>
+            <field name="checkpoint_type">approval</field>
+            <field name="validation_level">standard</field>
+            <field name="complexity_level">medium</field>
+            <field name="validation_method">manual</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="approval_workflow">1. Internal review and approval, 2. Client presentation, 3. Client feedback collection, 4. Final client sign-off</field>
+            <field name="validation_criteria">1. Deliverables meet requirements, 2. Quality standards met, 3. Client expectations aligned, 4. Timeline on track, 5. Budget within limits</field>
+            <field name="success_criteria">Client approval received, feedback incorporated, sign-off documented, project ready for next phase</field>
+            <field name="failure_actions">Address client feedback, revise deliverables, schedule follow-up meeting, escalate to project manager</field>
+            <field name="required_documents">Project deliverables, client presentation, feedback form, approval documentation, sign-off sheet</field>
+            <field name="required_skills">Client Relations, Project Management, Communication, Quality Assurance, Stakeholder Management</field>
+            <field name="prerequisites">Deliverables completed, internal review done, client meeting scheduled, approval documentation prepared</field>
+            <field name="estimated_duration_hours">8.0</field>
+            <field name="estimated_duration_days">1</field>
+            <field name="deadline_buffer_days">2</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_validate">false</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Documentation Review Checkpoint -->
+        <record id="demo_checkpoint_template_documentation_review" model="smart.checkpoint.template">
+            <field name="name">Documentation Review Checkpoint</field>
+            <field name="description">Comprehensive documentation review checkpoint to ensure all project documentation is complete, accurate, and up-to-date.</field>
+            <field name="checkpoint_type">documentation</field>
+            <field name="validation_level">standard</field>
+            <field name="complexity_level">medium</field>
+            <field name="validation_method">manual</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="validation_criteria">1. Technical documentation complete, 2. User documentation updated, 3. API documentation current, 4. Installation guides accurate, 5. Troubleshooting guides comprehensive</field>
+            <field name="success_criteria">All documentation reviewed and approved, accuracy verified, completeness confirmed, ready for publication</field>
+            <field name="failure_actions">Update incomplete documentation, fix inaccuracies, add missing sections, re-review if necessary</field>
+            <field name="required_documents">Technical documentation, user manuals, API documentation, installation guides, troubleshooting guides</field>
+            <field name="required_skills">Technical Writing, Documentation Review, Quality Assurance, Technical Communication, User Experience</field>
+            <field name="prerequisites">All documentation drafted, technical review completed, user testing done, publication process ready</field>
+            <field name="estimated_duration_hours">12.0</field>
+            <field name="estimated_duration_days">2</field>
+            <field name="deadline_buffer_days">1</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_validate">false</field>
+            <field name="auto_escalate">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Deployment Validation Checkpoint -->
+        <record id="demo_checkpoint_template_deployment_validation" model="smart.checkpoint.template">
+            <field name="name">Deployment Validation Checkpoint</field>
+            <field name="description">Pre-deployment validation checkpoint to ensure system is ready for production deployment with proper rollback procedures.</field>
+            <field name="checkpoint_type">deployment</field>
+            <field name="validation_level">advanced</field>
+            <field name="complexity_level">complex</field>
+            <field name="validation_method">hybrid</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="validation_criteria">1. Production environment ready, 2. Rollback plan tested, 3. Monitoring configured, 4. Backup procedures verified, 5. Deployment scripts validated</field>
+            <field name="success_criteria">Deployment environment validated, rollback tested successfully, monitoring active, team ready for deployment</field>
+            <field name="failure_actions">Fix environment issues, test rollback procedures, configure monitoring, re-validate deployment scripts</field>
+            <field name="required_documents">Deployment plan, rollback procedures, monitoring configuration, backup verification, deployment scripts</field>
+            <field name="required_skills">DevOps, System Administration, Deployment Management, Monitoring, Backup and Recovery</field>
+            <field name="prerequisites">Production environment prepared, rollback procedures documented, monitoring tools configured, deployment team ready</field>
+            <field name="estimated_duration_hours">16.0</field>
+            <field name="estimated_duration_days">2</field>
+            <field name="deadline_buffer_days">1</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_validate">true</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Performance Check Checkpoint -->
+        <record id="demo_checkpoint_template_performance_check" model="smart.checkpoint.template">
+            <field name="name">Performance Check Checkpoint</field>
+            <field name="description">Performance validation checkpoint to ensure system meets performance requirements and can handle expected load.</field>
+            <field name="checkpoint_type">performance</field>
+            <field name="validation_level">advanced</field>
+            <field name="complexity_level">complex</field>
+            <field name="validation_method">automated</field>
+            <field name="compliance_required">false</field>
+            <field name="approval_required">true</field>
+            <field name="validation_criteria">1. Response time within limits, 2. Throughput requirements met, 3. Resource utilization optimal, 4. Load testing completed, 5. Performance benchmarks achieved</field>
+            <field name="success_criteria">Performance requirements met, load testing passed, optimization completed, performance monitoring active</field>
+            <field name="failure_actions">Optimize performance bottlenecks, tune system parameters, re-run load tests, performance team review</field>
+            <field name="required_documents">Performance test results, load testing report, resource utilization metrics, optimization recommendations</field>
+            <field name="required_skills">Performance Testing, System Optimization, Load Testing, Performance Monitoring, Capacity Planning</field>
+            <field name="prerequisites">Performance testing environment ready, load testing tools configured, performance benchmarks defined, monitoring in place</field>
+            <field name="estimated_duration_hours">20.0</field>
+            <field name="estimated_duration_days">3</field>
+            <field name="deadline_buffer_days">2</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_validate">true</field>
+            <field name="auto_escalate">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- MILESTONE TEMPLATES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Project Phase Milestones -->
+        <record id="demo_milestone_template_project_initiation" model="smart.milestone.template">
+            <field name="name">Project Initiation Phase</field>
+            <field name="description">Project initiation milestone marking the completion of project setup, stakeholder alignment, and initial planning phase.</field>
+            <field name="milestone_type">phase</field>
+            <field name="priority_level">high</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration_days">14</field>
+            <field name="estimated_duration_weeks">2.0</field>
+            <field name="estimated_duration_months">0.5</field>
+            <field name="buffer_days">3</field>
+            <field name="deadline_type">flexible</field>
+            <field name="progress_tracking">stages</field>
+            <field name="status_stages">1. Project Charter Approved, 2. Stakeholders Identified, 3. Initial Planning Complete, 4. Team Assigned, 5. Kickoff Meeting Held</field>
+            <field name="completion_criteria">Project charter approved, stakeholder analysis complete, initial project plan created, team assigned, kickoff meeting conducted</field>
+            <field name="success_metrics">Stakeholder buy-in achieved, project scope defined, team alignment confirmed, initial timeline established</field>
+            <field name="failure_handling">Revisit project charter, realign stakeholders, adjust project scope, reschedule kickoff meeting</field>
+            <field name="has_dependencies">false</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">medium</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_schedule">false</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Planning Phase Milestone -->
+        <record id="demo_milestone_template_planning_complete" model="smart.milestone.template">
+            <field name="name">Planning Phase Complete</field>
+            <field name="description">Comprehensive project planning milestone including detailed project plan, resource allocation, risk assessment, and timeline finalization.</field>
+            <field name="milestone_type">phase</field>
+            <field name="priority_level">high</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration_days">21</field>
+            <field name="estimated_duration_weeks">3.0</field>
+            <field name="estimated_duration_months">0.75</field>
+            <field name="buffer_days">5</field>
+            <field name="deadline_type">flexible</field>
+            <field name="progress_tracking">percentage</field>
+            <field name="completion_criteria">Detailed project plan created, resource allocation complete, risk assessment done, timeline finalized, budget approved</field>
+            <field name="success_metrics">Plan accuracy, resource availability, risk mitigation, timeline feasibility, budget alignment</field>
+            <field name="failure_handling">Revise project plan, reallocate resources, update risk assessment, adjust timeline, review budget</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires project initiation phase completion, stakeholder approval, and initial requirements gathering</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">high</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_schedule">true</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Deliverable Milestones -->
+        <record id="demo_milestone_template_requirements_deliverable" model="smart.milestone.template">
+            <field name="name">Requirements Document Deliverable</field>
+            <field name="description">Complete requirements document deliverable including functional and non-functional requirements, user stories, and acceptance criteria.</field>
+            <field name="milestone_type">deliverable</field>
+            <field name="priority_level">high</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration_days">10</field>
+            <field name="estimated_duration_weeks">1.5</field>
+            <field name="estimated_duration_months">0.25</field>
+            <field name="buffer_days">2</field>
+            <field name="deadline_type">fixed</field>
+            <field name="progress_tracking">stages</field>
+            <field name="status_stages">1. Requirements Gathering, 2. Analysis Complete, 3. Document Draft, 4. Review &amp; Feedback, 5. Final Approval</field>
+            <field name="completion_criteria">Requirements document complete, stakeholder review done, approval received, version control established</field>
+            <field name="success_metrics">Document completeness, stakeholder satisfaction, approval rate, clarity of requirements</field>
+            <field name="failure_handling">Revise requirements, address feedback, reschedule review, update document</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires stakeholder interviews, business analysis, and initial project scope definition</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">medium</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_schedule">false</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Approval Milestones -->
+        <record id="demo_milestone_template_client_approval" model="smart.milestone.template">
+            <field name="name">Client Approval Milestone</field>
+            <field name="description">Client approval milestone for project deliverables, design, or key project phases requiring client sign-off.</field>
+            <field name="milestone_type">approval</field>
+            <field name="priority_level">critical</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration_days">5</field>
+            <field name="estimated_duration_weeks">1.0</field>
+            <field name="estimated_duration_months">0.125</field>
+            <field name="buffer_days">3</field>
+            <field name="deadline_type">fixed</field>
+            <field name="progress_tracking">binary</field>
+            <field name="completion_criteria">Client approval received, feedback incorporated, sign-off documented, project ready for next phase</field>
+            <field name="success_metrics">Approval time, client satisfaction, feedback quality, sign-off completeness</field>
+            <field name="failure_handling">Address client feedback, revise deliverables, reschedule approval meeting, escalate if needed</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires deliverable completion, internal review, and client presentation preparation</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">high</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_schedule">false</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Go-Live Milestones -->
+        <record id="demo_milestone_template_system_go_live" model="smart.milestone.template">
+            <field name="name">System Go-Live Milestone</field>
+            <field name="description">System go-live milestone marking the successful deployment and launch of the system to production environment.</field>
+            <field name="milestone_type">go_live</field>
+            <field name="priority_level">critical</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration_days">3</field>
+            <field name="estimated_duration_weeks">0.5</field>
+            <field name="estimated_duration_months">0.1</field>
+            <field name="buffer_days">1</field>
+            <field name="deadline_type">fixed</field>
+            <field name="progress_tracking">stages</field>
+            <field name="status_stages">1. Pre-deployment Check, 2. Deployment Execution, 3. System Verification, 4. User Acceptance, 5. Go-Live Complete</field>
+            <field name="completion_criteria">System deployed successfully, all tests passing, user acceptance confirmed, monitoring active, rollback plan ready</field>
+            <field name="success_metrics">Deployment success rate, system performance, user satisfaction, incident count, uptime</field>
+            <field name="failure_handling">Execute rollback plan, investigate issues, fix problems, re-deploy if necessary</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires testing completion, deployment preparation, user training, and production environment readiness</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">critical</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_schedule">true</field>
+            <field name="auto_progress">true</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Review Milestones -->
+        <record id="demo_milestone_template_project_review" model="smart.milestone.template">
+            <field name="name">Project Review Meeting</field>
+            <field name="description">Project review milestone for regular project status reviews, retrospective meetings, and project health assessments.</field>
+            <field name="milestone_type">review</field>
+            <field name="priority_level">medium</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_duration_days">1</field>
+            <field name="estimated_duration_weeks">0.2</field>
+            <field name="estimated_duration_months">0.05</field>
+            <field name="buffer_days">0</field>
+            <field name="deadline_type">flexible</field>
+            <field name="progress_tracking">binary</field>
+            <field name="completion_criteria">Review meeting conducted, status updated, action items identified, next review scheduled</field>
+            <field name="success_metrics">Meeting attendance, action item completion, project health score, stakeholder satisfaction</field>
+            <field name="failure_handling">Reschedule meeting, update status separately, identify action items, plan next review</field>
+            <field name="has_dependencies">false</field>
+            <field name="critical_path">false</field>
+            <field name="risk_level">low</field>
+            <field name="suggestion_level">passive</field>
+            <field name="auto_schedule">true</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Testing Milestones -->
+        <record id="demo_milestone_template_testing_complete" model="smart.milestone.template">
+            <field name="name">Testing Phase Complete</field>
+            <field name="description">Testing phase completion milestone including all testing activities, quality assurance, and testing sign-off.</field>
+            <field name="milestone_type">testing</field>
+            <field name="priority_level">high</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration_days">14</field>
+            <field name="estimated_duration_weeks">2.0</field>
+            <field name="estimated_duration_months">0.5</field>
+            <field name="buffer_days">3</field>
+            <field name="deadline_type">flexible</field>
+            <field name="progress_tracking">percentage</field>
+            <field name="completion_criteria">All test cases executed, defects resolved, test coverage achieved, quality gates passed, sign-off received</field>
+            <field name="success_metrics">Test coverage, defect resolution rate, quality score, test execution time, sign-off rate</field>
+            <field name="failure_handling">Address critical defects, improve test coverage, extend testing phase, revise quality criteria</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires development completion, test environment readiness, and test data preparation</field>
+            <field name="critical_path">true</field>
+            <field name="risk_level">high</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_schedule">true</field>
+            <field name="auto_progress">true</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Documentation Milestones -->
+        <record id="demo_milestone_template_documentation_complete" model="smart.milestone.template">
+            <field name="name">Documentation Complete</field>
+            <field name="description">Documentation completion milestone including all project documentation, user manuals, and knowledge transfer materials.</field>
+            <field name="milestone_type">documentation</field>
+            <field name="priority_level">medium</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration_days">7</field>
+            <field name="estimated_duration_weeks">1.0</field>
+            <field name="estimated_duration_months">0.25</field>
+            <field name="buffer_days">2</field>
+            <field name="deadline_type">flexible</field>
+            <field name="progress_tracking">stages</field>
+            <field name="status_stages">1. Documentation Plan, 2. Content Creation, 3. Review &amp; Edit, 4. User Testing, 5. Final Approval</field>
+            <field name="completion_criteria">All documentation complete, user testing done, approval received, knowledge transfer conducted</field>
+            <field name="success_metrics">Documentation completeness, user satisfaction, knowledge transfer success, approval rate</field>
+            <field name="failure_handling">Update documentation, address feedback, improve clarity, reschedule knowledge transfer</field>
+            <field name="has_dependencies">true</field>
+            <field name="dependency_type">prerequisite</field>
+            <field name="dependency_description">Requires system completion, user acceptance, and final system configuration</field>
+            <field name="critical_path">false</field>
+            <field name="risk_level">medium</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_schedule">false</field>
+            <field name="auto_progress">false</field>
+            <field name="auto_notify">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- ======================================== -->
         <!-- DEMO DATA RELATIONSHIPS -->
         <!-- ======================================== -->
         

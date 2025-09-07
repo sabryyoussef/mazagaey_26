@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Milestone Template Form View -->
     <record id="view_smart_milestone_template_form" model="ir.ui.view">
         <field name="name">smart.milestone.template.form</field>
         <field name="model">smart.milestone.template</field>
@@ -7,14 +8,232 @@
             <form string="Milestone Template">
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="name" placeholder="Template Name"/></h1>
+                        <h1>
+                            <field name="name" placeholder="Milestone Template Name"/>
+                        </h1>
                     </div>
+                    
+                    <group>
+                        <group string="Basic Information">
+                            <field name="milestone_type"/>
+                            <field name="priority_level"/>
+                            <field name="complexity_level"/>
+                            <field name="deadline_type"/>
+                            <field name="is_active"/>
+                        </group>
+                        <group string="Timeline &amp; Duration">
+                            <field name="estimated_duration_days"/>
+                            <field name="estimated_duration_weeks"/>
+                            <field name="estimated_duration_months"/>
+                            <field name="buffer_days"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Progress &amp; Status">
+                            <field name="progress_tracking"/>
+                            <field name="critical_path"/>
+                            <field name="risk_level"/>
+                        </group>
+                        <group string="Smart Features">
+                            <field name="suggestion_level"/>
+                            <field name="auto_schedule"/>
+                            <field name="auto_progress"/>
+                            <field name="auto_notify"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Usage Statistics">
+                            <field name="usage_count" readonly="1"/>
+                            <field name="total_projects" readonly="1"/>
+                            <field name="total_tasks" readonly="1"/>
+                            <field name="total_checkpoints" readonly="1"/>
+                            <field name="last_used" readonly="1"/>
+                        </group>
+                        <group string="Dependencies">
+                            <field name="has_dependencies"/>
+                            <field name="dependency_type"/>
+                        </group>
+                    </group>
+                    
                     <group>
                         <field name="description"/>
-                        <field name="is_active"/>
                     </group>
+                    
+                    <group>
+                        <field name="completion_criteria"/>
+                    </group>
+                    
+                    <group>
+                        <field name="success_metrics"/>
+                    </group>
+                    
+                    <group>
+                        <field name="failure_handling"/>
+                    </group>
+                    
+                    <group>
+                        <field name="status_stages"/>
+                    </group>
+                    
+                    <group>
+                        <field name="dependency_description"/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Related Projects" name="related_projects">
+                            <field name="project_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="template_type"/>
+                                    <field name="complexity_level"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Related Tasks" name="related_tasks">
+                            <field name="task_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="task_type"/>
+                                    <field name="priority"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Related Checkpoints" name="related_checkpoints">
+                            <field name="checkpoint_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="checkpoint_type"/>
+                                    <field name="validation_level"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <field name="usage_count" readonly="1"/>
+                                <field name="total_projects" readonly="1"/>
+                                <field name="total_tasks" readonly="1"/>
+                                <field name="total_checkpoints" readonly="1"/>
+                                <field name="last_used" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+    
+    <!-- Milestone Template List View -->
+    <record id="view_smart_milestone_template_list" model="ir.ui.view">
+        <field name="name">smart.milestone.template.list</field>
+        <field name="model">smart.milestone.template</field>
+        <field name="arch" type="xml">
+            <list string="Milestone Templates">
+                <field name="name"/>
+                <field name="milestone_type"/>
+                <field name="priority_level"/>
+                <field name="complexity_level"/>
+                <field name="estimated_duration_days"/>
+                <field name="progress_tracking"/>
+                <field name="critical_path"/>
+                <field name="total_projects"/>
+                <field name="total_tasks"/>
+                <field name="total_checkpoints"/>
+                <field name="usage_count"/>
+                <field name="is_active"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Milestone Template Search View -->
+    <record id="view_smart_milestone_template_search" model="ir.ui.view">
+        <field name="name">smart.milestone.template.search</field>
+        <field name="model">smart.milestone.template</field>
+        <field name="arch" type="xml">
+            <search string="Milestone Templates">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="milestone_type"/>
+                <field name="priority_level"/>
+                <field name="complexity_level"/>
+                <field name="progress_tracking"/>
+                <field name="completion_criteria"/>
+                <field name="success_metrics"/>
+                
+                <filter string="Active Templates" name="active" 
+                        domain="[('is_active', '=', True)]"/>
+                <filter string="Project Phases" name="phase" 
+                        domain="[('milestone_type', '=', 'phase')]"/>
+                <filter string="Deliverables" name="deliverable" 
+                        domain="[('milestone_type', '=', 'deliverable')]"/>
+                <filter string="Approval Points" name="approval" 
+                        domain="[('milestone_type', '=', 'approval')]"/>
+                <filter string="Go-Live Milestones" name="go_live" 
+                        domain="[('milestone_type', '=', 'go_live')]"/>
+                <filter string="Review Meetings" name="review" 
+                        domain="[('milestone_type', '=', 'review')]"/>
+                <filter string="Testing Phases" name="testing" 
+                        domain="[('milestone_type', '=', 'testing')]"/>
+                <filter string="Documentation" name="documentation" 
+                        domain="[('milestone_type', '=', 'documentation')]"/>
+                <filter string="Other Milestones" name="other" 
+                        domain="[('milestone_type', '=', 'other')]"/>
+                
+                <separator/>
+                <filter string="High Priority" name="high_priority" 
+                        domain="[('priority_level', 'in', ['high', 'critical'])]"/>
+                <filter string="Critical Path" name="critical_path" 
+                        domain="[('critical_path', '=', True)]"/>
+                <filter string="Has Dependencies" name="has_dependencies" 
+                        domain="[('has_dependencies', '=', True)]"/>
+                <filter string="Auto Schedule" name="auto_schedule" 
+                        domain="[('auto_schedule', '=', True)]"/>
+                <filter string="Auto Progress" name="auto_progress" 
+                        domain="[('auto_progress', '=', True)]"/>
+                <filter string="Auto Notify" name="auto_notify" 
+                        domain="[('auto_notify', '=', True)]"/>
+                <filter string="Complex Milestones" name="complex" 
+                        domain="[('complexity_level', '=', 'complex')]"/>
+                <filter string="Frequently Used" name="frequently_used" 
+                        domain="[('usage_count', '>', 5)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Milestone Type" name="group_milestone_type" 
+                            context="{'group_by': 'milestone_type'}"/>
+                    <filter string="Priority Level" name="group_priority" 
+                            context="{'group_by': 'priority_level'}"/>
+                    <filter string="Complexity Level" name="group_complexity" 
+                            context="{'group_by': 'complexity_level'}"/>
+                    <filter string="Progress Tracking" name="group_progress" 
+                            context="{'group_by': 'progress_tracking'}"/>
+                    <filter string="Deadline Type" name="group_deadline" 
+                            context="{'group_by': 'deadline_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Milestone Template Actions -->
+    <record id="action_smart_milestone_template" model="ir.actions.act_window">
+        <field name="name">Milestone Templates</field>
+        <field name="res_model">smart.milestone.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_smart_milestone_template_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Milestone Template!
+            </p>
+            <p>
+                Milestone templates help you standardize project timeline management and progress tracking.
+                Define templates with specific milestone types, timelines, and dependencies.
+            </p>
         </field>
     </record>
 </odoo>
