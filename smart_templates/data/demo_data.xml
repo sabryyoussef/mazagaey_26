@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ======================================== -->
+        <!-- USER PREFERENCES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Note: User Preferences demo data removed to avoid unique constraint conflicts -->
+        <!-- Users can create their own preferences through the interface -->
+        
+        <!-- ======================================== -->
+        <!-- PROJECT TEMPLATES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Basic Web Development Project -->
+        <record id="demo_project_template_basic_web" model="smart.project.template">
+            <field name="name">Basic Web Development Project</field>
+            <field name="description">A simple web development project template for small websites and landing pages. Perfect for beginners and small businesses.</field>
+            <field name="template_type">basic</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_duration">7</field>
+            <field name="required_skills">HTML, CSS, JavaScript, Basic Backend Development</field>
+            <field name="suggestion_level">active</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Advanced E-commerce Project -->
+        <record id="demo_project_template_advanced_ecommerce" model="smart.project.template">
+            <field name="name">Advanced E-commerce Platform</field>
+            <field name="description">A comprehensive e-commerce platform template with payment integration, inventory management, and customer analytics.</field>
+            <field name="template_type">advanced</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration">45</field>
+            <field name="required_skills">Full-Stack Development, Payment Integration, Database Design, Security, API Development</field>
+            <field name="suggestion_level">smart</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Enterprise CRM System -->
+        <record id="demo_project_template_enterprise_crm" model="smart.project.template">
+            <field name="name">Enterprise CRM System</field>
+            <field name="description">A full-featured Customer Relationship Management system with advanced analytics, automation, and integration capabilities.</field>
+            <field name="template_type">enterprise</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration">90</field>
+            <field name="required_skills">Enterprise Architecture, Microservices, Cloud Computing, Data Analytics, Machine Learning, Security</field>
+            <field name="suggestion_level">smart</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Mobile App Development -->
+        <record id="demo_project_template_mobile_app" model="smart.project.template">
+            <field name="name">Cross-Platform Mobile App</field>
+            <field name="description">A cross-platform mobile application template using React Native or Flutter for iOS and Android development.</field>
+            <field name="template_type">advanced</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration">30</field>
+            <field name="required_skills">React Native/Flutter, Mobile UI/UX, API Integration, App Store Deployment</field>
+            <field name="suggestion_level">active</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Data Analytics Dashboard -->
+        <record id="demo_project_template_analytics_dashboard" model="smart.project.template">
+            <field name="name">Business Intelligence Dashboard</field>
+            <field name="description">A comprehensive business intelligence dashboard with real-time analytics, reporting, and data visualization capabilities.</field>
+            <field name="template_type">advanced</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration">25</field>
+            <field name="required_skills">Data Science, Python/R, SQL, Visualization Tools, Machine Learning, Statistics</field>
+            <field name="suggestion_level">smart</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Simple Blog Platform -->
+        <record id="demo_project_template_simple_blog" model="smart.project.template">
+            <field name="name">Simple Blog Platform</field>
+            <field name="description">A basic blog platform template with content management, user authentication, and comment system.</field>
+            <field name="template_type">basic</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_duration">10</field>
+            <field name="required_skills">Web Development, Database Design, User Authentication, Content Management</field>
+            <field name="suggestion_level">passive</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- API Development Project -->
+        <record id="demo_project_template_api_development" model="smart.project.template">
+            <field name="name">RESTful API Development</field>
+            <field name="description">A comprehensive RESTful API development template with authentication, documentation, testing, and deployment.</field>
+            <field name="template_type">advanced</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_duration">20</field>
+            <field name="required_skills">API Design, Backend Development, Authentication, Documentation, Testing, DevOps</field>
+            <field name="suggestion_level">active</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- IoT Project Template -->
+        <record id="demo_project_template_iot" model="smart.project.template">
+            <field name="name">IoT Smart Home System</field>
+            <field name="description">An Internet of Things project template for smart home automation with sensor integration and mobile control.</field>
+            <field name="template_type">enterprise</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_duration">60</field>
+            <field name="required_skills">IoT Development, Embedded Systems, Cloud Computing, Mobile Development, Security, Hardware Integration</field>
+            <field name="suggestion_level">smart</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- TASK TEMPLATES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Development Task Templates -->
+        <record id="demo_task_template_frontend_dev" model="smart.task.template">
+            <field name="name">Frontend Development Task</field>
+            <field name="description">Standard frontend development task template for web applications with responsive design and modern frameworks.</field>
+            <field name="task_type">development</field>
+            <field name="priority">1</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_hours">16.0</field>
+            <field name="estimated_days">2.0</field>
+            <field name="required_skills">HTML, CSS, JavaScript, React/Vue.js, Responsive Design</field>
+            <field name="prerequisites">Design mockups, API documentation, Development environment setup</field>
+            <field name="deliverables">Responsive web interface, Cross-browser compatibility, Performance optimization</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <record id="demo_task_template_backend_dev" model="smart.task.template">
+            <field name="name">Backend API Development</field>
+            <field name="description">Backend development task template for RESTful API creation with database integration and security.</field>
+            <field name="task_type">development</field>
+            <field name="priority">1</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_hours">24.0</field>
+            <field name="estimated_days">3.0</field>
+            <field name="required_skills">Python/Node.js, Database Design, API Design, Authentication, Security</field>
+            <field name="prerequisites">Database schema, API specifications, Security requirements</field>
+            <field name="deliverables">RESTful API, Database integration, Authentication system, API documentation</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Testing Task Templates -->
+        <record id="demo_task_template_unit_testing" model="smart.task.template">
+            <field name="name">Unit Testing Implementation</field>
+            <field name="description">Unit testing task template for comprehensive code coverage and automated testing.</field>
+            <field name="task_type">testing</field>
+            <field name="priority">2</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_hours">8.0</field>
+            <field name="estimated_days">1.0</field>
+            <field name="required_skills">Testing frameworks, Code coverage tools, Test automation</field>
+            <field name="prerequisites">Code implementation, Testing requirements, Test environment setup</field>
+            <field name="deliverables">Unit tests, Code coverage report, Test automation scripts</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <record id="demo_task_template_integration_testing" model="smart.task.template">
+            <field name="name">Integration Testing</field>
+            <field name="description">Integration testing task template for testing component interactions and system integration.</field>
+            <field name="task_type">testing</field>
+            <field name="priority">2</field>
+            <field name="complexity_level">medium</field>
+            <field name="estimated_hours">16.0</field>
+            <field name="estimated_days">2.0</field>
+            <field name="required_skills">Integration testing tools, API testing, Database testing, Performance testing</field>
+            <field name="prerequisites">Component implementation, Integration requirements, Test data setup</field>
+            <field name="deliverables">Integration test suite, Test results report, Performance benchmarks</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Documentation Task Templates -->
+        <record id="demo_task_template_api_docs" model="smart.task.template">
+            <field name="name">API Documentation</field>
+            <field name="description">API documentation task template for comprehensive API reference and user guides.</field>
+            <field name="task_type">documentation</field>
+            <field name="priority">1</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_hours">12.0</field>
+            <field name="estimated_days">1.5</field>
+            <field name="required_skills">Technical writing, API documentation tools, Markdown, Swagger/OpenAPI</field>
+            <field name="prerequisites">API implementation, Documentation requirements, Documentation tools setup</field>
+            <field name="deliverables">API reference documentation, User guides, Code examples, Interactive documentation</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">passive</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Review Task Templates -->
+        <record id="demo_task_template_code_review" model="smart.task.template">
+            <field name="name">Code Review</field>
+            <field name="description">Code review task template for quality assurance and knowledge sharing.</field>
+            <field name="task_type">review</field>
+            <field name="priority">2</field>
+            <field name="complexity_level">simple</field>
+            <field name="estimated_hours">4.0</field>
+            <field name="estimated_days">0.5</field>
+            <field name="required_skills">Code review tools, Quality standards, Best practices knowledge</field>
+            <field name="prerequisites">Code implementation, Review guidelines, Review tools access</field>
+            <field name="deliverables">Code review report, Improvement suggestions, Quality assessment</field>
+            <field name="workflow_stage">review</field>
+            <field name="suggestion_level">active</field>
+            <field name="auto_assign">true</field>
+            <field name="auto_schedule">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Deployment Task Templates -->
+        <record id="demo_task_template_deployment" model="smart.task.template">
+            <field name="name">Production Deployment</field>
+            <field name="description">Production deployment task template for safe and reliable application deployment.</field>
+            <field name="task_type">deployment</field>
+            <field name="priority">3</field>
+            <field name="complexity_level">complex</field>
+            <field name="estimated_hours">8.0</field>
+            <field name="estimated_days">1.0</field>
+            <field name="required_skills">DevOps, CI/CD, Server management, Monitoring tools, Rollback procedures</field>
+            <field name="prerequisites">Production environment, Deployment scripts, Monitoring setup, Backup procedures</field>
+            <field name="deliverables">Deployed application, Deployment documentation, Monitoring setup, Rollback plan</field>
+            <field name="workflow_stage">planning</field>
+            <field name="suggestion_level">smart</field>
+            <field name="auto_assign">false</field>
+            <field name="auto_schedule">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- DOCUMENT TEMPLATES DEMO DATA -->
+        <!-- ======================================== -->
+        
+        <!-- Technical Documentation Templates -->
+        <record id="demo_document_template_technical_spec" model="smart.document.template">
+            <field name="name">Technical Specification Template</field>
+            <field name="description">Comprehensive technical specification template for software development projects with detailed system architecture and implementation guidelines.</field>
+            <field name="document_type">technical_spec</field>
+            <field name="document_format">pdf</field>
+            <field name="complexity_level">complex</field>
+            <field name="required_skills">Technical Writing, System Architecture, Software Design, Documentation Tools</field>
+            <field name="prerequisites">System requirements, Architecture design, Technical analysis</field>
+            <field name="target_audience">Development team, Technical leads, System architects, QA engineers</field>
+            <field name="document_structure">1. Overview, 2. System Architecture, 3. Technical Requirements, 4. Implementation Details, 5. Testing Strategy, 6. Deployment Plan</field>
+            <field name="required_sections">Executive Summary, System Overview, Technical Architecture, Data Models, API Specifications, Security Requirements, Performance Requirements</field>
+            <field name="optional_sections">Risk Assessment, Alternative Solutions, Future Enhancements, Appendices</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">smart</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">true</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <record id="demo_document_template_api_docs" model="smart.document.template">
+            <field name="name">API Documentation Template</field>
+            <field name="description">Standard API documentation template with interactive examples, endpoint descriptions, and code samples for developers.</field>
+            <field name="document_type">api_documentation</field>
+            <field name="document_format">html</field>
+            <field name="complexity_level">medium</field>
+            <field name="required_skills">API Documentation, Technical Writing, OpenAPI/Swagger, Code Examples</field>
+            <field name="prerequisites">API implementation, Endpoint specifications, Authentication details</field>
+            <field name="target_audience">API consumers, Frontend developers, Third-party integrators, QA engineers</field>
+            <field name="document_structure">1. Introduction, 2. Authentication, 3. Endpoints, 4. Data Models, 5. Error Handling, 6. Examples</field>
+            <field name="required_sections">API Overview, Authentication, Endpoint List, Request/Response Examples, Error Codes, Rate Limiting</field>
+            <field name="optional_sections">SDK Information, Postman Collection, Changelog, Support Information</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">active</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">false</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">true</field>
+            <field name="auto_update">true</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- User Documentation Templates -->
+        <record id="demo_document_template_user_manual" model="smart.document.template">
+            <field name="name">User Manual Template</field>
+            <field name="description">Comprehensive user manual template with step-by-step instructions, screenshots, and troubleshooting guides for end users.</field>
+            <field name="document_type">user_manual</field>
+            <field name="document_format">pdf</field>
+            <field name="complexity_level">medium</field>
+            <field name="required_skills">Technical Writing, User Experience, Screenshot Creation, Documentation Tools</field>
+            <field name="prerequisites">Application interface, User workflows, Feature specifications</field>
+            <field name="target_audience">End users, Customer support, Training teams, Product managers</field>
+            <field name="document_structure">1. Getting Started, 2. Basic Operations, 3. Advanced Features, 4. Troubleshooting, 5. FAQ</field>
+            <field name="required_sections">Introduction, Installation, Basic Usage, Feature Guide, Troubleshooting, Contact Information</field>
+            <field name="optional_sections">Keyboard Shortcuts, Advanced Configuration, Integration Guide, Glossary</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">active</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">false</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Project Documentation Templates -->
+        <record id="demo_document_template_project_proposal" model="smart.document.template">
+            <field name="name">Project Proposal Template</field>
+            <field name="description">Professional project proposal template with executive summary, scope definition, timeline, and budget estimation for client presentations.</field>
+            <field name="document_type">project_proposal</field>
+            <field name="document_format">docx</field>
+            <field name="complexity_level">medium</field>
+            <field name="required_skills">Business Writing, Project Management, Cost Estimation, Presentation Skills</field>
+            <field name="prerequisites">Client requirements, Project scope, Resource availability, Budget constraints</field>
+            <field name="target_audience">Clients, Stakeholders, Project managers, Business analysts</field>
+            <field name="document_structure">1. Executive Summary, 2. Project Overview, 3. Scope &amp; Objectives, 4. Methodology, 5. Timeline, 6. Budget, 7. Team</field>
+            <field name="required_sections">Executive Summary, Project Objectives, Scope Definition, Deliverables, Timeline, Budget, Team Structure, Risk Assessment</field>
+            <field name="optional_sections">Client Benefits, Success Metrics, References, Appendices</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">passive</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">true</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <record id="demo_document_template_requirements_doc" model="smart.document.template">
+            <field name="name">Requirements Document Template</field>
+            <field name="description">Detailed requirements document template with functional and non-functional requirements, use cases, and acceptance criteria.</field>
+            <field name="document_type">requirements_doc</field>
+            <field name="document_format">docx</field>
+            <field name="complexity_level">complex</field>
+            <field name="required_skills">Business Analysis, Requirements Engineering, Use Case Modeling, Stakeholder Management</field>
+            <field name="prerequisites">Stakeholder interviews, Business analysis, System analysis, User research</field>
+            <field name="target_audience">Business analysts, Developers, QA engineers, Project managers, Stakeholders</field>
+            <field name="document_structure">1. Introduction, 2. Business Requirements, 3. Functional Requirements, 4. Non-Functional Requirements, 5. Use Cases, 6. Acceptance Criteria</field>
+            <field name="required_sections">Business Overview, Functional Requirements, Non-Functional Requirements, Use Cases, Acceptance Criteria, Assumptions, Constraints</field>
+            <field name="optional_sections">User Stories, Wireframes, Data Requirements, Integration Requirements, Security Requirements</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">smart</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">true</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Testing Documentation Templates -->
+        <record id="demo_document_template_test_plan" model="smart.document.template">
+            <field name="name">Test Plan Template</field>
+            <field name="description">Comprehensive test plan template with test strategy, test cases, test data, and execution schedule for quality assurance.</field>
+            <field name="document_type">test_plan</field>
+            <field name="document_format">docx</field>
+            <field name="complexity_level">medium</field>
+            <field name="required_skills">Test Planning, Quality Assurance, Test Case Design, Risk Assessment</field>
+            <field name="prerequisites">Requirements document, System design, Test environment setup, Test data preparation</field>
+            <field name="target_audience">QA engineers, Test managers, Developers, Project managers</field>
+            <field name="document_structure">1. Test Strategy, 2. Test Scope, 3. Test Cases, 4. Test Data, 5. Test Environment, 6. Execution Schedule</field>
+            <field name="required_sections">Test Objectives, Test Scope, Test Strategy, Test Cases, Test Data, Test Environment, Execution Schedule, Risk Assessment</field>
+            <field name="optional_sections">Automation Strategy, Performance Testing, Security Testing, User Acceptance Testing</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">active</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">false</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- Deployment Documentation Templates -->
+        <record id="demo_document_template_deployment_guide" model="smart.document.template">
+            <field name="name">Deployment Guide Template</field>
+            <field name="description">Step-by-step deployment guide template with environment setup, configuration, and troubleshooting for production deployment.</field>
+            <field name="document_type">deployment_guide</field>
+            <field name="document_format">markdown</field>
+            <field name="complexity_level">medium</field>
+            <field name="required_skills">DevOps, System Administration, Deployment Automation, Technical Writing</field>
+            <field name="prerequisites">Production environment, Deployment scripts, Configuration files, Monitoring setup</field>
+            <field name="target_audience">DevOps engineers, System administrators, Deployment teams, Support engineers</field>
+            <field name="document_structure">1. Prerequisites, 2. Environment Setup, 3. Configuration, 4. Deployment Steps, 5. Verification, 6. Troubleshooting</field>
+            <field name="required_sections">System Requirements, Environment Setup, Configuration, Deployment Steps, Verification, Rollback Procedures, Troubleshooting</field>
+            <field name="optional_sections">Performance Tuning, Security Configuration, Monitoring Setup, Backup Procedures</field>
+            <field name="lifecycle_stage">draft</field>
+            <field name="suggestion_level">smart</field>
+            <field name="review_required">true</field>
+            <field name="approval_required">false</field>
+            <field name="version_control">true</field>
+            <field name="auto_generate">false</field>
+            <field name="auto_update">false</field>
+            <field name="is_active">true</field>
+        </record>
+        
+        <!-- ======================================== -->
+        <!-- DEMO DATA RELATIONSHIPS -->
+        <!-- ======================================== -->
+        
+        <!-- Note: Many2many relationships will be handled automatically by Odoo -->
+        <!-- when the related models are fully implemented -->
+        
+    </data>
+</odoo>

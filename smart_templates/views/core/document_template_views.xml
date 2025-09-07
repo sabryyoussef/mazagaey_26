@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Document Template Form View -->
+    <record id="view_smart_document_template_form" model="ir.ui.view">
+        <field name="name">smart.document.template.form</field>
+        <field name="model">smart.document.template</field>
+        <field name="arch" type="xml">
+            <form string="Document Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Document Template Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Basic Information">
+                            <field name="document_type"/>
+                            <field name="document_format"/>
+                            <field name="complexity_level"/>
+                            <field name="lifecycle_stage"/>
+                            <field name="is_active"/>
+                        </group>
+                        <group string="Document Workflow">
+                            <field name="review_required"/>
+                            <field name="approval_required"/>
+                            <field name="version_control"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Smart Features">
+                            <field name="suggestion_level"/>
+                            <field name="auto_generate"/>
+                            <field name="auto_update"/>
+                        </group>
+                        <group string="Usage Statistics">
+                            <field name="usage_count" readonly="1"/>
+                            <field name="total_projects" readonly="1"/>
+                            <field name="last_used" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    
+                    <group>
+                        <field name="required_skills"/>
+                    </group>
+                    
+                    <group>
+                        <field name="prerequisites"/>
+                    </group>
+                    
+                    <group>
+                        <field name="target_audience"/>
+                    </group>
+                    
+                    <group>
+                        <field name="document_structure"/>
+                    </group>
+                    
+                    <group>
+                        <field name="required_sections"/>
+                    </group>
+                    
+                    <group>
+                        <field name="optional_sections"/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Template Content" name="template_content">
+                            <field name="template_content" nolabel="1"/>
+                        </page>
+                        
+                        <page string="Related Projects" name="related_projects">
+                            <field name="project_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="template_type"/>
+                                    <field name="complexity_level"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <field name="usage_count" readonly="1"/>
+                                <field name="total_projects" readonly="1"/>
+                                <field name="last_used" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Document Template List View -->
+    <record id="view_smart_document_template_list" model="ir.ui.view">
+        <field name="name">smart.document.template.list</field>
+        <field name="model">smart.document.template</field>
+        <field name="arch" type="xml">
+            <list string="Document Templates">
+                <field name="name"/>
+                <field name="document_type"/>
+                <field name="document_format"/>
+                <field name="complexity_level"/>
+                <field name="lifecycle_stage"/>
+                <field name="total_projects"/>
+                <field name="usage_count"/>
+                <field name="is_active"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Document Template Search View -->
+    <record id="view_smart_document_template_search" model="ir.ui.view">
+        <field name="name">smart.document.template.search</field>
+        <field name="model">smart.document.template</field>
+        <field name="arch" type="xml">
+            <search string="Document Templates">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="document_type"/>
+                <field name="document_format"/>
+                <field name="complexity_level"/>
+                <field name="required_skills"/>
+                <field name="target_audience"/>
+                
+                <filter string="Active Templates" name="active" 
+                        domain="[('is_active', '=', True)]"/>
+                <filter string="Technical Specifications" name="technical_spec" 
+                        domain="[('document_type', '=', 'technical_spec')]"/>
+                <filter string="User Manuals" name="user_manual" 
+                        domain="[('document_type', '=', 'user_manual')]"/>
+                <filter string="API Documentation" name="api_documentation" 
+                        domain="[('document_type', '=', 'api_documentation')]"/>
+                <filter string="Project Proposals" name="project_proposal" 
+                        domain="[('document_type', '=', 'project_proposal')]"/>
+                <filter string="Requirements Documents" name="requirements_doc" 
+                        domain="[('document_type', '=', 'requirements_doc')]"/>
+                <filter string="Design Documents" name="design_document" 
+                        domain="[('document_type', '=', 'design_document')]"/>
+                <filter string="Test Plans" name="test_plan" 
+                        domain="[('document_type', '=', 'test_plan')]"/>
+                <filter string="Deployment Guides" name="deployment_guide" 
+                        domain="[('document_type', '=', 'deployment_guide')]"/>
+                <filter string="Troubleshooting Guides" name="troubleshooting" 
+                        domain="[('document_type', '=', 'troubleshooting')]"/>
+                <filter string="Compliance Documents" name="compliance_doc" 
+                        domain="[('document_type', '=', 'compliance_doc')]"/>
+                <filter string="Contracts" name="contract" 
+                        domain="[('document_type', '=', 'contract')]"/>
+                <filter string="Reports" name="report" 
+                        domain="[('document_type', '=', 'report')]"/>
+                <filter string="Presentations" name="presentation" 
+                        domain="[('document_type', '=', 'presentation')]"/>
+                <filter string="Other Documents" name="other" 
+                        domain="[('document_type', '=', 'other')]"/>
+                
+                <separator/>
+                <filter string="PDF Format" name="pdf_format" 
+                        domain="[('document_format', '=', 'pdf')]"/>
+                <filter string="Word Documents" name="docx_format" 
+                        domain="[('document_format', '=', 'docx')]"/>
+                <filter string="HTML Format" name="html_format" 
+                        domain="[('document_format', '=', 'html')]"/>
+                <filter string="Markdown Format" name="markdown_format" 
+                        domain="[('document_format', '=', 'markdown')]"/>
+                <filter string="Complex Documents" name="complex" 
+                        domain="[('complexity_level', '=', 'complex')]"/>
+                <filter string="Frequently Used" name="frequently_used" 
+                        domain="[('usage_count', '>', 5)]"/>
+                <filter string="Review Required" name="review_required" 
+                        domain="[('review_required', '=', True)]"/>
+                <filter string="Approval Required" name="approval_required" 
+                        domain="[('approval_required', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Document Type" name="group_document_type" 
+                            context="{'group_by': 'document_type'}"/>
+                    <filter string="Document Format" name="group_document_format" 
+                            context="{'group_by': 'document_format'}"/>
+                    <filter string="Complexity Level" name="group_complexity" 
+                            context="{'group_by': 'complexity_level'}"/>
+                    <filter string="Lifecycle Stage" name="group_lifecycle" 
+                            context="{'group_by': 'lifecycle_stage'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Document Template Actions -->
+    <record id="action_smart_document_template" model="ir.actions.act_window">
+        <field name="name">Document Templates</field>
+        <field name="res_model">smart.document.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_smart_document_template_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Document Template!
+            </p>
+            <p>
+                Document templates help you standardize and accelerate document creation.
+                Define templates with specific document types, formats, and content structure.
+            </p>
+        </field>
+    </record>
+</odoo>

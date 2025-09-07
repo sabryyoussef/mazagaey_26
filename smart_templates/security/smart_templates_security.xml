@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Categories -->
+    <record id="module_category_smart_templates" model="ir.module.category">
+        <field name="name">Smart Templates</field>
+        <field name="description">Smart Templates Management</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- User Group -->
+    <record id="group_smart_templates_user" model="res.groups">
+        <field name="name">Smart Templates User</field>
+        <field name="category_id" ref="module_category_smart_templates"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can use smart templates functionality</field>
+    </record>
+
+    <!-- Manager Group -->
+    <record id="group_smart_templates_manager" model="res.groups">
+        <field name="name">Smart Templates Manager</field>
+        <field name="category_id" ref="module_category_smart_templates"/>
+        <field name="implied_ids" eval="[(4, ref('group_smart_templates_user'))]"/>
+        <field name="comment">Can manage smart templates and user preferences</field>
+    </record>
+</odoo>

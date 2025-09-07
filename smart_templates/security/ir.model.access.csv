@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_smart_template_user_preferences_user,smart.template.user.preferences.user,model_smart_template_user_preferences,group_smart_templates_user,1,1,1,0
+access_smart_template_user_preferences_manager,smart.template.user.preferences.manager,model_smart_template_user_preferences,group_smart_templates_manager,1,1,1,1
+access_smart_template_user_preferences_admin,smart.template.user.preferences.admin,model_smart_template_user_preferences,base.group_system,1,1,1,1
+access_smart_project_template_user,smart.project.template.user,model_smart_project_template,group_smart_templates_user,1,1,1,0
+access_smart_project_template_manager,smart.project.template.manager,model_smart_project_template,group_smart_templates_manager,1,1,1,1
+access_smart_project_template_admin,smart.project.template.admin,model_smart_project_template,base.group_system,1,1,1,1
+access_smart_task_template_user,smart.task.template.user,model_smart_task_template,group_smart_templates_user,1,1,1,0
+access_smart_task_template_manager,smart.task.template.manager,model_smart_task_template,group_smart_templates_manager,1,1,1,1
+access_smart_task_template_admin,smart.task.template.admin,model_smart_task_template,base.group_system,1,1,1,1
+access_smart_document_template_user,smart.document.template.user,model_smart_document_template,group_smart_templates_user,1,1,1,0
+access_smart_document_template_manager,smart.document.template.manager,model_smart_document_template,group_smart_templates_manager,1,1,1,1
+access_smart_document_template_admin,smart.document.template.admin,model_smart_document_template,base.group_system,1,1,1,1

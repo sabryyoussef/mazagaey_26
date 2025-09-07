@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Template Form View -->
+    <record id="view_smart_project_template_form" model="ir.ui.view">
+        <field name="name">smart.project.template.form</field>
+        <field name="model">smart.project.template</field>
+        <field name="arch" type="xml">
+            <form string="Project Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Template Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Basic Information">
+                            <field name="template_type"/>
+                            <field name="complexity_level"/>
+                            <field name="estimated_duration"/>
+                            <field name="is_active"/>
+                        </group>
+                        <group string="Smart Features">
+                            <field name="suggestion_level"/>
+                            <!-- <field name="compatibility_score" readonly="1"/> -->
+                            <field name="usage_count" readonly="1"/>
+                            <field name="last_used" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    
+                    <group>
+                        <field name="required_skills"/>
+                    </group>
+                    
+                    <!-- Template relationships notebook (commented out until models are created) -->
+                    <!-- <notebook>
+                        <page string="Task Templates" name="task_templates">
+                            <field name="task_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Document Templates" name="document_templates">
+                            <field name="document_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Checkpoint Templates" name="checkpoint_templates">
+                            <field name="checkpoint_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Milestone Templates" name="milestone_templates">
+                            <field name="milestone_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <field name="total_templates" readonly="1"/>
+                                <field name="usage_count" readonly="1"/>
+                                <field name="last_used" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook> -->
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Project Template List View -->
+    <record id="view_smart_project_template_list" model="ir.ui.view">
+        <field name="name">smart.project.template.list</field>
+        <field name="model">smart.project.template</field>
+        <field name="arch" type="xml">
+            <list string="Project Templates">
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="complexity_level"/>
+                <field name="estimated_duration"/>
+                <!-- <field name="total_templates"/> -->
+                <!-- <field name="compatibility_score"/> -->
+                <field name="usage_count"/>
+                <field name="is_active"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Project Template Search View -->
+    <record id="view_smart_project_template_search" model="ir.ui.view">
+        <field name="name">smart.project.template.search</field>
+        <field name="model">smart.project.template</field>
+        <field name="arch" type="xml">
+            <search string="Project Templates">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="template_type"/>
+                <field name="complexity_level"/>
+                <filter string="Active Templates" name="active" 
+                        domain="[('is_active', '=', True)]"/>
+                <filter string="Basic Projects" name="basic" 
+                        domain="[('template_type', '=', 'basic')]"/>
+                <filter string="Advanced Projects" name="advanced" 
+                        domain="[('template_type', '=', 'advanced')]"/>
+                <filter string="Enterprise Projects" name="enterprise" 
+                        domain="[('template_type', '=', 'enterprise')]"/>
+                <separator/>
+                <!-- <filter string="High Compatibility" name="high_compatibility" 
+                        domain="[('compatibility_score', '>=', 0.8)]"/> -->
+                <filter string="Frequently Used" name="frequently_used" 
+                        domain="[('usage_count', '>', 5)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Template Type" name="group_template_type" 
+                            context="{'group_by': 'template_type'}"/>
+                    <filter string="Complexity Level" name="group_complexity" 
+                            context="{'group_by': 'complexity_level'}"/>
+                    <filter string="Suggestion Level" name="group_suggestion" 
+                            context="{'group_by': 'suggestion_level'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Project Template Actions -->
+    <record id="action_smart_project_template" model="ir.actions.act_window">
+        <field name="name">Project Templates</field>
+        <field name="res_model">smart.project.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_smart_project_template_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Project Template!
+            </p>
+            <p>
+                Project templates help you standardize and accelerate project creation.
+                Define templates with related tasks, documents, checkpoints, and milestones.
+            </p>
+        </field>
+    </record>
+
+    <!-- Simple Project Template Action -->
+    <record id="action_smart_project_template_simple" model="ir.actions.act_window">
+        <field name="name">Project Templates</field>
+        <field name="res_model">smart.project.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

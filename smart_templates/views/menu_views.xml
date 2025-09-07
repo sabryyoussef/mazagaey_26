@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_smart_templates_root" 
+              name="Smart Templates" 
+              sequence="10"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_smart_templates_config" 
+              name="Configuration" 
+              parent="menu_smart_templates_root" 
+              sequence="10"/>
+
+    <!-- User Preferences Menu -->
+    <menuitem id="menu_smart_templates_user_preferences" 
+              name="User Preferences" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_template_user_preferences" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="10"/>
+
+    <!-- Project Templates Menu -->
+    <menuitem id="menu_smart_templates_project_templates" 
+              name="Project Templates" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_project_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="20"/>
+
+    <!-- Direct Project Templates Menu (for testing) -->
+    <menuitem id="menu_smart_templates_project_templates_direct" 
+              name="Project Templates" 
+              parent="menu_smart_templates_root" 
+              action="action_smart_project_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="20"/>
+
+    <!-- Simple Project Templates Menu (simple action) -->
+    <menuitem id="menu_smart_templates_project_templates_simple" 
+              name="Project Templates (Simple)" 
+              parent="menu_smart_templates_root" 
+              action="action_smart_project_template_simple"
+              groups="smart_templates.group_smart_templates_user"
+              sequence="30"/>
+
+    <!-- Task Templates Menu -->
+    <menuitem id="menu_smart_templates_task_templates" 
+              name="Task Templates" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_task_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="30"/>
+
+    <!-- Document Templates Menu -->
+    <menuitem id="menu_smart_templates_document_templates" 
+              name="Document Templates" 
+              parent="menu_smart_templates_config" 
+              action="action_smart_document_template" 
+              groups="smart_templates.group_smart_templates_user"
+              sequence="40"/>
+</odoo>

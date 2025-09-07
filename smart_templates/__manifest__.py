@@ -21,34 +21,31 @@
         "security/smart_templates_security.xml",
         "security/ir.model.access.csv",
         
-        # Core Models
-        "models/core/__init__.py",
-        "models/preferences/__init__.py",
-        "models/integrations/__init__.py",
-        "models/__init__.py",
-        
-        # Views - Core
+        # Views - Only working views
+        "views/preferences/user_preferences_views.xml",
         "views/core/project_template_views.xml",
-        "views/core/workflow_template_views.xml",
         "views/core/task_template_views.xml",
         "views/core/document_template_views.xml",
-        "views/core/checkpoint_template_views.xml",
-        "views/core/milestone_template_views.xml",
-        
-        # Views - Preferences
-        "views/preferences/user_preferences_views.xml",
-        "views/preferences/template_preferences_views.xml",
-        
-        # Views - Wizard
-        "views/wizard/template_suggestion_wizard_views.xml",
-        "views/wizard/preferences_configuration_wizard_views.xml",
-        
-        # Menus
         "views/menu_views.xml",
         
         # Data
         "data/smart_templates_data.xml",
         "data/demo_data.xml",
+        
+        # Views - Core (commented out until models are complete)
+        # "views/core/project_template_views.xml",
+        # "views/core/workflow_template_views.xml",
+        # "views/core/task_template_views.xml",
+        # "views/core/document_template_views.xml",
+        # "views/core/checkpoint_template_views.xml",
+        # "views/core/milestone_template_views.xml",
+        
+        # Views - Preferences (commented out until models are complete)
+        # "views/preferences/template_preferences_views.xml",
+        
+        # Views - Wizard (commented out until models are complete)
+        # "views/wizard/template_suggestion_wizard_views.xml",
+        # "views/wizard/preferences_configuration_wizard_views.xml",
     ],
     "demo": [
         "data/demo_data.xml",
