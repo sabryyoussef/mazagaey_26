@@ -29,23 +29,23 @@ class SmartProjectTemplate(models.Model):
     estimated_duration = fields.Integer(string='Estimated Duration (Days)')
     required_skills = fields.Text(string='Required Skills')
     
-    # Template relationships (commented out until models are created)
-    # task_template_ids = fields.Many2many(
-    #     'smart.task.template',
-    #     string='Task Templates'
-    # )
-    # document_template_ids = fields.Many2many(
-    #     'smart.document.template',
-    #     string='Document Templates'
-    # )
-    # checkpoint_template_ids = fields.Many2many(
-    #     'smart.checkpoint.template',
-    #     string='Checkpoint Templates'
-    # )
-    # milestone_template_ids = fields.Many2many(
-    #     'smart.milestone.template',
-    #     string='Milestone Templates'
-    # )
+    # Template relationships (restored - all models now exist)
+    task_template_ids = fields.Many2many(
+        'smart.task.template',
+        string='Task Templates'
+    )
+    document_template_ids = fields.Many2many(
+        'smart.document.template',
+        string='Document Templates'
+    )
+    checkpoint_template_ids = fields.Many2many(
+        'smart.checkpoint.template',
+        string='Checkpoint Templates'
+    )
+    milestone_template_ids = fields.Many2many(
+        'smart.milestone.template',
+        string='Milestone Templates'
+    )
     
     # Smart features
     suggestion_level = fields.Selection([
@@ -53,6 +53,12 @@ class SmartProjectTemplate(models.Model):
         ('active', 'Active'),
         ('smart', 'Smart')
     ], string='Suggestion Level', default='active')
+    
+    # Computed fields (restored)
+    total_templates = fields.Integer(
+        string='Total Related Templates',
+        compute='_compute_total_templates'
+    )
     
     compatibility_score = fields.Float(
         string='Compatibility Score',
@@ -67,38 +73,32 @@ class SmartProjectTemplate(models.Model):
     
     last_used = fields.Datetime(string='Last Used')
     
-    # Computed fields (commented out until template relationships are created)
-    # total_templates = fields.Integer(
-    #     string='Total Related Templates',
-    #     compute='_compute_total_templates'
-    # )
+    @api.depends('task_template_ids', 'document_template_ids', 
+                 'checkpoint_template_ids', 'milestone_template_ids')
+    def _compute_total_templates(self):
+        for record in self:
+            record.total_templates = (
+                len(record.task_template_ids) +
+                len(record.document_template_ids) +
+                len(record.checkpoint_template_ids) +
+                len(record.milestone_template_ids)
+            )
     
-    # @api.depends('task_template_ids', 'document_template_ids', 
-    #              'checkpoint_template_ids', 'milestone_template_ids')
-    # def _compute_total_templates(self):
-    #     for record in self:
-    #         record.total_templates = (
-    #             len(record.task_template_ids) +
-    #             len(record.document_template_ids) +
-    #             len(record.checkpoint_template_ids) +
-    #             len(record.milestone_template_ids)
-    #         )
-    
-    # @api.depends('task_template_ids', 'document_template_ids',
-    #              'checkpoint_template_ids', 'milestone_template_ids')
-    # def _compute_compatibility_score(self):
-    #     for record in self:
-    #         # Simple compatibility scoring based on template count and types
-    #         score = 0.0
-    #         if record.task_template_ids:
-    #             score += 0.3
-    #         if record.document_template_ids:
-    #             score += 0.2
-    #         if record.checkpoint_template_ids:
-    #             score += 0.3
-    #         if record.milestone_template_ids:
-    #             score += 0.2
-    #         record.compatibility_score = min(score, 1.0)
+    @api.depends('task_template_ids', 'document_template_ids',
+                 'checkpoint_template_ids', 'milestone_template_ids')
+    def _compute_compatibility_score(self):
+        for record in self:
+            # Simple compatibility scoring based on template count and types
+            score = 0.0
+            if record.task_template_ids:
+                score += 0.3
+            if record.document_template_ids:
+                score += 0.2
+            if record.checkpoint_template_ids:
+                score += 0.3
+            if record.milestone_template_ids:
+                score += 0.2
+            record.compatibility_score = min(score, 1.0)
     
     # Methods
     def apply_template(self):

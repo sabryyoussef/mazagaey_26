@@ -22,7 +22,7 @@
                         </group>
                         <group string="Smart Features">
                             <field name="suggestion_level"/>
-                            <!-- <field name="compatibility_score" readonly="1"/> -->
+                            <field name="compatibility_score" readonly="1"/>
                             <field name="usage_count" readonly="1"/>
                             <field name="last_used" readonly="1"/>
                         </group>
@@ -36,8 +36,8 @@
                         <field name="required_skills"/>
                     </group>
                     
-                    <!-- Template relationships notebook (commented out until models are created) -->
-                    <!-- <notebook>
+                    <!-- Template relationships notebook (restored - all models now exist) -->
+                    <notebook>
                         <page string="Task Templates" name="task_templates">
                             <field name="task_template_ids" nolabel="1">
                                 <list>
@@ -85,7 +85,7 @@
                                 <field name="last_used" readonly="1"/>
                             </group>
                         </page>
-                    </notebook> -->
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -101,8 +101,8 @@
                 <field name="template_type"/>
                 <field name="complexity_level"/>
                 <field name="estimated_duration"/>
-                <!-- <field name="total_templates"/> -->
-                <!-- <field name="compatibility_score"/> -->
+                <field name="total_templates"/>
+                <field name="compatibility_score"/>
                 <field name="usage_count"/>
                 <field name="is_active"/>
             </list>
@@ -128,8 +128,8 @@
                 <filter string="Enterprise Projects" name="enterprise" 
                         domain="[('template_type', '=', 'enterprise')]"/>
                 <separator/>
-                <!-- <filter string="High Compatibility" name="high_compatibility" 
-                        domain="[('compatibility_score', '>=', 0.8)]"/> -->
+                <filter string="High Compatibility" name="high_compatibility" 
+                        domain="[('compatibility_score', '>=', 0.8)]"/>
                 <filter string="Frequently Used" name="frequently_used" 
                         domain="[('usage_count', '>', 5)]"/>
                 <group expand="0" string="Group By">
