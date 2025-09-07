@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class SmartProjectTemplate(models.Model):
@@ -147,4 +150,208 @@ class SmartProjectTemplate(models.Model):
                 *self.milestone_template_ids.ids,
             ])],
             'context': {'default_project_template_id': self.id},
+        }
+    
+    def get_smart_suggestions(self, context=None, limit=5):
+        """Get smart template suggestions using the suggestion engine"""
+        try:
+            suggestion_engine = self.env['smart.template.suggestion.engine']
+            
+            # Prepare context
+            suggestion_context = context or {}
+            suggestion_context.update({
+                'template_type': 'project',
+                'project_type': self.template_type,
+                'complexity_level': self.complexity_level,
+                'user_id': self.env.user.id,
+            })
+            
+            # Get suggestions
+            suggestions = suggestion_engine.get_suggestions(
+                context=suggestion_context,
+                limit=limit,
+                user_id=self.env.user.id
+            )
+            
+            # If called from button, show results in a dialog
+            if self.env.context.get('from_button'):
+                return self._show_suggestions_dialog(suggestions)
+            
+            return suggestions
+            
+        except Exception as e:
+            _logger.error(f"Error getting smart suggestions: {str(e)}")
+            if self.env.context.get('from_button'):
+                return self._show_error_dialog(f"Error getting suggestions: {str(e)}")
+            return []
+    
+    def check_template_compatibility(self, template_ids=None):
+        """Check compatibility with other templates"""
+        try:
+            suggestion_engine = self.env['smart.template.suggestion.engine']
+            
+            # If called from button, get related template IDs
+            if self.env.context.get('from_button') and not template_ids:
+                template_ids = []
+                if self.task_template_ids:
+                    template_ids.extend(self.task_template_ids.ids)
+                if self.document_template_ids:
+                    template_ids.extend(self.document_template_ids.ids)
+                if self.checkpoint_template_ids:
+                    template_ids.extend(self.checkpoint_template_ids.ids)
+                if self.milestone_template_ids:
+                    template_ids.extend(self.milestone_template_ids.ids)
+            
+            # Include current template in compatibility check
+            all_template_ids = [self.id] + (template_ids or [])
+            
+            compatibility_result = suggestion_engine.check_template_compatibility(
+                template_ids=all_template_ids,
+                context={
+                    'project_type': self.template_type,
+                    'complexity_level': self.complexity_level,
+                }
+            )
+            
+            # If called from button, show results in a dialog
+            if self.env.context.get('from_button'):
+                return self._show_compatibility_dialog(compatibility_result)
+            
+            return compatibility_result
+            
+        except Exception as e:
+            _logger.error(f"Error checking template compatibility: {str(e)}")
+            error_result = {
+                'compatible': False,
+                'warnings': [f"Error checking compatibility: {str(e)}"],
+                'conflicts': [],
+                'suggestions': [],
+                'compatibility_score': 0.0
+            }
+            
+            if self.env.context.get('from_button'):
+                return self._show_compatibility_dialog(error_result)
+            
+            return error_result
+    
+    def learn_from_usage(self, action='applied'):
+        """Learn from user actions to improve suggestions"""
+        try:
+            suggestion_engine = self.env['smart.template.suggestion.engine']
+            
+            suggestion_engine.learn_from_user_action(
+                template_id=self.id,
+                action=action,
+                user_id=self.env.user.id,
+                context={
+                    'template_type': 'project',
+                    'project_type': self.template_type,
+                    'complexity_level': self.complexity_level,
+                }
+            )
+            
+        except Exception as e:
+            _logger.error(f"Error learning from usage: {str(e)}")
+    
+    def apply_template_with_suggestions(self):
+        """Apply template and get suggestions for related templates"""
+        # Learn from this action
+        self.learn_from_usage('applied')
+        
+        # Get suggestions for related templates
+        suggestions = self.get_smart_suggestions(limit=3)
+        
+        # Apply the template
+        result = self.apply_template()
+        
+        # Add suggestions to context
+        if isinstance(result, dict) and 'context' in result:
+            result['context']['suggestions'] = suggestions
+        
+        return result
+    
+    def _show_suggestions_dialog(self, suggestions):
+        """Show suggestions in a dialog"""
+        message = f"<h3>Smart Suggestions for '{self.name}'</h3><br/>"
+        
+        if not suggestions:
+            message += "<p>No suggestions available at this time.</p>"
+        else:
+            message += "<ul>"
+            for suggestion in suggestions:
+                template = suggestion.get('template')
+                score = suggestion.get('score', 0.0)
+                if template:
+                    message += f"<li><strong>{template.name}</strong> (Score: {score:.2f})</li>"
+            message += "</ul>"
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Smart Suggestions',
+                'message': message,
+                'type': 'success',
+                'sticky': True,
+            }
+        }
+    
+    def _show_compatibility_dialog(self, compatibility_result):
+        """Show compatibility results in a dialog"""
+        message = f"<h3>Compatibility Analysis for '{self.name}'</h3><br/>"
+        
+        # Compatibility status
+        status = "✅ Compatible" if compatibility_result.get('compatible', False) else "❌ Not Compatible"
+        message += f"<p><strong>Status:</strong> {status}</p>"
+        
+        # Compatibility score
+        score = compatibility_result.get('compatibility_score', 0.0)
+        message += f"<p><strong>Compatibility Score:</strong> {score:.2f}</p>"
+        
+        # Conflicts
+        conflicts = compatibility_result.get('conflicts', [])
+        if conflicts:
+            message += "<p><strong>Conflicts:</strong></p><ul>"
+            for conflict in conflicts:
+                message += f"<li>{conflict}</li>"
+            message += "</ul>"
+        
+        # Warnings
+        warnings = compatibility_result.get('warnings', [])
+        if warnings:
+            message += "<p><strong>Warnings:</strong></p><ul>"
+            for warning in warnings:
+                message += f"<li>{warning}</li>"
+            message += "</ul>"
+        
+        # Suggestions
+        suggestions = compatibility_result.get('suggestions', [])
+        if suggestions:
+            message += "<p><strong>Suggestions:</strong></p><ul>"
+            for suggestion in suggestions:
+                message += f"<li>{suggestion}</li>"
+            message += "</ul>"
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Compatibility Analysis',
+                'message': message,
+                'type': 'info',
+                'sticky': True,
+            }
+        }
+    
+    def _show_error_dialog(self, error_message):
+        """Show error in a dialog"""
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Error',
+                'message': f"<p>{error_message}</p>",
+                'type': 'danger',
+                'sticky': True,
+            }
         }

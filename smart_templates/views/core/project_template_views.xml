@@ -28,6 +28,27 @@
                         </group>
                     </group>
                     
+                    <!-- Smart Actions -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="get_smart_suggestions" type="object" 
+                                string="Get Smart Suggestions" 
+                                class="oe_stat_button" 
+                                icon="fa-lightbulb-o"
+                                context="{'from_button': True}"
+                                help="Get intelligent template suggestions based on context and user behavior"/>
+                        <button name="check_template_compatibility" type="object" 
+                                string="Check Compatibility" 
+                                class="oe_stat_button" 
+                                icon="fa-check-circle"
+                                context="{'from_button': True}"
+                                help="Check compatibility with other templates"/>
+                        <button name="apply_template_with_suggestions" type="object" 
+                                string="Apply with Suggestions" 
+                                class="oe_stat_button" 
+                                icon="fa-rocket"
+                                help="Apply template and get suggestions for related templates"/>
+                    </div>
+                    
                     <group>
                         <field name="description"/>
                     </group>
