@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Checkpoint Template Form View -->
+    <record id="view_smart_checkpoint_template_form" model="ir.ui.view">
+        <field name="name">smart.checkpoint.template.form</field>
+        <field name="model">smart.checkpoint.template</field>
+        <field name="arch" type="xml">
+            <form string="Checkpoint Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Checkpoint Template Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Basic Information">
+                            <field name="checkpoint_type"/>
+                            <field name="validation_level"/>
+                            <field name="complexity_level"/>
+                            <field name="validation_method"/>
+                            <field name="is_active"/>
+                        </group>
+                        <group string="Compliance &amp; Approval">
+                            <field name="compliance_required"/>
+                            <field name="approval_required"/>
+                            <field name="auto_validate"/>
+                            <field name="auto_escalate"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Smart Features">
+                            <field name="suggestion_level"/>
+                        </group>
+                        <group string="Usage Statistics">
+                            <field name="usage_count" readonly="1"/>
+                            <field name="total_projects" readonly="1"/>
+                            <field name="total_tasks" readonly="1"/>
+                            <field name="last_used" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    
+                    <group>
+                        <field name="validation_criteria"/>
+                    </group>
+                    
+                    <group>
+                        <field name="success_criteria"/>
+                    </group>
+                    
+                    <group>
+                        <field name="failure_actions"/>
+                    </group>
+                    
+                    <group>
+                        <field name="compliance_standards"/>
+                    </group>
+                    
+                    <group>
+                        <field name="approval_workflow"/>
+                    </group>
+                    
+                    <group>
+                        <field name="required_documents"/>
+                    </group>
+                    
+                    <group>
+                        <field name="required_skills"/>
+                    </group>
+                    
+                    <group>
+                        <field name="prerequisites"/>
+                    </group>
+                    
+                    <group>
+                        <group string="Time Estimation">
+                            <field name="estimated_duration_hours"/>
+                            <field name="estimated_duration_days"/>
+                            <field name="deadline_buffer_days"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Related Projects" name="related_projects">
+                            <field name="project_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="template_type"/>
+                                    <field name="complexity_level"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Related Tasks" name="related_tasks">
+                            <field name="task_template_ids" nolabel="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="task_type"/>
+                                    <field name="priority"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <field name="usage_count" readonly="1"/>
+                                <field name="total_projects" readonly="1"/>
+                                <field name="total_tasks" readonly="1"/>
+                                <field name="last_used" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Checkpoint Template List View -->
+    <record id="view_smart_checkpoint_template_list" model="ir.ui.view">
+        <field name="name">smart.checkpoint.template.list</field>
+        <field name="model">smart.checkpoint.template</field>
+        <field name="arch" type="xml">
+            <list string="Checkpoint Templates">
+                <field name="name"/>
+                <field name="checkpoint_type"/>
+                <field name="validation_level"/>
+                <field name="complexity_level"/>
+                <field name="validation_method"/>
+                <field name="compliance_required"/>
+                <field name="approval_required"/>
+                <field name="total_projects"/>
+                <field name="total_tasks"/>
+                <field name="usage_count"/>
+                <field name="is_active"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Checkpoint Template Search View -->
+    <record id="view_smart_checkpoint_template_search" model="ir.ui.view">
+        <field name="name">smart.checkpoint.template.search</field>
+        <field name="model">smart.checkpoint.template</field>
+        <field name="arch" type="xml">
+            <search string="Checkpoint Templates">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="checkpoint_type"/>
+                <field name="validation_level"/>
+                <field name="complexity_level"/>
+                <field name="validation_method"/>
+                <field name="required_skills"/>
+                <field name="compliance_standards"/>
+                
+                <filter string="Active Templates" name="active" 
+                        domain="[('is_active', '=', True)]"/>
+                <filter string="Quality Gates" name="quality_gate" 
+                        domain="[('checkpoint_type', '=', 'quality_gate')]"/>
+                <filter string="Compliance Checks" name="compliance" 
+                        domain="[('checkpoint_type', '=', 'compliance')]"/>
+                <filter string="Approval Points" name="approval" 
+                        domain="[('checkpoint_type', '=', 'approval')]"/>
+                <filter string="Documentation Reviews" name="documentation" 
+                        domain="[('checkpoint_type', '=', 'documentation')]"/>
+                <filter string="Deployment Validations" name="deployment" 
+                        domain="[('checkpoint_type', '=', 'deployment')]"/>
+                <filter string="Performance Checks" name="performance" 
+                        domain="[('checkpoint_type', '=', 'performance')]"/>
+                <filter string="Security Audits" name="security" 
+                        domain="[('checkpoint_type', '=', 'security')]"/>
+                <filter string="Other Checkpoints" name="other" 
+                        domain="[('checkpoint_type', '=', 'other')]"/>
+                
+                <separator/>
+                <filter string="Compliance Required" name="compliance_required" 
+                        domain="[('compliance_required', '=', True)]"/>
+                <filter string="Approval Required" name="approval_required" 
+                        domain="[('approval_required', '=', True)]"/>
+                <filter string="Auto Validate" name="auto_validate" 
+                        domain="[('auto_validate', '=', True)]"/>
+                <filter string="Auto Escalate" name="auto_escalate" 
+                        domain="[('auto_escalate', '=', True)]"/>
+                <filter string="Complex Checkpoints" name="complex" 
+                        domain="[('complexity_level', '=', 'complex')]"/>
+                <filter string="Frequently Used" name="frequently_used" 
+                        domain="[('usage_count', '>', 5)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Checkpoint Type" name="group_checkpoint_type" 
+                            context="{'group_by': 'checkpoint_type'}"/>
+                    <filter string="Validation Level" name="group_validation_level" 
+                            context="{'group_by': 'validation_level'}"/>
+                    <filter string="Complexity Level" name="group_complexity" 
+                            context="{'group_by': 'complexity_level'}"/>
+                    <filter string="Validation Method" name="group_validation_method" 
+                            context="{'group_by': 'validation_method'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Checkpoint Template Actions -->
+    <record id="action_smart_checkpoint_template" model="ir.actions.act_window">
+        <field name="name">Checkpoint Templates</field>
+        <field name="res_model">smart.checkpoint.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_smart_checkpoint_template_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Checkpoint Template!
+            </p>
+            <p>
+                Checkpoint templates help you standardize quality gates, compliance checks, and approval processes.
+                Define templates with validation criteria, compliance requirements, and approval workflows.
+            </p>
+        </field>
+    </record>
+</odoo>

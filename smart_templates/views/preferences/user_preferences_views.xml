@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User Preferences Form View -->
+    <record id="view_smart_template_user_preferences_form" model="ir.ui.view">
+        <field name="name">smart.template.user.preferences.form</field>
+        <field name="model">smart.template.user.preferences</field>
+        <field name="arch" type="xml">
+            <form string="Smart Template Preferences">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="user_id" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Suggestion Behavior">
+                            <field name="suggestion_level" widget="radio"/>
+                            <field name="trigger_behavior" widget="radio"/>
+                            <field name="preferred_start_template" widget="radio"/>
+                        </group>
+                        <group string="Advanced Options">
+                            <field name="enable_learning"/>
+                            <field name="show_compatibility_warnings"/>
+                            <field name="auto_save_preferences"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Information">
+                        <field name="is_default" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- User Preferences List View -->
+    <record id="view_smart_template_user_preferences_list" model="ir.ui.view">
+        <field name="name">smart.template.user.preferences.list</field>
+        <field name="model">smart.template.user.preferences</field>
+        <field name="arch" type="xml">
+            <list string="Smart Template Preferences">
+                <field name="user_id"/>
+                <field name="suggestion_level"/>
+                <field name="trigger_behavior"/>
+                <field name="preferred_start_template"/>
+                <field name="enable_learning"/>
+                <field name="is_default"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- User Preferences Search View -->
+    <record id="view_smart_template_user_preferences_search" model="ir.ui.view">
+        <field name="name">smart.template.user.preferences.search</field>
+        <field name="model">smart.template.user.preferences</field>
+        <field name="arch" type="xml">
+            <search string="Smart Template Preferences">
+                <field name="user_id"/>
+                <field name="suggestion_level"/>
+                <field name="trigger_behavior"/>
+                <filter string="Active Learning" name="learning_enabled" 
+                        domain="[('enable_learning', '=', True)]"/>
+                <filter string="Default User" name="default_user" 
+                        domain="[('is_default', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Suggestion Level" name="group_suggestion_level" 
+                            context="{'group_by': 'suggestion_level'}"/>
+                    <filter string="Trigger Behavior" name="group_trigger_behavior" 
+                            context="{'group_by': 'trigger_behavior'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- User Preferences Actions -->
+    <record id="action_smart_template_user_preferences" model="ir.actions.act_window">
+        <field name="name">Smart Template Preferences</field>
+        <field name="res_model">smart.template.user.preferences</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_smart_template_user_preferences_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Smart Template Preferences!
+            </p>
+            <p>
+                Configure how smart templates should behave for you.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Add to User Form View -->
+    <record id="res_users_view_form_inherit_smart_templates" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.smart.templates</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Smart Templates" name="smart_templates">
+                    <field name="smart_template_preferences_ids" readonly="1">
+                        <list>
+                            <field name="suggestion_level"/>
+                            <field name="trigger_behavior"/>
+                            <field name="preferred_start_template"/>
+                            <field name="enable_learning"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
