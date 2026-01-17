@@ -119,19 +119,3 @@ class ProjectDocumentTemplate(models.Model):
             'target': 'new',
             'flags': {'mode': 'readonly'},
         }
-    
-    def action_apply_template(self):
-        """Open wizard to apply template to projects or tasks"""
-        self.ensure_one()
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Apply Template'),
-            'res_model': 'project.template.application',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_template_id': self.id,
-                'default_template_type': 'document',
-            },
-        }

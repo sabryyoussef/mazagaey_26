@@ -45,18 +45,8 @@ class ProjectProject(models.Model):
             
             # Check if all tasks are in completion stages
             completion_stages = ['done', 'completed', 'finished', 'closed']
-            
-            # Debug logging for problematic tasks
-            for task in project.tasks:
-                if not task.stage_id:
-                    _logger.warning(f"Task {task.name} (ID: {task.id}) has no stage_id")
-                    continue
-                if not task.stage_id.name:
-                    _logger.warning(f"Task {task.name} (ID: {task.id}) has stage_id but no name")
-                    continue
-            
             all_tasks_completed = all(
-                task.stage_id and task.stage_id.name and task.stage_id.name.lower() in completion_stages 
+                task.stage_id.name.lower() in completion_stages 
                 for task in project.tasks
             )
             

@@ -30,11 +30,6 @@
                                 type="object" 
                                 string="Preview Template" 
                                 class="btn-secondary"/>
-                        <button name="action_apply_template" 
-                                type="object" 
-                                string="Apply Template" 
-                                class="btn-primary"
-                                help="Apply this template to projects or tasks"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -61,54 +56,20 @@
                                     <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
-                                        <field name="description"/>
                                         <field name="category"/>
                                         <field name="priority"/>
-                                        <field name="notes"/>
                                         <field name="tag_ids" widget="many2many_tags"/>
                                     </list>
                                 </field>
-                                <div class="alert alert-info" role="alert">
-                                    <strong>How to add document templates:</strong>
-                                    <ol>
-                                        <li>Click on any empty row in the list above</li>
-                                        <li>Fill in the document details (name, description, category, etc.)</li>
-                                        <li>Press Enter or click outside to save the line</li>
-                                        <li>Repeat to add more document templates</li>
-                                    </ol>
-                                    <strong>Document Categories:</strong>
-                                    <ul>
-                                        <li><strong>Required:</strong> Documents that must be completed</li>
-                                        <li><strong>Deliverable:</strong> Documents that will be delivered to the client</li>
-                                        <li><strong>Reference:</strong> Reference documents for the project</li>
-                                        <li><strong>Compliance:</strong> Compliance and regulatory documents</li>
-                                    </ul>
-                                </div>
                             </page>
                             <page string="Checklist Template Lines" name="checklist_lines">
                                 <field name="checklist_template_line_ids">
                                     <list editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
-                                        <field name="description"/>
                                         <field name="is_required"/>
                                     </list>
                                 </field>
-                                <div class="alert alert-info" role="alert">
-                                    <strong>How to add checklist templates:</strong>
-                                    <ol>
-                                        <li>Click on any empty row in the list above</li>
-                                        <li>Fill in the checklist item details (name, description, required status)</li>
-                                        <li>Press Enter or click outside to save the line</li>
-                                        <li>Repeat to add more checklist items</li>
-                                    </ol>
-                                    <strong>Checklist Items:</strong>
-                                    <ul>
-                                        <li><strong>Name:</strong> The checklist item title</li>
-                                        <li><strong>Description:</strong> Detailed description of what needs to be done</li>
-                                        <li><strong>Required:</strong> Whether this item is mandatory for completion</li>
-                                    </ul>
-                                </div>
                             </page>
                             <page string="Application Settings" name="settings">
                                 <group>

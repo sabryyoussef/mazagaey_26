@@ -8,29 +8,13 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="💼 Project Business" name="project_business">
-                        <notebook>
-                            <!-- Project Quotations Sub-tab -->
-                            <page string="💼 Project Quotations" name="project_quotations_sub">
-                                <group>
-                                    <field name="create_quotation_on_completion"/>
-                                    <field name="quotation_template_id" invisible="not create_quotation_on_completion"/>
-                                    <field name="quotation_notes" invisible="not create_quotation_on_completion"/>
-                                    <field name="is_completed" readonly="1"/>
-                                </group>
-                                
-                                <div class="alert alert-info" role="alert">
-                                    <strong>Project Quotations:</strong> Configure automatic quotation creation when projects are completed.
-                                    <br/><br/>
-                                    <strong>Features:</strong>
-                                    <ul>
-                                        <li>Automatically create quotations when project is completed</li>
-                                        <li>Use quotation templates for consistent pricing</li>
-                                        <li>Add project-specific notes to quotations</li>
-                                    </ul>
-                                </div>
-                            </page>
-                        </notebook>
+                    <page string="Quotation Integration" name="quotation_integration">
+                        <group>
+                            <field name="create_quotation_on_completion"/>
+                            <field name="quotation_template_id" invisible="not create_quotation_on_completion"/>
+                            <field name="quotation_notes" invisible="not create_quotation_on_completion"/>
+                            <field name="is_completed" readonly="1"/>
+                        </group>
                     </page>
                 </xpath>
             </field>
