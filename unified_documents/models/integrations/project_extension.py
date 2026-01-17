@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 import logging
+from dateutil.relativedelta import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -51,6 +52,14 @@ class ProjectProject(models.Model):
 
     # Temporary fields for document creation
     new_document_name = fields.Char('Document Name')
+    
+    # Document name field for compatibility with other modules
+    document_name = fields.Char(
+        string='Document Name', 
+        compute='_compute_document_name',
+        store=False,
+        help='Document name for compatibility with other modules'
+    )
     new_document_category = fields.Selection([
         ('required', 'Required'),
         ('deliverable', 'Deliverable'),
@@ -140,6 +149,17 @@ class ProjectProject(models.Model):
 
 
 
+    @api.depends('new_document_name', 'document_ids')
+    def _compute_document_name(self):
+        """Compute document name for compatibility with other modules"""
+        for project in self:
+            if project.new_document_name:
+                project.document_name = project.new_document_name
+            elif project.document_ids:
+                project.document_name = project.document_ids[0].name
+            else:
+                project.document_name = project.name or ''
+
     @api.depends('document_ids', 'documents_folder_id')
     def _compute_project_files_count(self):
         """Compute the number of files linked to project documents or folder"""
@@ -205,6 +225,401 @@ class ProjectProject(models.Model):
                 ])
                 
             project.project_folder_files = files
+    
+    def action_fix_document_linking(self):
+        """Fix document linking for documents in project folder that are not properly linked"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Find documents in the folder that are not linked to this project
+        unlinked_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            '|',
+            ('linked_project_id', '=', False),
+            ('linked_project_id', '!=', self.id),
+            ('type', '!=', 'folder')  # Exclude the folder itself
+        ])
+        
+        # Also get all documents in folder for comparison
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        linked_docs = all_folder_docs.filtered(lambda d: d.linked_project_id == self)
+        
+        if not unlinked_docs:
+            # Show detailed analysis even if no unlinked docs found
+            analysis_msg = f"""
+All documents in folder: {len(all_folder_docs)}
+Linked to this project: {len(linked_docs)}
+Unlinked documents: {len(unlinked_docs)}
+
+Linked documents:
+{chr(10).join([f"  - {doc.name} (linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in linked_docs])}
+
+Unlinked documents:
+{chr(10).join([f"  - {doc.name} (linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in unlinked_docs])}
+            """
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Document Linking Analysis'),
+                    'message': analysis_msg,
+                    'type': 'info',
+                }
+            }
+        
+        # Link the documents to this project
+        linked_count = 0
+        for doc in unlinked_docs:
+            doc.write({
+                'linked_project_id': self.id,
+                'res_model': 'project.project',
+                'res_id': self.id
+            })
+            linked_count += 1
+        
+        # Invalidate cache to refresh counts
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Documents Linked'),
+                'message': _('Successfully linked %d documents to this project.') % linked_count,
+                'type': 'success',
+            }
+        }
+    
+    def action_force_link_all_folder_documents(self):
+        """Force link ALL documents in the folder to this project"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get ALL documents in the folder (excluding the folder itself)
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        # Link ALL documents to this project
+        linked_count = 0
+        for doc in all_folder_docs:
+            if doc.linked_project_id != self:
+                doc.write({
+                    'linked_project_id': self.id,
+                    'res_model': 'project.project',
+                    'res_id': self.id
+                })
+                linked_count += 1
+        
+        # Invalidate cache to refresh counts
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('All Documents Linked'),
+                'message': _('Successfully linked ALL %d documents in the folder to this project.') % linked_count,
+                'type': 'success',
+            }
+        }
+    
+    def action_debug_document_counts(self):
+        """Debug method to show detailed document count information"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Folder'),
+                    'message': _('This project has no documents folder.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get all documents in the folder
+        all_folder_docs = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id)
+        ])
+        
+        # Get documents linked to this project
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Get documents in folder that are not folders (what folder_document_ids shows)
+        folder_docs_not_folders = all_folder_docs.filtered(lambda d: d.type != 'folder')
+        
+        # Get documents linked to project that are not folders
+        linked_docs_not_folders = linked_docs.filtered(lambda d: d.type != 'folder')
+        
+        # Build debug message
+        debug_info = f"""
+Project: {self.name}
+Folder: {self.documents_folder_id.name}
+
+📊 Count Analysis:
+• All documents in folder: {len(all_folder_docs)}
+• Documents in folder (not folders): {len(folder_docs_not_folders)}
+• Documents linked to project: {len(linked_docs)}
+• Documents linked to project (not folders): {len(linked_docs_not_folders)}
+
+📋 Folder Documents (not folders):
+{chr(10).join([f"  - {doc.name} (type: {doc.type}, linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in folder_docs_not_folders])}
+
+🔗 Linked Documents (not folders):
+{chr(10).join([f"  - {doc.name} (type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in linked_docs_not_folders])}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document Count Debug'),
+                'message': debug_info,
+                'type': 'info',
+            }
+        }
+    
+    def action_debug_project_document_ids(self):
+        """Debug the project's document_ids field specifically"""
+        self.ensure_one()
+        
+        # Get documents directly linked to this project
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Get the actual document_ids field value
+        actual_document_ids = self.document_ids
+        
+        # Get documents in folder
+        folder_docs = []
+        if self.documents_folder_id:
+            folder_docs = self.env['documents.document'].search([
+                ('folder_id', '=', self.documents_folder_id.id),
+                ('type', '!=', 'folder')
+            ])
+        
+        debug_info = f"""
+Project: {self.name}
+Project ID: {self.id}
+
+🔍 Document Analysis:
+
+📋 Direct Search (linked_project_id = {self.id}):
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in linked_docs])}
+Count: {len(linked_docs)}
+
+📋 Project document_ids Field:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, folder_id: {doc.folder_id.name if doc.folder_id else 'None'})" for doc in actual_document_ids])}
+Count: {len(actual_document_ids)}
+
+📋 Documents in Folder:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id}, type: {doc.type}, linked_project_id: {doc.linked_project_id.name if doc.linked_project_id else 'None'})" for doc in folder_docs])}
+Count: {len(folder_docs)}
+
+🔍 Differences:
+• Direct search vs document_ids field: {len(linked_docs)} vs {len(actual_document_ids)}
+• Folder docs vs linked docs: {len(folder_docs)} vs {len(linked_docs)}
+
+🔍 Missing from project document_ids:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id})" for doc in linked_docs if doc not in actual_document_ids])}
+
+🔍 Missing from linked search:
+{chr(10).join([f"  - {doc.name} (ID: {doc.id})" for doc in actual_document_ids if doc not in linked_docs])}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Project Document IDs Debug'),
+                'message': debug_info,
+                'type': 'info',
+            }
+        }
+    
+    def action_force_refresh_document_ids(self):
+        """Force refresh the document_ids One2many field specifically"""
+        self.ensure_one()
+        
+        # Get all documents that should be linked
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Check the actual database state
+        self.env.cr.execute("""
+            SELECT id, name, linked_project_id, res_model, res_id, type 
+            FROM documents_document 
+            WHERE linked_project_id = %s
+            ORDER BY id
+        """, (self.id,))
+        db_docs = self.env.cr.fetchall()
+        
+        # Get the One2many field value
+        field_docs = self.document_ids
+        
+        # Fix documents with wrong res_model/res_id
+        fixed_count = 0
+        for row in db_docs:
+            doc_id, name, linked_project_id, res_model, res_id, doc_type = row
+            if res_model != 'project.project' or res_id != self.id:
+                # Fix the document's res_model and res_id
+                self.env.cr.execute("""
+                    UPDATE documents_document 
+                    SET res_model = 'project.project', res_id = %s
+                    WHERE id = %s
+                """, (self.id, doc_id))
+                fixed_count += 1
+        
+        # Invalidate all caches
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        # Force recomputation
+        self._compute_document_counts()
+        
+        # Get the refreshed document_ids
+        refreshed_docs = self.document_ids
+        
+        debug_info = f"""
+Database Analysis for Project {self.name} (ID: {self.id}):
+
+📋 Database Records (linked_project_id = {self.id}):
+{chr(10).join([f"  - ID: {row[0]}, Name: {row[1]}, linked_project_id: {row[2]}, res_model: {row[3]}, res_id: {row[4]}, type: {row[5]}" for row in db_docs])}
+Count: {len(db_docs)}
+
+📋 One2many Field Value (document_ids):
+{chr(10).join([f"  - ID: {doc.id}, Name: {doc.name}, linked_project_id: {doc.linked_project_id.id if doc.linked_project_id else 'None'}, res_model: {doc.res_model}, res_id: {doc.res_id}, type: {doc.type}" for doc in field_docs])}
+Count: {len(field_docs)}
+
+📋 After Fix and Refresh:
+{chr(10).join([f"  - ID: {doc.id}, Name: {doc.name}, linked_project_id: {doc.linked_project_id.id if doc.linked_project_id else 'None'}, res_model: {doc.res_model}, res_id: {doc.res_id}, type: {doc.type}" for doc in refreshed_docs])}
+Count: {len(refreshed_docs)}
+
+🔍 Fix Results:
+• Documents fixed: {fixed_count}
+• Before vs After: {len(field_docs)} vs {len(refreshed_docs)}
+• Should be equal now: {len(db_docs)} == {len(refreshed_docs)}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document IDs Fixed'),
+                'message': debug_info,
+                'type': 'success',
+            }
+        }
+    
+    def action_fix_and_refresh_view(self):
+        """Fix document linking and refresh the form view"""
+        self.ensure_one()
+        
+        # First fix the documents
+        linked_docs = self.env['documents.document'].search([
+            ('linked_project_id', '=', self.id)
+        ])
+        
+        # Fix documents with wrong res_model/res_id
+        fixed_count = 0
+        for doc in linked_docs:
+            if doc.res_model != 'project.project' or doc.res_id != self.id:
+                doc.write({
+                    'res_model': 'project.project',
+                    'res_id': self.id
+                })
+                fixed_count += 1
+        
+        # Invalidate all caches
+        self._invalidate_cache(['document_ids', 'document_count', 'required_document_count', 'deliverable_document_count'])
+        
+        # Force recomputation
+        self._compute_document_counts()
+        
+        # Return action to refresh the form view
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True}},
+        }
+    
+    def action_refresh_all_counts(self):
+        """Force refresh all computed document counts"""
+        self.ensure_one()
+        
+        # Force recompute all document count fields
+        self._compute_document_counts()
+        self._compute_project_files_count()
+        self._compute_project_folder_files()
+        
+        # Invalidate cache for all related fields
+        self._invalidate_cache([
+            'document_ids', 'document_count', 'required_document_count', 
+            'deliverable_document_count', 'project_files_count', 'project_folder_files'
+        ])
+        
+        # Force refresh the One2many field by triggering a write
+        # This ensures the document_ids field is properly refreshed
+        self.write({'id': self.id})
+        
+        # Also refresh folder counts if folder exists
+        if self.documents_folder_id:
+            self.documents_folder_id._compute_folder_counts()
+            self.documents_folder_id._compute_folder_summary()
+            self.documents_folder_id._invalidate_cache([
+                'folder_document_ids', 'folder_document_count', 'folder_subfolder_count',
+                'folder_category_summary', 'folder_status_summary', 'folder_expired_summary', 'folder_verified_summary'
+            ])
+        
+        # Force a final recomputation after cache invalidation
+        self._compute_document_counts()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Counts Refreshed'),
+                'message': _('All document counts have been refreshed. Project: %d, Folder: %d') % (
+                    self.document_count, 
+                    self.documents_folder_id.folder_document_count if self.documents_folder_id else 0
+                ),
+                'type': 'success',
+            }
+        }
 
     def action_refresh_project_files(self):
         """Refresh the project files list and recompute fields"""
@@ -462,12 +877,14 @@ class ProjectProject(models.Model):
         """Open wizard to copy documents from a selected product to this project"""
         self.ensure_one()
         
-        # Find products that have documents
+        # Find products that have documents AND are used in quotations (sale orders)
         products_with_documents = self.env['product.template'].search([
             ('id', 'in', self.env['documents.document'].search([
                 ('res_model', '=', 'product.template'),
                 ('active', '=', True)
-            ]).mapped('res_id'))
+            ]).mapped('res_id')),
+            # Filter to only products that are used in sale order lines (quotations)
+            ('id', 'in', self.env['sale.order.line'].search([]).mapped('product_template_id').ids)
         ])
         
         if not products_with_documents:
@@ -475,8 +892,8 @@ class ProjectProject(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': _('No Products with Documents'),
-                    'message': _('No products found with documents to copy.'),
+                    'title': _('No Quotation Products with Documents'),
+                    'message': _('No quotation products found with documents to copy. Only products that are used in sale orders and have documents will be shown.'),
                     'type': 'warning',
                 }
             }
@@ -501,7 +918,7 @@ class ProjectProject(models.Model):
         
         # If multiple products, show selection dialog
         return {
-            'name': _('Select Product to Copy Documents From'),
+            'name': _('Select Quotation Product to Copy Documents From'),
             'type': 'ir.actions.act_window',
             'res_model': 'product.template',
             'view_mode': 'list',
@@ -510,6 +927,8 @@ class ProjectProject(models.Model):
             'domain': [('id', 'in', products_with_documents.ids)],
             'context': {
                 'default_target_project_id': self.id,
+                'quotation_product_ids': products_with_documents.ids,
+                'search_default_quotation_products': 1,  # Apply quotation products filter by default
             }
         }
 
@@ -963,3 +1382,239 @@ class ProjectProject(models.Model):
                 'type': 'info',
             }
         }
+
+    def action_create_document_tasks_with_approval(self):
+        """Create document management tasks with approval integration"""
+        self.ensure_one()
+        
+        if not self.documents_folder_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Documents Folder'),
+                    'message': _('This project does not have a documents folder. Create one first.'),
+                    'type': 'warning',
+                }
+            }
+        
+        # Get all documents in the folder
+        folder_documents = self.env['documents.document'].search([
+            ('folder_id', '=', self.documents_folder_id.id),
+            ('type', '!=', 'folder')
+        ])
+        
+        if not folder_documents:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Documents'),
+                    'message': _('No documents found in the project folder.'),
+                    'type': 'info',
+                }
+            }
+        
+        # Create main document management task
+        main_task = self.env['project.task'].create({
+            'name': f'Document Management - {self.name}',
+            'project_id': self.id,
+            'description': f'Manage all documents for project: {self.name}',
+            'priority': '1',  # Normal priority
+            'user_ids': [(6, 0, [self.user_id.id])] if self.user_id else False,
+        })
+        
+        created_tasks = []
+        created_approvals = []
+        
+        # Create subtasks for each document
+        for doc in folder_documents:
+            # Create document task
+            doc_task = self.env['project.task'].create({
+                'name': f'Process {doc.name}',
+                'project_id': self.id,
+                'parent_id': main_task.id,  # Make it a subtask
+                'description': f'Process document: {doc.name}\nCategory: {doc.category}\nStatus: {doc.status}',
+                'priority': '1',
+                'user_ids': [(6, 0, [self.user_id.id])] if self.user_id else False,
+            })
+            created_tasks.append(doc_task)
+            
+            # Create approval request for document verification (if approvals module is available)
+            try:
+                if 'approval.request' in self.env:
+                    category = self._get_document_approval_category()
+                    if category:
+                        approval_request = self.env['approval.request'].create({
+                            'name': f'Document Approval - {doc.name}',
+                            'category_id': category.id,
+                            'request_owner_id': self.user_id.id if self.user_id else self.env.user.id,
+                            'request_status': 'pending',
+                            'date_start': fields.Date.today(),
+                            'date_end': fields.Date.today() + relativedelta(days=7),
+                            'reference': f'Project: {self.name} | Document: {doc.name}',
+                        })
+                        created_approvals.append(approval_request)
+                        
+                        # Link approval to task
+                        doc_task.write({
+                            'approval_request_id': approval_request.id,
+                        })
+            except Exception as e:
+                _logger.warning(f"Could not create approval request: {e}")
+                # Continue without approval integration
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Document Tasks Created'),
+                'message': _('Successfully created:\n• 1 main task\n• %d document subtasks\n• %d approval requests') % (len(created_tasks), len(created_approvals)),
+                'type': 'success',
+            }
+        }
+    
+    def _get_document_approval_category(self):
+        """Get or create document approval category"""
+        try:
+            if 'approval.category' not in self.env:
+                return False
+                
+            category = self.env['approval.category'].search([
+                ('name', 'ilike', 'document')
+            ], limit=1)
+            
+            if not category:
+                # Create a new document approval category
+                category = self.env['approval.category'].create({
+                    'name': 'Document Approval',
+                    'description': 'Document review and approval workflow',
+                    'approval_minimum': 1,
+                    'has_product': False,
+                    'has_reference': True,
+                    'has_date': True,
+                    'has_period': False,
+                    'has_quantity': False,
+                    'has_amount': False,
+                    'has_tax': False,
+                    'has_partner': False,
+                    'has_payment_method': False,
+                    'has_location': False,
+                    'has_delivery_address': False,
+                })
+            
+            return category
+        except Exception as e:
+            _logger.warning(f"Could not get/create approval category: {e}")
+            return False
+    
+    def action_view_document_processing_tasks(self):
+        """View all document processing tasks for this project"""
+        self.ensure_one()
+        
+        document_tasks = self.env['project.task'].search([
+            ('project_id', '=', self.id),
+            ('document_id', '!=', False)
+        ])
+        
+        return {
+            'name': f'Document Processing Tasks - {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task',
+            'view_mode': 'list,form,kanban',
+            'domain': [('id', 'in', document_tasks.ids)],
+            'context': {
+                'default_project_id': self.id,
+                'search_default_document_tasks': 1,
+                'search_default_group_document_category': 1,
+            },
+        }
+    
+    def action_view_document_processing_dashboard(self):
+        """View document processing dashboard for this project"""
+        self.ensure_one()
+        
+        # Calculate statistics
+        document_tasks = self.env['project.task'].search([
+            ('project_id', '=', self.id),
+            ('document_id', '!=', False)
+        ])
+        
+        if not document_tasks:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('No Document Processing Tasks'),
+                    'message': _('This project has no document processing tasks yet.'),
+                    'type': 'info',
+                }
+            }
+        
+        # Group by processing stage
+        stage_stats = {}
+        for stage in ['upload', 'review', 'approval', 'delivery', 'completed']:
+            stage_stats[stage] = len(document_tasks.filtered(
+                lambda t: t.document_processing_stage == stage
+            ))
+        
+        # Group by document category
+        category_stats = {}
+        for category in ['required', 'compliance', 'deliverable', 'reference']:
+            category_tasks = document_tasks.filtered(
+                lambda t: t.document_category == category
+            )
+            category_stats[category] = {
+                'total': len(category_tasks),
+                'completed': len(category_tasks.filtered(
+                    lambda t: t.document_processing_stage == 'completed'
+                ))
+            }
+        
+        # Calculate overall progress
+        total_tasks = len(document_tasks)
+        completed_tasks = stage_stats.get('completed', 0)
+        progress = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+        
+        # Build dashboard message
+        dashboard_msg = f"""
+Document Processing Dashboard - {self.name}
+
+📊 Overall Progress: {progress:.1f}% ({completed_tasks}/{total_tasks} tasks completed)
+
+📋 Processing Stages:
+• Upload: {stage_stats.get('upload', 0)} tasks
+• Review: {stage_stats.get('review', 0)} tasks  
+• Approval: {stage_stats.get('approval', 0)} tasks
+• Delivery: {stage_stats.get('delivery', 0)} tasks
+• Completed: {stage_stats.get('completed', 0)} tasks
+
+📂 Document Categories:
+• Required: {category_stats.get('required', {}).get('completed', 0)}/{category_stats.get('required', {}).get('total', 0)} completed
+• Compliance: {category_stats.get('compliance', {}).get('completed', 0)}/{category_stats.get('compliance', {}).get('total', 0)} completed
+• Deliverable: {category_stats.get('deliverable', {}).get('completed', 0)}/{category_stats.get('deliverable', {}).get('total', 0)} completed
+• Reference: {category_stats.get('reference', {}).get('completed', 0)}/{category_stats.get('reference', {}).get('total', 0)} completed
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Document Processing Dashboard',
+                'message': dashboard_msg,
+                'type': 'info',
+            }
+        }
+
+    def _onchange_documents_folder_id(self):
+        """Automatically create document tasks when documents are added to folder"""
+        if self.documents_folder_id and self.documents_folder_id.folder_document_count > 0:
+            # Check if document tasks already exist
+            existing_tasks = self.env['project.task'].search([
+                ('project_id', '=', self.id),
+                ('name', 'ilike', 'Document Management')
+            ])
+            
+            if not existing_tasks:
+                # Auto-create document tasks
+                self.action_create_document_tasks_with_approval()
