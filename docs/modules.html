@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modules - Mazagawy Modules</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>🏢 Mazagawy Modules</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="modules.html" class="active">Modules</a></li>
+                <li><a href="workflow.html">Workflow</a></li>
+                <li><a href="advantages.html">Advantages</a></li>
+                <li><a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Module Documentation</h1>
+            <p>Detailed information about all 7 Mazagawy modules</p>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="container">
+            
+            <!-- Module 1: Checkpoints -->
+            <div id="checkpoints" class="module-item">
+                <span class="module-badge level-1">Level 1 - Foundation</span>
+                <h2>project_checkpoints_basic</h2>
+                <p class="module-desc">Core checkpoint and milestone management system for granular task tracking</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Multi-level checkpoint system for tasks</li>
+                    <li>✅ Milestone templates with progress tracking</li>
+                    <li>✅ Automated stage transitions based on checkpoint completion</li>
+                    <li>✅ Progress percentage calculation</li>
+                    <li>✅ Email notifications on milestone achievements</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>project.checkpoint.template
+├─ name: Checkpoint template name
+├─ description: Detailed description
+├─ sequence: Display order
+└─ task_template_id: Link to task template
+
+project.checkpoint
+├─ task_id: Link to project task
+├─ name: Checkpoint name
+├─ is_done: Completion status
+├─ sequence: Order
+└─ template_id: Source template
+
+project.milestone
+├─ project_id: Associated project
+├─ name: Milestone name
+├─ date: Target date
+├─ is_reached: Completion flag
+└─ description: Details</code></pre>
+
+                <h3>UAE Service Use Cases</h3>
+                <ul>
+                    <li><strong>License Application Task:</strong>
+                        <ul>
+                            <li>☐ Application form completed</li>
+                            <li>☐ Passport copies attached</li>
+                            <li>☐ Business plan reviewed</li>
+                            <li>☐ Government fees calculated</li>
+                            <li>☐ Client approval received</li>
+                            <li>☐ Application submitted to authority</li>
+                            <li>☐ Submission receipt obtained</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Dependencies</h3>
+                <p><code>project</code>, <code>product</code></p>
+            </div>
+
+            <!-- Module 2: Templates -->
+            <div id="templates" class="module-item">
+                <span class="module-badge level-2">Level 2 - Templates</span>
+                <h2>project_templates_basic</h2>
+                <p class="module-desc">Template management system for reusable project workflows</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Workflow templates for UAE company formation services</li>
+                    <li>✅ Task templates with hierarchies and dependencies</li>
+                    <li>✅ Project templates linked to products</li>
+                    <li>✅ Document template integration</li>
+                    <li>✅ Automatic project creation from templates</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>project.template
+├─ name: Template name (e.g., "FZCO Formation")
+├─ description: Template description
+├─ task_template_ids: Task templates
+├─ project_tag_ids: Default tags
+└─ user_id: Default project manager
+
+project.task.template
+├─ name: Task template name
+├─ description: Task description
+├─ sequence: Order
+├─ stage_id: Default stage
+├─ checkpoint_template_ids: Checkpoints
+├─ parent_template_id: Parent task
+└─ project_template_id: Parent project template
+
+product.template (Extended)
+├─ service_tracking: Project creation mode
+│   ├─ "task_in_project": Single task
+│   ├─ "task_global_project": Global project
+│   ├─ "project_only": New project
+│   └─ "new_workflow": Template-based
+├─ project_template_id: Linked template
+└─ partner_required_fields: Required customer data</code></pre>
+
+                <h3>UAE Service Templates</h3>
+                <ul>
+                    <li><strong>FZCO Formation Template:</strong>
+                        <ul>
+                            <li>Document Collection (5 days)</li>
+                            <li>Name Approval (7 days)</li>
+                            <li>License Application (5 days)</li>
+                            <li>License Issuance (10 days)</li>
+                            <li>Document Preparation (3 days)</li>
+                            <li>Client Handover (2 days)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Mainland LLC Template:</strong>
+                        <ul>
+                            <li>Initial Approval (10 days)</li>
+                            <li>DED Application (15 days)</li>
+                            <li>License Processing (20 days)</li>
+                            <li>Municipality Approvals (7 days)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Dependencies</h3>
+                <p><code>project_checkpoints_basic</code>, <code>sale_management</code></p>
+            </div>
+
+            <!-- Module 3: Documents -->
+            <div id="documents" class="module-item">
+                <span class="module-badge level-3">Level 3 - Core Features</span>
+                <h2>unified_documents</h2>
+                <p class="module-desc">Product-based document automation and lifecycle management</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Product-specific document configuration</li>
+                    <li>✅ Required documents (from customer)</li>
+                    <li>✅ Deliverable documents (to customer)</li>
+                    <li>✅ Complete workflow: Draft → Upload → Complete → Confirm → Done</li>
+                    <li>✅ Return workflow with notes</li>
+                    <li>✅ Automatic folder structure creation</li>
+                    <li>✅ Expiry date tracking and reminders</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>documents.document (Extended)
+├─ required_project_id: Project needing this doc
+├─ deliverable_project_id: Project delivering this doc
+├─ state: Draft/Uploaded/Complete/Confirmed/Done
+├─ expiration_date: Document expiry
+├─ return_notes: Return reason
+└─ type_id: Document type
+
+product.template (Extended)
+├─ required_document_ids: Documents needed from client
+│   ├─ document_type_id: Type (Passport, etc.)
+│   ├─ expiration_required: Track expiry?
+│   └─ is_mandatory: Required or optional
+└─ deliverable_document_ids: Documents to deliver
+    ├─ document_type_id: Type (License, etc.)
+    └─ milestone_id: When to create</code></pre>
+
+                <h3>Document Workflows</h3>
+                
+                <h4>Required Documents (From Client)</h4>
+                <pre><code>1. Auto-created on project start
+   └─> state = 'draft'
+   
+2. Client uploads document
+   └─> state = 'uploaded'
+   
+3. Document controller reviews
+   └─> Click "Complete Required"
+   └─> state = 'complete'
+   
+4. Project manager approves
+   └─> Click "Confirm Required"
+   └─> state = 'confirmed'
+   
+   OR return if issues:
+   └─> Click "Return Required"
+   └─> Add return notes
+   └─> state = 'draft'</code></pre>
+
+                <h4>Deliverable Documents (To Client)</h4>
+                <pre><code>1. Auto-created at milestone
+   └─> state = 'draft'
+   
+2. Service team uploads finals
+   └─> Click "Complete Deliverable"
+   └─> state = 'complete'
+   
+3. Quality check
+   └─> Click "Confirm Deliverable"
+   └─> state = 'confirmed'
+   └─> Ready for handover</code></pre>
+
+                <h3>UAE Document Types</h3>
+                <ul>
+                    <li><strong>Required:</strong> Passport, Emirates ID, Proof of Address, Bank Reference, Business Plan</li>
+                    <li><strong>Deliverable:</strong> Trade License, MOA, Share Certificates, Certificate of Incorporation</li>
+                </ul>
+
+                <h3>Dependencies</h3>
+                <p><code>documents</code> (Enterprise), <code>project_templates_basic</code></p>
+            </div>
+
+            <!-- Module 4: Smart Templates -->
+            <div id="smart" class="module-item">
+                <span class="module-badge level-3">Level 3 - Core Features</span>
+                <h2>smart_templates</h2>
+                <p class="module-desc">AI-powered template recommendations and usage analytics</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Usage pattern tracking and analysis</li>
+                    <li>✅ Template recommendation engine</li>
+                    <li>✅ User preference learning</li>
+                    <li>✅ Most-used template suggestions</li>
+                    <li>✅ Template effectiveness metrics</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>template.usage.analytics
+├─ template_id: Project template
+├─ user_id: User who applied template
+├─ date_used: Application date
+├─ project_id: Created project
+├─ success_score: Effectiveness rating
+└─ notes: Usage notes
+
+template.recommendation
+├─ template_id: Recommended template
+├─ user_id: Target user
+├─ confidence_score: Recommendation strength
+├─ reason: Why recommended
+└─ based_on: Data source</code></pre>
+
+                <h3>Smart Features</h3>
+                <ul>
+                    <li><strong>Pattern Recognition:</strong> Learns from 100+ completed projects</li>
+                    <li><strong>Auto-suggestions:</strong> "Based on your history, use FZCO Template"</li>
+                    <li><strong>Customization Tracking:</strong> Records manual additions to improve templates</li>
+                    <li><strong>Success Metrics:</strong> Tracks on-time completion rates per template</li>
+                </ul>
+
+                <h3>Dependencies</h3>
+                <p><code>project_templates_basic</code></p>
+            </div>
+
+            <!-- Module 5: Handover -->
+            <div id="handover" class="module-item">
+                <span class="module-badge level-4">Level 4 - Handover & FSM</span>
+                <h2>project_handover_notes</h2>
+                <p class="module-desc">Company formation data collection and approval workflows</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Company formation data capture</li>
+                    <li>✅ Individual/company type selection</li>
+                    <li>✅ Share structure configuration</li>
+                    <li>✅ Visa application tracking</li>
+                    <li>✅ Approval workflow (Complete → Confirm → Return)</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>project.handover.notes
+├─ project_id: Associated project
+├─ handover_type: 'individual' or 'company'
+├─ is_complete_hand: Data complete?
+├─ is_confirm_hand: Manager confirmed?
+├─ return_notes: Return reason
+│
+├─ Company Formation:
+│   ├─ company_name_1/2/3: Name options
+│   ├─ legal_entity_type: FZCO/FZE/LLC
+│   ├─ license_authority: DMCC/DAFZA/RAKEZ
+│   ├─ license_validity: 1-10 years
+│   ├─ business_activities: Up to 3
+│   ├─ number_of_shares: Share capital
+│   ├─ price_per_share: Share price
+│   └─ total_share_capital: Computed
+│
+└─ Individual Formation:
+    ├─ first/middle/last_name
+    ├─ gender
+    ├─ nationality
+    ├─ place_of_birth
+    ├─ date_of_birth
+    └─ marital_status
+
+project.visa.application
+├─ handover_id: Parent handover
+├─ visa_type: Investor/Partner/Employee/Dependent
+├─ application_date
+├─ approval_status
+├─ visa_number
+├─ issue_date
+└─ expiry_date</code></pre>
+
+                <h3>Workflow States</h3>
+                <pre><code>Draft → Complete → Confirm → Approved
+          ↓
+       Return (with notes)
+          ↓
+       Update → Complete</code></pre>
+
+                <h3>Critical Gate</h3>
+                <pre><code>IF not is_confirm_hand:
+    BLOCK deliverable document confirmation
+    BLOCK project completion</code></pre>
+
+                <h3>Dependencies</h3>
+                <p><code>project_templates_basic</code></p>
+            </div>
+
+            <!-- Module 6: FSM -->
+            <div id="fsm" class="module-item">
+                <span class="module-badge level-4">Level 4 - Handover & FSM</span>
+                <h2>fsm_workflow_quote_v2</h2>
+                <p class="module-desc">Field service management with quotation workflows (Optional)</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Field service quotations</li>
+                    <li>✅ Time & materials tracking</li>
+                    <li>✅ Fixed price milestones</li>
+                    <li>✅ Project conversion from FSM tasks</li>
+                    <li>✅ On-site service management</li>
+                </ul>
+
+                <h3>Use Cases</h3>
+                <ul>
+                    <li><strong>On-site Consultations:</strong> Initial business setup meetings at client location</li>
+                    <li><strong>Document Collection:</strong> Field agent collects physical documents</li>
+                    <li><strong>Site Inspections:</strong> Pre-license approval site visits</li>
+                    <li><strong>Deliverable Handover:</strong> Physical delivery of company documents</li>
+                </ul>
+
+                <h3>Dependencies</h3>
+                <p><code>project_templates_basic</code>, <code>industry_fsm</code></p>
+            </div>
+
+            <!-- Module 7: Compliance -->
+            <div id="compliance" class="module-item">
+                <span class="module-badge level-5">Level 5 - Compliance</span>
+                <h2>project_compliance</h2>
+                <p class="module-desc">KYC/AML compliance, shareholder registry, and UBO calculation</p>
+
+                <h3>Key Features</h3>
+                <ul>
+                    <li>✅ Multi-factor risk assessment framework</li>
+                    <li>✅ Shareholder registry with ownership tracking</li>
+                    <li>✅ Automatic UBO (Ultimate Beneficial Owner) calculation</li>
+                    <li>✅ Compliance onboarding workflows</li>
+                    <li>✅ Document requirements by risk level</li>
+                    <li>✅ PEP (Politically Exposed Person) screening</li>
+                    <li>✅ Sanctions checking</li>
+                </ul>
+
+                <h3>Main Models</h3>
+                <pre><code>initial.client.onboarding
+├─ partner_id: Customer
+├─ state: Draft/Submitted/Validated/Approved
+├─ risk_rating: Low/Medium/High
+├─ service_risk/product_risk/client_risk: Risk scores
+├─ geography_risk/pep_risk/sanction_risk
+├─ adverse_media_risk
+└─ overall_risk_score: Computed
+
+res.partner.shareholder
+├─ partner_id: Company
+├─ shareholder_id: Shareholder (individual/company)
+├─ ownership_percentage: % owned
+├─ is_direct: Direct or indirect ownership
+├─ is_ubo: Ultimate Beneficial Owner?
+└─ ubo_percentage: Computed total ownership
+
+project.project (Extended)
+├─ compliance_onboarding_id: Linked onboarding
+├─ compliance_required: Boolean
+├─ is_complete_compliance: Data complete?
+├─ is_confirm_compliance: Compliance approved?
+└─ compliance_shareholder_ids: Shareholders</code></pre>
+
+                <h3>Risk Assessment Framework</h3>
+                <pre><code>Risk Categories:
+├─ Service Risk (15%) - Offshore, complex structures
+├─ Product Risk (15%) - Banking, crypto, financial
+├─ Client Risk (15%) - First-time, complex
+├─ Geography Risk (20%) - High-risk jurisdictions
+├─ PEP Risk (15%) - Politically exposed
+├─ Sanction Risk (10%) - Sanctioned entities
+└─ Adverse Media (10%) - Negative news
+
+Rating:
+├─ Low Risk: Score < 30
+├─ Medium Risk: Score 30-60
+└─ High Risk: Score > 60</code></pre>
+
+                <h3>UBO Calculation</h3>
+                <pre><code>Company: Tech Innovations FZCO
+Shareholders:
+├─> Individual A (40%) → Direct UBO ✓
+├─> Company B (35%)
+│   ├─> Individual C (60%) → Indirect 21% (below 25%)
+│   └─> Individual D (40%) → Indirect 14% (below 25%)
+└─> Individual E (25%) → Direct UBO ✓ (exactly at threshold)
+
+Identified UBOs:
+1. Individual A (40% direct)
+2. Individual E (25% direct)</code></pre>
+
+                <h3>Document Requirements</h3>
+                <ul>
+                    <li><strong>Low Risk:</strong> Passport, proof of address, bank reference</li>
+                    <li><strong>Medium Risk:</strong> + Source of funds, bank statements (6 months), business plan</li>
+                    <li><strong>High Risk:</strong> + Source of wealth, audited financials, enhanced due diligence</li>
+                </ul>
+
+                <h3>Critical Gate</h3>
+                <pre><code>IF product.requires_compliance AND not is_confirm_compliance:
+    BLOCK project completion
+    BLOCK deliverable handover</code></pre>
+
+                <h3>Dependencies</h3>
+                <p><code>project_handover_notes</code></p>
+            </div>
+
+            <div class="cta-buttons" style="margin-top: 3rem;">
+                <a href="workflow.html" class="btn btn-primary">View Complete Workflow</a>
+                <a href="advantages.html" class="btn btn-secondary">Compare Advantages</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Mazagawy Modules | Odoo 18 Enterprise | UAE Business Formation Platform</p>
+            <p>Maintained by Sabry Youssef | <a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub Repository</a></p>
+        </div>
+    </footer>
+</body>
+</html>

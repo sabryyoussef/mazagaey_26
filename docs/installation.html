@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation Guide - Mazagawy Modules</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>🏢 Mazagawy Modules</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="installation.html" class="active">Installation</a></li>
+                <li><a href="modules.html">Modules</a></li>
+                <li><a href="workflow.html">Workflow</a></li>
+                <li><a href="advantages.html">Advantages</a></li>
+                <li><a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Installation Guide</h1>
+            <p>Step-by-step instructions to install and configure Mazagawy modules</p>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="container">
+            <h2>Prerequisites</h2>
+            <ul>
+                <li><strong>Odoo Version:</strong> 18.0 Enterprise Edition</li>
+                <li><strong>Required Base Modules:</strong>
+                    <ul>
+                        <li>project (Projects)</li>
+                        <li>documents (Documents - Enterprise)</li>
+                        <li>sale_management (Sales)</li>
+                        <li>hr_timesheet (Timesheets)</li>
+                        <li>product (Products)</li>
+                    </ul>
+                </li>
+                <li><strong>System Requirements:</strong>
+                    <ul>
+                        <li>Docker & Docker Compose (if using containerized setup)</li>
+                        <li>PostgreSQL 15+</li>
+                        <li>Python 3.10+</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>Installation Order</h2>
+            <p>Modules must be installed in the following order due to dependencies:</p>
+
+            <h3>Level 1: Foundation (Install First)</h3>
+            <div class="module-item">
+                <span class="module-badge level-1">Step 1</span>
+                <h3>project_checkpoints_basic</h3>
+                <p><strong>Purpose:</strong> Core checkpoint and milestone functionality</p>
+                <p><strong>Dependencies:</strong> project, product</p>
+                <p><strong>Installation:</strong></p>
+                <pre><code># Via Odoo UI
+Apps → Search "Project Checkpoints" → Install
+
+# Via command line
+./odoo-bin -d your_database -i project_checkpoints_basic</code></pre>
+            </div>
+
+            <h3>Level 2: Templates (Install Second)</h3>
+            <div class="module-item">
+                <span class="module-badge level-2">Step 2</span>
+                <h3>project_templates_basic</h3>
+                <p><strong>Purpose:</strong> Project and task template management</p>
+                <p><strong>Dependencies:</strong> project_checkpoints_basic, sale_management</p>
+                <p><strong>Installation:</strong></p>
+                <pre><code># Via Odoo UI
+Apps → Search "Project Templates" → Install
+
+# Via command line
+./odoo-bin -d your_database -i project_templates_basic</code></pre>
+            </div>
+
+            <h3>Level 3: Core Features (Install in Any Order)</h3>
+            <div class="module-item">
+                <span class="module-badge level-3">Step 3a</span>
+                <h3>unified_documents</h3>
+                <p><strong>Purpose:</strong> Document lifecycle management</p>
+                <p><strong>Dependencies:</strong> documents (Enterprise), project_templates_basic</p>
+                <pre><code>./odoo-bin -d your_database -i unified_documents</code></pre>
+            </div>
+
+            <div class="module-item">
+                <span class="module-badge level-3">Step 3b</span>
+                <h3>smart_templates</h3>
+                <p><strong>Purpose:</strong> AI-powered template recommendations</p>
+                <p><strong>Dependencies:</strong> project_templates_basic</p>
+                <pre><code>./odoo-bin -d your_database -i smart_templates</code></pre>
+            </div>
+
+            <h3>Level 4: Handover & FSM (Install in Any Order)</h3>
+            <div class="module-item">
+                <span class="module-badge level-4">Step 4a</span>
+                <h3>project_handover_notes</h3>
+                <p><strong>Purpose:</strong> Company formation data collection</p>
+                <p><strong>Dependencies:</strong> project_templates_basic</p>
+                <pre><code>./odoo-bin -d your_database -i project_handover_notes</code></pre>
+            </div>
+
+            <div class="module-item">
+                <span class="module-badge level-4">Step 4b</span>
+                <h3>fsm_workflow_quote_v2 (Optional)</h3>
+                <p><strong>Purpose:</strong> Field service quotations</p>
+                <p><strong>Dependencies:</strong> project_templates_basic, industry_fsm</p>
+                <pre><code>./odoo-bin -d your_database -i fsm_workflow_quote_v2</code></pre>
+            </div>
+
+            <h3>Level 5: Compliance (Install Last)</h3>
+            <div class="module-item">
+                <span class="module-badge level-5">Step 5</span>
+                <h3>project_compliance</h3>
+                <p><strong>Purpose:</strong> KYC/AML compliance and shareholder management</p>
+                <p><strong>Dependencies:</strong> project_handover_notes</p>
+                <pre><code>./odoo-bin -d your_database -i project_compliance</code></pre>
+            </div>
+
+            <h2>Docker Installation</h2>
+            <p>If using the provided Docker setup:</p>
+
+            <h3>1. Clone Repository</h3>
+            <pre><code>git clone https://github.com/sabryyoussef/mazagaey_26.git
+cd mazagaey_26</code></pre>
+
+            <h3>2. Configure Environment</h3>
+            <pre><code># Edit docker-compose.yml if needed
+# Default configuration:
+# - PostgreSQL port: 5433
+# - Odoo port: 8069
+# - Database: odoo
+# - User/Password: odoo</code></pre>
+
+            <h3>3. Start Containers</h3>
+            <pre><code># Build and start
+docker-compose up -d
+
+# Check status
+docker ps
+
+# View logs
+docker-compose logs -f odoo</code></pre>
+
+            <h3>4. Access Odoo</h3>
+            <pre><code># Database manager
+http://localhost:8069/web/database/manager
+
+# Create database or use existing
+# Default credentials: odoo/odoo</code></pre>
+
+            <h3>5. Install Modules</h3>
+            <p>Access Odoo UI and install modules in order listed above.</p>
+
+            <h2>Post-Installation Configuration</h2>
+
+            <h3>1. Configure Document Types</h3>
+            <ul>
+                <li>Go to <strong>Documents → Configuration → Document Types</strong></li>
+                <li>Create required document types:
+                    <ul>
+                        <li>Passport</li>
+                        <li>Emirates ID</li>
+                        <li>Trade License</li>
+                        <li>Memorandum of Association</li>
+                        <li>Share Certificates</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>2. Create Project Templates</h3>
+            <ul>
+                <li>Go to <strong>Projects → Configuration → Workflow Templates</strong></li>
+                <li>Create templates for your services:
+                    <ul>
+                        <li>FZCO Formation</li>
+                        <li>FZE Formation</li>
+                        <li>Mainland LLC Formation</li>
+                        <li>Visa Services</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. Configure Task Templates</h3>
+            <ul>
+                <li>Go to <strong>Projects → Configuration → Task Templates</strong></li>
+                <li>Create task templates with checkpoints for each service phase</li>
+            </ul>
+
+            <h3>4. Set Up Products</h3>
+            <ul>
+                <li>Go to <strong>Sales → Products → Products</strong></li>
+                <li>Create service products</li>
+                <li>Link to project templates</li>
+                <li>Configure required and deliverable documents</li>
+            </ul>
+
+            <h3>5. Configure Compliance Rules</h3>
+            <ul>
+                <li>Go to <strong>Projects → Compliance → Configuration</strong></li>
+                <li>Set up risk assessment criteria</li>
+                <li>Define document requirements by risk level</li>
+            </ul>
+
+            <h2>Verification</h2>
+            <p>Test your installation:</p>
+
+            <h3>1. Create Test Quotation</h3>
+            <pre><code>1. Sales → New Quotation
+2. Add customer
+3. Add service product
+4. Confirm quotation
+5. Verify project auto-created</code></pre>
+
+            <h3>2. Check Project Structure</h3>
+            <pre><code>1. Open created project
+2. Verify tasks created from templates
+3. Check documents folder exists
+4. Verify checkpoints visible on tasks</code></pre>
+
+            <h3>3. Test Document Workflow</h3>
+            <pre><code>1. Go to Documents
+2. Find project folder
+3. Upload test document
+4. Complete → Confirm workflow
+5. Verify state changes</code></pre>
+
+            <h2>Troubleshooting</h2>
+
+            <h3>Module Installation Fails</h3>
+            <ul>
+                <li>Check installation order</li>
+                <li>Verify dependencies installed</li>
+                <li>Check Odoo logs: <code>docker-compose logs odoo</code></li>
+            </ul>
+
+            <h3>Enterprise Modules Missing</h3>
+            <ul>
+                <li>Verify enterprise addons path in odoo.conf</li>
+                <li>Check Documents module installed</li>
+                <li>Restart Odoo: <code>docker-compose restart odoo</code></li>
+            </ul>
+
+            <h3>Slow Performance</h3>
+            <ul>
+                <li>Set workers=0 in odoo.conf during installation</li>
+                <li>Increase after all modules installed</li>
+            </ul>
+
+            <h2>Next Steps</h2>
+            <div class="cta-buttons" style="margin-top: 2rem;">
+                <a href="modules.html" class="btn btn-primary">Explore Modules</a>
+                <a href="workflow.html" class="btn btn-secondary">View Workflow</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Mazagawy Modules | Odoo 18 Enterprise | UAE Business Formation Platform</p>
+            <p>Maintained by Sabry Youssef | <a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub Repository</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Workflow - Mazagawy Modules</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>🏢 Mazagawy Modules</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="modules.html">Modules</a></li>
+                <li><a href="workflow.html" class="active">Workflow</a></li>
+                <li><a href="advantages.html">Advantages</a></li>
+                <li><a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Complete Business Workflow</h1>
+            <p>End-to-end process for UAE company formation services</p>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="container">
+            
+            <h2>Overview</h2>
+            <p>This workflow covers the complete lifecycle of UAE business formation services from initial quotation through project delivery and client handover.</p>
+
+            <div class="workflow-steps" style="flex-direction: column; margin: 3rem 0;">
+                <div class="step">
+                    <div class="step-number">0</div>
+                    <h3>System Setup (One-Time)</h3>
+                    <p>Configure modules, templates, and business rules</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Product Configuration</h3>
+                    <p>Set up service products with templates and documents</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Sales Process</h3>
+                    <p>Quotation, customer data, order confirmation</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Document Collection</h3>
+                    <p>Client uploads required documents for verification</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Handover Data</h3>
+                    <p>Capture company formation details</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>Compliance</h3>
+                    <p>KYC/AML checks and risk assessment</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <h3>Service Execution</h3>
+                    <p>Process license application and approvals</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">7</div>
+                    <h3>Deliverables</h3>
+                    <p>Prepare final documents for client</p>
+                </div>
+                <div class="arrow" style="transform: rotate(90deg);">→</div>
+                <div class="step">
+                    <div class="step-number">8</div>
+                    <h3>Handover & Completion</h3>
+                    <p>Deliver documents and close project</p>
+                </div>
+            </div>
+
+            <h2>Phase 0: System Setup</h2>
+            <p><strong>Frequency:</strong> One-time configuration</p>
+            <ul>
+                <li>✓ Install modules in correct order (Levels 1-5)</li>
+                <li>✓ Configure document types (Passport, License, etc.)</li>
+                <li>✓ Create project templates for UAE services</li>
+                <li>✓ Set up task libraries with checkpoints</li>
+                <li>✓ Configure compliance rules and risk matrix</li>
+            </ul>
+
+            <h2>Phase 1: Product Configuration</h2>
+            <p><strong>Module:</strong> project_templates_basic + unified_documents</p>
+            
+            <h3>Service Product Setup</h3>
+            <pre><code>Product: "FZCO Formation - Standard Package"
+├─> Type: Service
+├─> Service Tracking: "new_workflow" (template-based)
+├─> Project Template: "FZCO Formation Template"
+├─> Required Documents:
+│   ├─> Passport Copy
+│   ├─> Emirates ID
+│   ├─> Proof of Address
+│   └─> Business Plan
+├─> Deliverable Documents:
+│   ├─> Trade License
+│   ├─> MOA (Memorandum)
+│   ├─> Share Certificates
+│   └─> Certificate of Incorporation
+└─> Partner Required Fields:
+    ├─> Nationality
+    ├─> License Authority
+    └─> Business Activity</code></pre>
+
+            <h2>Phase 2: Sales Process</h2>
+            
+            <h3>Step 1: Create Quotation</h3>
+            <ul>
+                <li>Navigate to <strong>Sales → Quotations → Create</strong></li>
+                <li>Select customer</li>
+                <li>Add service product(s)</li>
+                <li>Set pricing and payment terms</li>
+            </ul>
+
+            <h3>Step 2: Customer Data Collection</h3>
+            <div class="gate">
+                <strong>⚠️ GATE:</strong> Required partner fields must be filled before SO confirmation
+            </div>
+            <p>If missing fields detected:</p>
+            <ul>
+                <li>System opens wizard to collect data</li>
+                <li>Captures nationality, license authority, activities</li>
+                <li>Validates completeness before proceeding</li>
+            </ul>
+
+            <h3>Step 3: Confirm Sale Order</h3>
+            <ul>
+                <li><strong>Invoice Creation:</strong> Based on invoicing policy
+                    <ul>
+                        <li>Prepayment: Invoice created immediately</li>
+                        <li>Milestone: Multiple invoices per phase</li>
+                        <li>Post-paid: Invoice on delivery</li>
+                    </ul>
+                </li>
+                <li><strong>Project Auto-Creation:</strong>
+                    <ul>
+                        <li>Creates project from template</li>
+                        <li>Generates tasks with checkpoints</li>
+                        <li>Creates document placeholders</li>
+                        <li>Sets up folder structure</li>
+                        <li>Project state: <code>b_new</code></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>Phase 3: Document Collection</h2>
+            <p><strong>Module:</strong> unified_documents</p>
+
+            <h3>Required Documents Workflow</h3>
+            <pre><code>1. Auto-created (state: draft)
+   └─> System creates placeholders based on product config
+
+2. Client Upload (state: uploaded)
+   └─> Client uploads via portal or email
+
+3. Verification (state: complete)
+   └─> Document controller clicks "Complete Required"
+   └─> Reviews validity, expiry dates
+
+4. Confirmation (state: confirmed)
+   └─> Project manager clicks "Confirm Required"
+   └─> Document locked, checkpoint updated
+
+Alternative: Return Flow
+   └─> Click "Return Required"
+   └─> Add notes explaining issues
+   └─> Client re-uploads
+   └─> Repeat verification</code></pre>
+
+            <div class="gate">
+                <strong>⚠️ GATE:</strong> All required documents must be <code>confirmed</code> before project can move to <code>c_in_progress</code>
+            </div>
+
+            <h2>Phase 4: Handover Data Collection</h2>
+            <p><strong>Module:</strong> project_handover_notes</p>
+
+            <h3>Company Formation Details</h3>
+            <ul>
+                <li><strong>Basic Info:</strong> Company names (3 options), legal entity, authority</li>
+                <li><strong>License:</strong> Validity period, business activities</li>
+                <li><strong>Operations:</strong> Countries, visa requirements, office space</li>
+                <li><strong>Shareholding:</strong> Number of shares, price, distribution</li>
+                <li><strong>Tax:</strong> TRN, registration status, filing schedule</li>
+            </ul>
+
+            <h3>Workflow States</h3>
+            <pre><code>Draft → Complete → Confirm → Approved
+          ↓
+       Return → Update → Complete</code></pre>
+
+            <div class="gate">
+                <strong>⚠️ GATE:</strong> <code>is_confirm_hand = True</code> required before deliverable document confirmation
+            </div>
+
+            <h2>Phase 5: Compliance Processing</h2>
+            <p><strong>Module:</strong> project_compliance</p>
+
+            <h3>Risk Assessment</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Risk Category</th>
+                        <th>Weight</th>
+                        <th>Factors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Service Risk</td>
+                        <td>15%</td>
+                        <td>Complexity, offshore structures</td>
+                    </tr>
+                    <tr>
+                        <td>Product Risk</td>
+                        <td>15%</td>
+                        <td>Banking, crypto, financial services</td>
+                    </tr>
+                    <tr>
+                        <td>Client Risk</td>
+                        <td>15%</td>
+                        <td>First-time vs repeat customer</td>
+                    </tr>
+                    <tr>
+                        <td>Geography Risk</td>
+                        <td>20%</td>
+                        <td>High-risk jurisdictions</td>
+                    </tr>
+                    <tr>
+                        <td>PEP Risk</td>
+                        <td>15%</td>
+                        <td>Politically exposed persons</td>
+                    </tr>
+                    <tr>
+                        <td>Sanction Risk</td>
+                        <td>10%</td>
+                        <td>Sanctioned entities/individuals</td>
+                    </tr>
+                    <tr>
+                        <td>Adverse Media</td>
+                        <td>10%</td>
+                        <td>Negative news, legal issues</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>UBO Identification</h3>
+            <p>System automatically calculates Ultimate Beneficial Owners (>25% ownership):</p>
+            <pre><code>Example:
+Company: Tech Innovations FZCO
+├─> Individual A (40%) → UBO ✓
+├─> Company B (35%)
+│   ├─> Individual C (60% of B) → Indirect 21%
+│   └─> Individual D (40% of B) → Indirect 14%
+└─> Individual E (25%) → UBO ✓
+
+Result: 2 UBOs identified</code></pre>
+
+            <div class="gate">
+                <strong>⚠️ GATE:</strong> <code>is_confirm_compliance = True</code> required before project completion
+            </div>
+
+            <h2>Phase 6: Service Execution</h2>
+            <p><strong>Module:</strong> project_checkpoints_basic</p>
+
+            <h3>Task Progress with Checkpoints</h3>
+            <pre><code>Task: "Submit License Application"
+Checkpoints:
+☐ Application form completed
+☐ Passport copies attached
+☐ Business plan reviewed
+☐ Government fees calculated
+☐ Client approval received
+☐ Application submitted to authority
+☑ Submission receipt obtained
+☑ Application tracking number recorded
+
+Progress: 25% → Updates automatically</code></pre>
+
+            <h3>Milestones</h3>
+            <ul>
+                <li><strong>Contract Signed</strong> (Day 0)</li>
+                <li><strong>Documents Collected</strong> (Day 3-5)</li>
+                <li><strong>Name Approved</strong> (Day 7-10)</li>
+                <li><strong>License Submitted</strong> (Day 12-15)</li>
+                <li><strong>License Issued</strong> (Day 20-25) ← Triggers deliverable creation</li>
+                <li><strong>Documents Delivered</strong> (Day 28-30)</li>
+            </ul>
+
+            <h2>Phase 7: Deliverable Preparation</h2>
+            <p><strong>Module:</strong> unified_documents</p>
+
+            <h3>Deliverable Documents Workflow</h3>
+            <pre><code>1. Auto-created at "License Issued" milestone
+   └─> state: draft
+
+2. Service team uploads finals
+   └─> Trade license PDF
+   └─> Certificate scans
+   └─> Share certificates
+   └─> Click "Complete Deliverable"
+
+3. Quality check
+   └─> Document controller verifies
+   └─> Click "Confirm Deliverable"
+   └─> state: confirmed
+
+4. Ready for handover
+   └─> Link to handover package
+   └─> Schedule client appointment</code></pre>
+
+            <div class="gate">
+                <strong>⚠️ GATE:</strong> All deliverable documents must be <code>confirmed</code> before project completion
+            </div>
+
+            <h2>Phase 8: Handover & Completion</h2>
+
+            <h3>Final Steps</h3>
+            <ol>
+                <li><strong>Prepare Handover Package</strong>
+                    <ul>
+                        <li>Collect all confirmed deliverables</li>
+                        <li>Create physical folder/cabinet entry</li>
+                        <li>Prepare sign-off document</li>
+                    </ul>
+                </li>
+                <li><strong>Schedule Client Appointment</strong>
+                    <ul>
+                        <li>Coordinate with client</li>
+                        <li>Arrange office visit or courier</li>
+                    </ul>
+                </li>
+                <li><strong>Physical Handover</strong>
+                    <ul>
+                        <li>Client receives documents</li>
+                        <li>Sign handover receipt</li>
+                        <li>Upload signed receipt</li>
+                    </ul>
+                </li>
+                <li><strong>Project Completion</strong>
+                    <ul>
+                        <li>Mark project as complete</li>
+                        <li>Trigger commission calculation</li>
+                        <li>Archive project files</li>
+                        <li>Send satisfaction survey</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h2>Phase 9: Commission Processing</h2>
+            <p><strong>Note:</strong> Not yet implemented - planned feature</p>
+
+            <h3>Planned Workflow</h3>
+            <pre><code>On Project Completion:
+1. Check payment_state = 'paid'
+2. Calculate sales commission
+   └─> Add to payroll for salesperson
+3. Check partner commission eligibility
+   └─> Create partner commission record
+   └─> Generate vendor bill
+4. Approval workflow
+5. Process payments</code></pre>
+
+            <h2>Complete UAE Service Example: FZCO Formation</h2>
+
+            <h3>Timeline: 30 Days</h3>
+            
+            <div class="module-item">
+                <h3>Week 1: Setup & Documentation</h3>
+                <ul>
+                    <li><strong>Day 1:</strong> SO confirmed, project created, documents requested</li>
+                    <li><strong>Day 2-3:</strong> Client uploads passport, Emirates ID, proof of address</li>
+                    <li><strong>Day 4:</strong> Document verification complete</li>
+                    <li><strong>Day 5:</strong> Handover data collected, compliance check initiated</li>
+                </ul>
+            </div>
+
+            <div class="module-item">
+                <h3>Week 2: Name Approval</h3>
+                <ul>
+                    <li><strong>Day 8:</strong> 3 company name options submitted to DMCC</li>
+                    <li><strong>Day 10:</strong> Name approved, reservation certificate issued</li>
+                    <li><strong>Day 12:</strong> Compliance approved, risk rating: Low</li>
+                </ul>
+            </div>
+
+            <div class="module-item">
+                <h3>Week 3: License Application</h3>
+                <ul>
+                    <li><strong>Day 15:</strong> License application prepared and reviewed</li>
+                    <li><strong>Day 16:</strong> Client approves application</li>
+                    <li><strong>Day 17:</strong> Application submitted to DMCC</li>
+                    <li><strong>Day 18-20:</strong> DMCC processing</li>
+                </ul>
+            </div>
+
+            <div class="module-item">
+                <h3>Week 4: Issuance & Handover</h3>
+                <ul>
+                    <li><strong>Day 23:</strong> Trade license issued by DMCC</li>
+                    <li><strong>Day 24:</strong> Deliverable documents created</li>
+                    <li><strong>Day 25-26:</strong> MOA, share certificates prepared</li>
+                    <li><strong>Day 27:</strong> Quality check, all docs confirmed</li>
+                    <li><strong>Day 28:</strong> Handover package prepared</li>
+                    <li><strong>Day 29:</strong> Client appointment, physical handover</li>
+                    <li><strong>Day 30:</strong> Project completed, commission triggered</li>
+                </ul>
+            </div>
+
+            <h2>Key Success Factors</h2>
+            <ul>
+                <li>✅ <strong>Template-based consistency</strong> - Every FZCO uses same proven workflow</li>
+                <li>✅ <strong>Automated gates</strong> - Cannot skip critical steps</li>
+                <li>✅ <strong>Document tracking</strong> - Never lose track of requirements</li>
+                <li>✅ <strong>Compliance built-in</strong> - KYC/AML integrated into process</li>
+                <li>✅ <strong>Progress visibility</strong> - Real-time tracking via checkpoints</li>
+                <li>✅ <strong>Smart automation</strong> - Reduce manual work, improve speed</li>
+            </ul>
+
+            <div class="cta-buttons" style="margin-top: 3rem;">
+                <a href="modules.html" class="btn btn-secondary">View Modules</a>
+                <a href="advantages.html" class="btn btn-primary">Compare Advantages</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Mazagawy Modules | Odoo 18 Enterprise | UAE Business Formation Platform</p>
+            <p>Maintained by Sabry Youssef | <a href="https://github.com/sabryyoussef/mazagaey_26" target="_blank">GitHub Repository</a></p>
+        </div>
+    </footer>
+</body>
+</html>
