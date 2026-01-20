@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Products from Freezoner Analysis -->
+        
+        <!-- 1. Employment Visa - 2 Years -->
+        <record id="product_employment_visa_2y" model="product.template">
+            <field name="name">Employment Visa - 2 Years</field>
+            <field name="default_code">VISA-EMP-2Y</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">3500</field>
+            <field name="standard_price">2000</field>
+            <field name="service_type_id" ref="service_type_visa_employment"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_visa_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Employment visa processing for 2 years including application, medical fitness, Emirates ID, and stamping</field>
+        </record>
+        
+        <!-- 2. Corporate Tax Registration -->
+        <record id="product_ct_registration" model="product.template">
+            <field name="name">Corporate Tax (CT) Registration</field>
+            <field name="default_code">ACCT-CTR</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1000</field>
+            <field name="standard_price">500</field>
+            <field name="service_type_id" ref="service_type_accounting_tax"/>
+            <field name="product_department_id" ref="department_accounts"/>
+            <field name="is_accounting_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Corporate Tax (CT) registration with Federal Tax Authority including TRN issuance</field>
+        </record>
+        
+        <!-- 3. VAT Registration -->
+        <record id="product_vat_registration" model="product.template">
+            <field name="name">Value Added Tax (VAT) Registration</field>
+            <field name="default_code">ACCT-VATR</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1000</field>
+            <field name="standard_price">500</field>
+            <field name="service_type_id" ref="service_type_accounting_tax"/>
+            <field name="product_department_id" ref="department_accounts"/>
+            <field name="is_accounting_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">VAT registration with Federal Tax Authority</field>
+        </record>
+        
+        <!-- 4. Corporate Bank Account Opening -->
+        <record id="product_corporate_banking" model="product.template">
+            <field name="name">Corporate Bank Account Opening</field>
+            <field name="default_code">BANK-CORP</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">5000</field>
+            <field name="standard_price">2000</field>
+            <field name="service_type_id" ref="service_type_banking_corporate"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_banking_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Corporate banking assistance including documentation, bank application, and account opening support</field>
+        </record>
+        
+        <!-- 5. Tax Residency Certificate - Individual -->
+        <record id="product_tax_residency_individual" model="product.template">
+            <field name="name">Tax Residency Certificate - Individual</field>
+            <field name="default_code">ACCT-TRI</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">6000</field>
+            <field name="standard_price">3000</field>
+            <field name="service_type_id" ref="service_type_accounting_specialized"/>
+            <field name="product_department_id" ref="department_accounts"/>
+            <field name="is_accounting_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Tax residency certificate for individuals from Federal Tax Authority</field>
+        </record>
+        
+        <!-- 6. Golden Visa - Company Investment -->
+        <record id="product_golden_visa_investment" model="product.template">
+            <field name="name">Golden Visa - Company Investment (10 Years)</field>
+            <field name="default_code">VISA-GOLD-INV</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">15000</field>
+            <field name="standard_price">8000</field>
+            <field name="service_type_id" ref="service_type_visa_golden"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_visa_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Golden Visa (10 years) for company investors - premium visa service</field>
+        </record>
+        
+        <!-- 7. Business Setup - FZCO 1 Year -->
+        <record id="product_business_setup_1y" model="product.template">
+            <field name="name">Business Formation - FZCO 1 Year</field>
+            <field name="default_code">SETUP-FZCO-1Y</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">12000</field>
+            <field name="standard_price">6000</field>
+            <field name="service_type_id" ref="service_type_business_setup_fzco"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_business_setup" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Complete FZCO business formation including name approval, license issuance, and registration (1 year)</field>
+        </record>
+        
+        <!-- 8. License Renewal - 1 Year -->
+        <record id="product_license_renewal_1y" model="product.template">
+            <field name="name">Trade License Renewal - 1 Year</field>
+            <field name="default_code">RENEW-1Y</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">8000</field>
+            <field name="standard_price">4000</field>
+            <field name="service_type_id" ref="service_type_renewal"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Annual trade license renewal including government fees and processing</field>
+        </record>
+        
+        <!-- 9. POA Drafting -->
+        <record id="product_poa_drafting" model="product.template">
+            <field name="name">Power of Attorney (POA) Drafting</field>
+            <field name="default_code">VALUE-POA</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">2500</field>
+            <field name="standard_price">1000</field>
+            <field name="service_type_id" ref="service_type_value_legal"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_value_added" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Professional Power of Attorney drafting and attestation services</field>
+        </record>
+        
+        <!-- 10. Health Insurance Services -->
+        <record id="product_health_insurance" model="product.template">
+            <field name="name">Health Insurance Services</field>
+            <field name="default_code">VALUE-INS</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">1500</field>
+            <field name="standard_price">800</field>
+            <field name="service_type_id" ref="service_type_value_insurance"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_value_added" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Health insurance policy procurement and registration for employees</field>
+        </record>
+        
+        <!-- 11. Investor Visa - 2 Years -->
+        <record id="product_investor_visa_2y" model="product.template">
+            <field name="name">Investor Visa - 2 Years</field>
+            <field name="default_code">VISA-INV-2Y</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">4000</field>
+            <field name="standard_price">2200</field>
+            <field name="service_type_id" ref="service_type_visa_investor"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_visa_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Investor visa for business owners and partners (2 years validity)</field>
+        </record>
+        
+        <!-- 12. Audit Report -->
+        <record id="product_audit_report" model="product.template">
+            <field name="name">Annual Audit Report</field>
+            <field name="default_code">ACCT-AUDIT</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">8000</field>
+            <field name="standard_price">4000</field>
+            <field name="service_type_id" ref="service_type_accounting_audit"/>
+            <field name="product_department_id" ref="department_accounts"/>
+            <field name="is_accounting_service" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Professional audit report preparation for annual compliance</field>
+        </record>
+        
+        <!-- 13. Company Amendment - Add/Remove Activity -->
+        <record id="product_company_amendment_activity" model="product.template">
+            <field name="name">Company Amendment - Add/Remove Activity</field>
+            <field name="default_code">ADMIN-ACT</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">2000</field>
+            <field name="standard_price">1000</field>
+            <field name="service_type_id" ref="service_type_admin_amendment"/>
+            <field name="product_department_id" ref="department_admin"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">License amendment to add or remove business activities</field>
+        </record>
+        
+        <!-- 14. Attestation Services -->
+        <record id="product_attestation" model="product.template">
+            <field name="name">Document Attestation Services</field>
+            <field name="default_code">VALUE-ATT</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">800</field>
+            <field name="standard_price">400</field>
+            <field name="service_type_id" ref="service_type_value_certificates"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_value_added" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Document attestation and legalization services</field>
+        </record>
+        
+        <!-- 15. Translation Services -->
+        <record id="product_translation" model="product.template">
+            <field name="name">Professional Translation Services</field>
+            <field name="default_code">VALUE-TRANS</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">500</field>
+            <field name="standard_price">200</field>
+            <field name="service_type_id" ref="service_type_value_support"/>
+            <field name="product_department_id" ref="department_operations"/>
+            <field name="is_value_added" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="description">Legal document translation (Arabic-English)</field>
+        </record>
+        
+    </data>
+</odoo>

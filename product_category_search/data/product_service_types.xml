@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Main Service Type Categories from Freezoner Analysis -->
+        
+        <!-- 1. Visa Services (60+ products) -->
+        <record id="service_type_visa" model="product.service.type">
+            <field name="name">Visa Services</field>
+            <field name="code">VISA</field>
+            <field name="description">Employment, Investor, Golden, Dependent, and specialized visa services</field>
+            <field name="color">1</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <!-- Visa Sub-types -->
+        <record id="service_type_visa_employment" model="product.service.type">
+            <field name="name">Employment Visa</field>
+            <field name="code">VISA-EMP</field>
+            <field name="parent_id" ref="service_type_visa"/>
+            <field name="description">Employment visa processing (2 years)</field>
+            <field name="sequence">11</field>
+        </record>
+        
+        <record id="service_type_visa_investor" model="product.service.type">
+            <field name="name">Investor Visa</field>
+            <field name="code">VISA-INV</field>
+            <field name="parent_id" ref="service_type_visa"/>
+            <field name="description">Investor visa processing (2 years)</field>
+            <field name="sequence">12</field>
+        </record>
+        
+        <record id="service_type_visa_golden" model="product.service.type">
+            <field name="name">Golden Visa</field>
+            <field name="code">VISA-GOLD</field>
+            <field name="parent_id" ref="service_type_visa"/>
+            <field name="description">Golden visa (10 years) - Investment, Property, Executive</field>
+            <field name="sequence">13</field>
+        </record>
+        
+        <record id="service_type_visa_dependent" model="product.service.type">
+            <field name="name">Dependent Visa</field>
+            <field name="code">VISA-DEP</field>
+            <field name="parent_id" ref="service_type_visa"/>
+            <field name="description">Dependent, maid, and family visa services</field>
+            <field name="sequence">14</field>
+        </record>
+        
+        <record id="service_type_visa_renewal" model="product.service.type">
+            <field name="name">Visa Renewal</field>
+            <field name="code">VISA-REN</field>
+            <field name="parent_id" ref="service_type_visa"/>
+            <field name="description">Visa renewal and modification services</field>
+            <field name="sequence">15</field>
+        </record>
+        
+        <!-- 2. Accounting Services (46 products) -->
+        <record id="service_type_accounting" model="product.service.type">
+            <field name="name">Accounting Services</field>
+            <field name="code">ACCT</field>
+            <field name="description">Tax, audit, bookkeeping, and financial compliance services</field>
+            <field name="color">5</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <!-- Accounting Sub-types -->
+        <record id="service_type_accounting_tax" model="product.service.type">
+            <field name="name">Tax Services</field>
+            <field name="code">ACCT-TAX</field>
+            <field name="parent_id" ref="service_type_accounting"/>
+            <field name="description">Corporate Tax (CT) and VAT registration, filing, de-registration</field>
+            <field name="sequence">21</field>
+        </record>
+        
+        <record id="service_type_accounting_audit" model="product.service.type">
+            <field name="name">Audit &amp; Compliance</field>
+            <field name="code">ACCT-AUDIT</field>
+            <field name="parent_id" ref="service_type_accounting"/>
+            <field name="description">Audit reports, financial statements, bookkeeping</field>
+            <field name="sequence">22</field>
+        </record>
+        
+        <record id="service_type_accounting_specialized" model="product.service.type">
+            <field name="name">Specialized Accounting</field>
+            <field name="code">ACCT-SPEC</field>
+            <field name="parent_id" ref="service_type_accounting"/>
+            <field name="description">Tax residency certificates, customs, GoAML, payroll</field>
+            <field name="sequence">23</field>
+        </record>
+        
+        <!-- 3. Banking & Account Opening (12 products) -->
+        <record id="service_type_banking" model="product.service.type">
+            <field name="name">Banking Services</field>
+            <field name="code">BANK</field>
+            <field name="description">Corporate, personal, digital banking and mortgage assistance</field>
+            <field name="color">3</field>
+            <field name="sequence">30</field>
+        </record>
+        
+        <record id="service_type_banking_corporate" model="product.service.type">
+            <field name="name">Corporate Banking</field>
+            <field name="code">BANK-CORP</field>
+            <field name="parent_id" ref="service_type_banking"/>
+            <field name="description">Corporate bank account opening assistance</field>
+            <field name="sequence">31</field>
+        </record>
+        
+        <record id="service_type_banking_personal" model="product.service.type">
+            <field name="name">Personal Banking</field>
+            <field name="code">BANK-PERS</field>
+            <field name="parent_id" ref="service_type_banking"/>
+            <field name="description">Personal bank account and mortgage assistance</field>
+            <field name="sequence">32</field>
+        </record>
+        
+        <!-- 4. Business Setup (5 products) -->
+        <record id="service_type_business_setup" model="product.service.type">
+            <field name="name">Business Setup</field>
+            <field name="code">SETUP</field>
+            <field name="description">Company formation, pre-approval, license issuance</field>
+            <field name="color">4</field>
+            <field name="sequence">40</field>
+        </record>
+        
+        <record id="service_type_business_setup_fzco" model="product.service.type">
+            <field name="name">FZCO Setup</field>
+            <field name="code">SETUP-FZCO</field>
+            <field name="parent_id" ref="service_type_business_setup"/>
+            <field name="description">Freezone Company (FZCO) setup - 1 year or multiyear</field>
+            <field name="sequence">41</field>
+        </record>
+        
+        <!-- 5. Company Renewal (6 products) -->
+        <record id="service_type_renewal" model="product.service.type">
+            <field name="name">License Renewal</field>
+            <field name="code">RENEW</field>
+            <field name="description">Trade license renewal - 1 year or multiyear</field>
+            <field name="color">6</field>
+            <field name="sequence">50</field>
+        </record>
+        
+        <!-- 6. Company Liquidation (6 products) -->
+        <record id="service_type_liquidation" model="product.service.type">
+            <field name="name">Company Liquidation</field>
+            <field name="code">LIQUID</field>
+            <field name="description">License cancellation with/without visa</field>
+            <field name="color">8</field>
+            <field name="sequence">60</field>
+        </record>
+        
+        <!-- 7. Business Administration (24 products) -->
+        <record id="service_type_administration" model="product.service.type">
+            <field name="name">Business Administration</field>
+            <field name="code">ADMIN</field>
+            <field name="description">Company amendments, ownership changes, activity updates</field>
+            <field name="color">9</field>
+            <field name="sequence">70</field>
+        </record>
+        
+        <record id="service_type_admin_amendment" model="product.service.type">
+            <field name="name">Company Amendments</field>
+            <field name="code">ADMIN-AMD</field>
+            <field name="parent_id" ref="service_type_administration"/>
+            <field name="description">Add/remove activities, shareholders, management changes, name changes</field>
+            <field name="sequence">71</field>
+        </record>
+        
+        <!-- 8. Value Added Services (85+ products) -->
+        <record id="service_type_value_added" model="product.service.type">
+            <field name="name">Value Added Services</field>
+            <field name="code">VALUE</field>
+            <field name="description">Certificates, attestation, POA, health insurance, courier, etc.</field>
+            <field name="color">10</field>
+            <field name="sequence">80</field>
+        </record>
+        
+        <record id="service_type_value_certificates" model="product.service.type">
+            <field name="name">Certificates &amp; Attestation</field>
+            <field name="code">VALUE-CERT</field>
+            <field name="parent_id" ref="service_type_value_added"/>
+            <field name="description">Certificate assistance, attestation, stamping</field>
+            <field name="sequence">81</field>
+        </record>
+        
+        <record id="service_type_value_legal" model="product.service.type">
+            <field name="name">Legal Services</field>
+            <field name="code">VALUE-LEGAL</field>
+            <field name="parent_id" ref="service_type_value_added"/>
+            <field name="description">POA drafting, tenancy agreements, wills, contracts</field>
+            <field name="sequence">82</field>
+        </record>
+        
+        <record id="service_type_value_insurance" model="product.service.type">
+            <field name="name">Insurance Services</field>
+            <field name="code">VALUE-INS</field>
+            <field name="parent_id" ref="service_type_value_added"/>
+            <field name="description">Health insurance services and renewals</field>
+            <field name="sequence">83</field>
+        </record>
+        
+        <record id="service_type_value_support" model="product.service.type">
+            <field name="name">Support Services</field>
+            <field name="code">VALUE-SUPP</field>
+            <field name="parent_id" ref="service_type_value_added"/>
+            <field name="description">Courier, delivery, translation, typing, PO Box</field>
+            <field name="sequence">84</field>
+        </record>
+        
+        <!-- 9. Service Fees -->
+        <record id="service_type_fees" model="product.service.type">
+            <field name="name">Service Fees</field>
+            <field name="code">FEES</field>
+            <field name="description">Annual contracts, service fees, payment processing</field>
+            <field name="color">7</field>
+            <field name="sequence">90</field>
+        </record>
+        
+    </data>
+</odoo>

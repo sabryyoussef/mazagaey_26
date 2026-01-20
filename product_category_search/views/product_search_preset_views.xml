@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Search Preset List View -->
+        <record id="view_product_search_preset_tree" model="ir.ui.view">
+            <field name="name">product.search.preset.tree</field>
+            <field name="model">product.search.preset</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="is_public"/>
+                    <field name="usage_count"/>
+                    <field name="result_count"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- Search Preset Form View -->
+        <record id="view_product_search_preset_form" model="ir.ui.view">
+            <field name="name">product.search.preset.form</field>
+            <field name="model">product.search.preset</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="is_public"/>
+                            <field name="search_domain"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search Preset Action -->
+        <record id="action_product_search_preset" model="ir.actions.act_window">
+            <field name="name">Search Presets</field>
+            <field name="res_model">product.search.preset</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu under Sales -->
+        <menuitem id="menu_product_category_search_root"
+                  name="Product Search"
+                  parent="sale.sale_menu_root"
+                  groups="product_category_search.group_product_search_user"
+                  sequence="50"/>
+        
+        <!-- Advanced Search Wizard -->
+        <menuitem id="menu_product_advanced_search"
+                  name="Advanced Search"
+                  parent="menu_product_category_search_root"
+                  action="action_product_search_wizard"
+                  groups="product_category_search.group_product_search_user"
+                  sequence="5"/>
+        
+        <!-- Configuration Menu -->
+        <menuitem id="menu_product_search_config"
+                  name="Configuration"
+                  parent="menu_product_category_search_root"
+                  groups="product_category_search.group_product_search_manager"
+                  sequence="100"/>
+        
+        <!-- Service Types -->
+        <menuitem id="menu_product_service_types"
+                  name="Service Types"
+                  parent="menu_product_search_config"
+                  action="action_product_service_type"
+                  groups="product_category_search.group_product_search_manager"
+                  sequence="10"/>
+        
+        <!-- Departments -->
+        <menuitem id="menu_product_departments"
+                  name="Departments"
+                  parent="menu_product_search_config"
+                  action="action_product_department"
+                  groups="product_category_search.group_product_search_manager"
+                  sequence="20"/>
+        
+        <!-- Search Presets -->
+        <menuitem id="menu_product_search_presets"
+                  name="Search Presets"
+                  parent="menu_product_search_config"
+                  action="action_product_search_preset"
+                  groups="product_category_search.group_product_search_user"
+                  sequence="30"/>
+        
+    </data>
+</odoo>

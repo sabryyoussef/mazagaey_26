@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Department List View -->
+        <record id="view_product_department_tree" model="ir.ui.view">
+            <field name="name">product.department.tree</field>
+            <field name="model">product.department</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="sequence" widget="handle"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="manager_id"/>
+                    <field name="product_count"/>
+                </list>
+            </field>
+        </record>
+        
+        <!-- Department Form View -->
+        <record id="view_product_department_form" model="ir.ui.view">
+            <field name="name">product.department.form</field>
+            <field name="model">product.department</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="manager_id"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                                <field name="product_count"/>
+                            </group>
+                        </group>
+                        <field name="description"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Department Action -->
+        <record id="action_product_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">product.department</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+    </data>
+</odoo>

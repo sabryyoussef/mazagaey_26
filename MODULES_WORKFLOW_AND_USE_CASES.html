@@ -1,0 +1,1411 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<title>Mazagawy Modules - Workflow & Use Cases</title>
+<style>
+body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1200px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #333; background: #f8f9fa; }
+h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; background: white; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+h2 { color: #2980b9; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 15px; background: white; padding: 15px; border-radius: 5px; }
+h3 { color: #34495e; margin-top: 20px; background: white; padding: 10px; border-radius: 3px; }
+code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; }
+pre { background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 5px; overflow-x: auto; font-family: 'Consolas', 'Courier New', monospace; white-space: pre; line-height: 1.4; font-size: 13px; }
+pre code { background: none; color: #ecf0f1; padding: 0; }
+ul { margin-left: 20px; background: white; padding: 15px 15px 15px 35px; border-radius: 5px; }
+li { margin: 8px 0; }
+p { background: white; padding: 15px; border-radius: 5px; margin: 10px 0; }
+strong { color: #2c3e50; }
+.page { page-break-after: always; }
+@media print {
+  body { background: white; }
+  h1, h2, h3, p, ul, pre { background: white; box-shadow: none; }
+}
+</style>
+</head>
+<body><h1>Complete Workflow: UAE Business Formation Services</h1>
+
+<h2>$2</h2>
+This document outlines the complete workflow for UAE business formation and company services delivery using the Mazagawy custom Odoo modules. The system manages everything from initial client inquiry through project delivery, compliance verification, document handover, and service completion.
+
+<strong>Business Context:</strong> UAE business formation, company licensing, document preparation, compliance management, and shareholder services.
+
+---
+
+<h2>$2</h2>
+1. [Module Overview & Architecture](#1-module-overview--architecture)
+2. [Product & Service Configuration](#2-product--service-configuration)
+3. [Sales & Project Creation](#3-sales--project-creation)
+4. [Checkpoint & Milestone Management](#4-checkpoint--milestone-management)
+5. [Document Management Workflow](#5-document-management-workflow)
+6. [Handover Notes Process](#6-handover-notes-process)
+7. [Compliance & Shareholder Management](#7-compliance--shareholder-management)
+8. [Smart Templates & Automation](#8-smart-templates--automation)
+9. [Complete Workflow Summary](#9-complete-workflow-summary)
+10. [Advantages & Missing Features](#10-advantages--missing-features)
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+
+The Mazagawy module suite provides comprehensive UAE business formation and company services management:
+
+<strong>Core Capabilities:</strong>
+- ✅ <strong>Template-Based Project Management</strong> - Reusable workflows for different service types
+- ✅ <strong>Checkpoint & Milestone Tracking</strong> - Granular progress monitoring
+- ✅ <strong>Document Lifecycle Management</strong> - From collection to delivery
+- ✅ <strong>Compliance & Shareholder Registry</strong> - UBO tracking and regulatory compliance
+- ✅ <strong>Handover Documentation</strong> - Structured client deliverable management
+- ✅ <strong>Smart Recommendations</strong> - AI-powered template suggestions
+- ✅ <strong>Field Service Integration</strong> - For on-site services and consultations
+
+<h3>$3</h3>
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│            Base Odoo Enterprise 18                           │
+│    (project, documents, sale, hr_timesheet, product)        │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│         LEVEL 1: Foundation (Install First)                  │
+│         project_checkpoints_basic                            │
+│         • Checkpoint management                              │
+│         • Milestone templates                                │
+│         • Task extensions with checklists                    │
+│         • Progress tracking automation                       │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│         LEVEL 2: Templates (Install Second)                  │
+│         project_templates_basic                              │
+│         • Workflow templates (service packages)             │
+│         • Task templates with dependencies                   │
+│         • Project templates for UAE services                 │
+│         • Document template integration                      │
+└──────────────────────────┬───────────────────────────────────┘
+                           │
+                   ┌───────┴──────┐
+                   ▼              ▼
+┌────────────────────────┐  ┌────────────────────────┐
+│ LEVEL 3: Documents     │  │ LEVEL 3: Smart AI      │
+│ unified_documents      │  │ smart_templates        │
+│ • Product documents    │  │ • Usage analytics      │
+│ • Project automation   │  │ • Recommendations      │
+│ • Folder structure     │  │ • Pattern recognition  │
+│ • Workflow integration │  │ • User preferences     │
+└────────────┬───────────┘  └────────────┬───────────┘
+             │                           │
+             └────────────┬──────────────┘
+                          │
+                   ┌──────┴──────┐
+                   ▼             ▼
+┌────────────────────────┐  ┌──────────────────────────┐
+│ LEVEL 4: Handover      │  │ LEVEL 4: FSM (Optional)  │
+│ project_handover_notes │  │ fsm_workflow_quote_v2    │
+│ • Company formation    │  │ • Field quotations       │
+│ • Deliverable tracking │  │ • Time & materials       │
+│ • Approval workflows   │  │ • Fixed price milestones │
+│ • Client sign-off      │  │ • Project conversion     │
+└────────────┬───────────┘  └──────────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────────────┐
+│ LEVEL 5: Compliance (Install Last)      │
+│ project_compliance                       │
+│ • Shareholder registry                   │
+│ • UBO calculation (>25% ownership)      │
+│ • KYC/AML documentation                 │
+│ • Compliance workflows                  │
+│ • Regulatory reporting                  │
+└──────────────────────────────────────────┘
+```
+
+<h3>$3</h3>
+
+<strong>Prerequisites:</strong>
+- Odoo 18 Enterprise with valid license
+- Documents module activated
+- Projects module installed
+- Sales Management installed
+
+<strong>Installation Order:</strong>
+```
+1. Install Base Modules (Odoo Enterprise):
+   └─> Documents, Projects, Sales, Timesheets
+
+2. Install Mazagawy Modules (IN EXACT ORDER):
+   ├─> 1. Project Checkpoints Basic
+   ├─> 2. Project Templates Basic  
+   ├─> 3. Unified Documents Extension
+   ├─> 4. Smart Templates (optional but recommended)
+   ├─> 5. Project Handover Notes
+   ├─> 6. Project Compliance
+   └─> 7. FSM Workflow Quote v2 (if field services needed)
+
+3. Configure System Settings:
+   └─> Settings → Projects
+       ├─> Enable sub-tasks
+       ├─> Enable task dependencies
+       ├─> Enable milestones
+       └─> Configure document folders
+
+4. Import Demo Data (Recommended for Testing):
+   └─> Each module includes UAE-specific demo data
+```
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_templates_basic</code> + <code>project_checkpoints_basic</code>  
+<strong>Location:</strong> Products → Products → Create
+
+#### Service Package Configuration
+
+<strong>Product Types for UAE Business Services:</strong>
+- Free Zone Company Formation (FZCO/FZE)
+- Mainland LLC Formation
+- Professional License Services
+- Commercial License Services
+- Trade License Services
+- Business License Renewal
+- Visa Processing Services
+- Document Attestation Services
+- PRO Services
+- Corporate Bank Account Opening
+
+#### Required Product Fields:
+- <strong>Product Type:</strong> Service
+- <strong>Service Tracking:</strong> Project & Task (standard Odoo)
+- <strong>Create on Order:</strong> Task in global project OR Project & Task
+- <strong>Project Template:</strong> Link to pre-configured project template
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_templates_basic</code>  
+<strong>Model:</strong> <code>project.project</code> (with <code>is_template = True</code>)
+
+<strong>Template Creation Steps:</strong>
+1. Navigate to Projects → Configuration → Project Templates
+2. Click "Create" and set:
+   - <code>is_template = True</code>
+   - Template name (e.g., "FZCO Formation - Standard Package")
+   - Default settings and configurations
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_templates_basic</code>  
+<strong>Model:</strong> <code>project.task</code> (from template project)
+
+<strong>Example Task Structure for FZCO Formation:</strong>
+
+```
+Parent Tasks:
+1. Initial Client Consultation
+   └─ Checkpoints:
+      ☐ Collect basic client information
+      ☐ Explain service packages
+      ☐ Discuss timeline and requirements
+      ☐ Sign service agreement
+
+2. Document Collection
+   └─ Checkpoints:
+      ☐ Passport copies received
+      ☐ Emirates ID copies received  
+      ☐ Proof of address received
+      ☐ Business plan received
+      ☐ All documents verified
+
+3. Business Name Reservation
+   └─ Checkpoints:
+      ☐ Name options submitted
+      ☐ Name approved by authority
+      ☐ Name reservation certificate issued
+
+4. License Application Preparation
+   └─ Checkpoints:
+      ☐ Application forms completed
+      ☐ Supporting documents attached
+      ☐ Fees calculated
+      ☐ Client approval obtained
+
+5. License Submission & Processing
+   └─ Checkpoints:
+      ☐ Application submitted to free zone
+      ☐ Payment proof uploaded
+      ☐ Initial approval received
+      ☐ Final license issued
+
+6. Share Certificate Preparation
+   └─ Checkpoints:
+      ☐ Shareholder details verified
+      ☐ Share distribution confirmed
+      ☐ Certificates drafted
+      ☐ Certificates issued
+
+7. Document Handover
+   └─ Checkpoints:
+      ☐ All deliverables collected
+      ☐ Handover package prepared
+      ☐ Client appointment scheduled
+      ☐ Documents handed over
+      ☐ Client sign-off obtained
+```
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_checkpoints_basic</code>  
+<strong>Model:</strong> <code>project.checkpoint</code>
+
+<strong>Configuration:</strong>
+- Create checkpoint templates linked to task templates
+- Set checkpoint types:
+  - Document collection
+  - Authority approval
+  - Payment confirmation
+  - Client approval
+  - Document delivery
+- Define completion criteria
+- Link to milestones for automation
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_checkpoints_basic</code>  
+<strong>Model:</strong> <code>project.milestone</code>
+
+<strong>UAE Service Milestones:</strong>
+1. Client Onboarding Complete
+2. Documents Collected & Verified
+3. License Application Submitted
+4. License Issued
+5. Documents Ready for Handover
+6. Project Completed & Closed
+
+<strong>Milestone Features:</strong>
+- Auto-notification triggers
+- Task stage automation
+- Progress tracking
+- Client communication templates
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>unified_documents</code>  
+<strong>Model:</strong> <code>documents.document</code> templates
+
+#### A. Required Documents (From Client)
+<strong>Purpose:</strong> Documents needed from client to start service
+
+<strong>Common Required Documents:</strong>
+- Passport copy (all shareholders)
+- Emirates ID copy (UAE residents)
+- Visa page (if applicable)
+- Proof of address (utility bill, bank statement)
+- Resume/CV (for visa applications)
+- Educational certificates (attested)
+- Business plan
+- NOC from sponsor (if applicable)
+- Source of funds declaration
+
+<strong>Configuration:</strong>
+- Document type
+- Mandatory/Optional flag
+- Expiry tracking (for passports, visas)
+- Attestation requirements
+
+#### B. Deliverable Documents (To Client)
+<strong>Purpose:</strong> Documents company will deliver upon completion
+
+<strong>Common Deliverables:</strong>
+- Trade License (original + copies)
+- Certificate of Incorporation
+- Memorandum of Association
+- Articles of Association  
+- Share Certificates
+- Establishment Card
+- Initial Approval Certificate
+- Chamber of Commerce Certificate
+- Company Stamp
+- Signatory Authorization
+- Bank account opening documents
+
+<strong>Configuration:</strong>
+- Document type
+- Issue date tracking
+- Expiry date tracking
+- Renewal reminders
+- Handover status
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> Standard Odoo Sale + <code>project_templates_basic</code> integration
+
+<strong>Process:</strong>
+1. <strong>Lead/Opportunity Creation</strong> (CRM)
+   - Capture initial inquiry
+   - Qualify lead (budget, timeline, authority, need)
+   - Assign to sales representative
+
+2. <strong>Quotation Generation</strong>
+   - Create quotation from CRM opportunity
+   - Add service products (UAE business formation packages)
+   - Set pricing and payment terms
+   - Attach service description and timeline
+
+<h3>$3</h3>
+
+<strong>Invoice Workflow (CRITICAL - Previously Missing):</strong>
+
+#### When Invoices are Created:
+- <strong>Option A: Upon SO Confirmation (Prepayment Model)</strong>
+  - Invoice created automatically when SO is confirmed
+  - Status: Draft
+  - Payment required before project execution
+  - Common for UAE services requiring government fees upfront
+
+- <strong>Option B: Milestone-Based Invoicing</strong>
+  - Multiple invoices created per milestone
+  - Example: 50% upfront, 50% on license delivery
+  - Linked to checkpoint completion
+  
+- <strong>Option C: Upon Delivery (Post-paid)</strong>
+  - Invoice created when all deliverables confirmed
+  - Suitable for corporate clients with credit terms
+
+<strong>Configuration:</strong>
+```
+Product Settings:
+└─> Invoicing Policy
+    ├─> Ordered quantities (upfront)
+    ├─> Delivered quantities (on completion)
+    └─> Milestones (based on checkpoints)
+```
+
+#### Invoice Status Impact on Project:
+
+<strong>Hard Gates Enforced:</strong>
+```
+IF invoice_status == "to_invoice":
+    - Project state = "b_new" (cannot start)
+    - Documents cannot be confirmed
+    
+IF invoice_status == "invoiced" AND payment_state == "not_paid":
+    - Project can start collecting required docs
+    - Cannot proceed to deliverables
+    
+IF payment_state == "paid":
+    - Project can move to "c_in_progress"
+    - All stages unlocked
+    - Commission becomes eligible
+```
+
+<h3>$3</h3>
+
+<strong>Trigger:</strong> Sales Order confirmation (after validation)
+<strong>Method:</strong> <code>action_create_project_tasks()</code>
+
+<strong>Pre-Confirmation Validation:</strong>
+1. <strong>Product Configuration Check:</strong>
+   ```
+   ✓ service_tracking == "new_workflow"
+   ✓ project_template exists
+   ✓ task_ids configured
+   ✓ document_type_ids configured
+   ✓ document_required_type_ids configured
+   ```
+
+2. <strong>Partner Required Fields Check:</strong>
+   ```
+   ✓ Nationality captured
+   ✓ Business structure defined
+   ✓ License authority selected
+   ✓ Contact details complete
+   ```
+   <strong>Gate:</strong> If required partner fields missing → Block SO confirmation
+   <strong>Action:</strong> Open wizard to collect missing fields before proceeding
+
+3. <strong>Multi-Product Handling (Previously Missing):</strong>
+   
+   <strong>Scenario A: Multiple "New Workflow" Products</strong>
+   ```
+   Example SO:
+   - FZCO Formation (Product A)
+   - Visa Processing (Product B)
+   - PRO Services (Product C)
+   
+   Decision Rules:
+   IF all products share same project_template:
+       → Create ONE consolidated project
+       → Merge task lists (deduplicate by template_id, not name)
+       → Combine document requirements
+   ELSE:
+       → Create SEPARATE projects per product
+       → Link all to same SO
+       → Independent tracking
+   ```
+   
+   <strong>Scenario B: Repeat Customer</strong>
+   ```
+   IF partner_id already has active project for same service:
+       → Prompt user: Reuse or Create New?
+       → Option 1: Add to existing project (upsell scenario)
+       → Option 2: Create new project (new company formation)
+   ```
+
+<h3>$3</h3>
+
+<strong>Automatic Field Population:</strong>
+
+<strong>Automatic Field Population:</strong>
+- name: Product name + Customer name
+- partner_id: Customer from SO
+- sale_id: Link to sales order
+- user_id: Salesperson
+- date_start: Current date
+- documents_folder_id: Auto-created in Documents app
+- state: 'b_new' (New Projects)
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_checkpoints_basic</code>
+
+<strong>Purpose:</strong> Track granular task completion criteria for UAE business services.
+
+<strong>Checkpoint Types:</strong>
+1. <strong>Document Collection</strong> - Required docs received
+2. <strong>Authority Approval</strong> - Government approvals obtained
+3. <strong>Payment Confirmation</strong> - Fees paid to authorities
+4. <strong>Client Sign-off</strong> - Customer approval checkpoints
+5. <strong>Deliverable Ready</strong> - Documents prepared for handover
+
+<strong>Example Checkpoints for License Application Task:</strong>
+<pre><code>
+Task: "Submit License Application"
+Checkpoints:
+? Application form completed
+? Passport copies attached
+? Business plan reviewed
+? Government fees calculated
+? Client approval received
+? Application submitted to authority
+? Submission receipt obtained
+? Application tracking number recorded
+<pre><code>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_checkpoints_basic</code>
+<strong>Model:</strong> <code>project.milestone</code>
+
+<strong>UAE Service Milestones:</strong>
+
+<strong>For FZCO Formation:</strong>
+1. <strong>Contract Signed & Payment Received</strong> (Day 0)
+2. <strong>Required Documents Collected</strong> (Day 3-5)
+3. <strong>Company Name Approved</strong> (Day 7-10)
+4. <strong>License Application Submitted</strong> (Day 12-15)
+5. <strong>License Issued</strong> (Day 20-25)
+6. <strong>Documents Delivered to Client</strong> (Day 28-30)
+
+<strong>Milestone Automation:</strong>
+- Email notifications when reached
+- Auto-change task stages
+- Update project progress %
+- Trigger next phase tasks
+- Alert stakeholders
+
+<strong>Milestone Triggers:</strong>
+<pre><code>
+<h1>Milestone reached when specific checkpoints complete</h1>
+Milestone: "License Application Submitted"
+Trigger: is_complete_hand AND is_confirm_hand
+Action: 
+  - Send email to customer
+  - Change tasks to "Waiting for Authority"
+  - Update project progress to 60%
+  - Create follow-up reminder tasks
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>unified_documents</code>
+
+<strong>Document States:</strong>
+<pre><code>
+Draft ? Uploaded ? Complete ? Confirmed ? Done
+                      ?
+                   Return (with notes)
+                      ?
+                   Update ? Complete (again)
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>A. Collection Process:</strong>
+1. <strong>Auto-Created on Project Start:</strong>
+   - System creates document placeholders
+   - Based on product configuration
+   - Linked to project via <code>required_project_id</code>
+
+2. <strong>Client Upload:</strong>
+   - Client receives request via portal/email
+   - Uploads through customer portal
+   - Or uploaded by service team via scan/email
+
+3. <strong>Verification:</strong>
+   - Document controller reviews
+   - Checks validity, expiry dates
+   - Marks complete when verified
+
+4. <strong>Confirmation:</strong>
+   - Project manager confirms
+   - Document locked for changes
+   - Project can proceed to next phase
+
+<strong>B. Required Document Workflow:</strong>
+<pre><code>
+1. Draft State (Auto-created)
+   ??> Waiting for client upload
+   
+2. Upload Complete
+   ??> User clicks "Complete Required"
+   ??> Triggers verification task
+   
+3. Verification
+   ??> Document controller reviews
+   ??> Option A: Confirm if good
+   ??> Option B: Return if issues found
+       ??> Return wizard captures issues
+       ??> Client re-uploads
+       ??> Mark "Update"
+       ??> Complete again
+
+4. Confirmed State
+   ??> Document approved
+   ??> Checkpoint updated
+   ??> Project can advance
+<pre><code>
+
+<strong>Critical Gate:</strong>
+<pre><code>
+IF all required_documents.state != 'confirmed':
+    BLOCK project move to "c_in_progress"
+    SHOW message: "Complete all required documents first"
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>A. Preparation Process:</strong>
+1. <strong>Auto-Created Placeholders:</strong>
+   - Created when project reaches "License Issued" milestone
+   - Based on product deliverable configuration
+   - Linked via <code>deliverable_project_id</code>
+
+2. <strong>Document Generation:</strong>
+   - Service team uploads final documents
+   - Trade license PDF
+   - Certificate scans
+   - Share certificates
+
+3. <strong>Quality Check:</strong>
+   - Document controller verifies
+   - Checks completeness
+   - Marks complete
+
+4. <strong>Client Delivery:</strong>
+   - Project manager confirms ready
+   - Handover package assembled
+   - Client notified for collection
+
+<strong>B. Deliverable Workflow:</strong>
+<pre><code>
+1. Placeholder Created
+   ??> Linked to milestones
+   
+2. Document Upload
+   ??> Service team uploads finals
+   ??> "Complete Deliverable" button
+
+3. Quality Check
+   ??> Verify against checklist
+   ??> Return if incomplete
+   ??> Confirm when ready
+
+4. Ready for Handover
+   ??> Link to handover notes
+   ??> Add to cabinet directory
+   ??> Schedule client appointment
+<pre><code>
+
+<strong>Critical Gate:</strong>
+<pre><code>
+IF deliverable_documents.state != 'confirmed':
+    BLOCK handover confirmation
+    BLOCK project completion
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>Problem:</strong> Passports, visas, Emirates IDs expire - need reminders.
+
+<strong>Solution:</strong>
+<pre><code>
+<h1>Automated expiry check (daily cron job)</h1>
+def _check_document_expiry(self):
+    # Find docs expiring in 60 days
+    expiring_soon = self.search([
+        ('expiration_date', '!=', False),
+        ('expiration_date', '<=', 
+         fields.Date.today() + timedelta(days=60)),
+        ('expiration_date', '>=', fields.Date.today())
+    ])
+    
+    for doc in expiring_soon:
+        # Send reminder email
+        template = self.env.ref(
+            'unified_documents.document_expiry_reminder'
+        )
+        template.send_mail(doc.id)
+        
+        # Create renewal task
+        self.env['project.task'].create({
+            'name': f'Renew {doc.type_id.name} for {doc.partner_id.name}',
+            'project_id': doc.required_project_id.id or doc.deliverable_project_id.id,
+            'date_deadline': doc.expiration_date
+        })
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_handover_notes</code>
+
+<strong>Purpose:</strong> Capture company setup details for UAE business formation.
+
+<strong>Data Collection Sections:</strong>
+
+<strong>A. Company Type Selection:</strong>
+- Individual Business (Sole Proprietorship)
+- Limited Company (FZCO, FZE, LLC)
+
+<strong>B. For Company Formation:</strong>
+<pre><code>
+1. Basic Company Information:
+   ??> Proposed company names (3 options)
+   ??> Legal entity type (FZCO/FZE/LLC)
+   ??> License authority (DMCC, DAFZA, RAKEZ, etc.)
+   ??> License validity period (1-10 years)
+   ??> Business activities (up to 3)
+
+2. Operating Information:
+   ??> Top 5 countries of operation
+   ??> Visa eligibility (number of visas)
+   ??> Office space requirements
+   ??> Employee headcount estimate
+
+3. Share Structure:
+   ??> Number of shares
+   ??> Price per share
+   ??> Total share capital
+   ??> Shareholder distribution
+   ??> Share classes (if applicable)
+
+4. Contact Information:
+   ??> Correspondence email
+   ??> Preferred mobile number
+   ??> Country code
+   ??> Alternate contacts
+
+5. Corporate Tax Details:
+   ??> Tax registration status
+   ??> TRN (if registered)
+   ??> Tax period dates
+   ??> Filing schedule
+<pre><code>
+
+<strong>C. For Individual Formation:</strong>
+<pre><code>
+1. Personal Information:
+   ??> Full name (first, middle, last)
+   ??> Gender
+   ??> Nationality
+   ??> Place of birth
+   ??> Date of birth
+   ??> Marital status
+
+2. Identification:
+   ??> Passport details
+   ??> Emirates ID (if UAE resident)
+   ??> Visa details
+   ??> Contact information
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>Workflow States:</strong>
+<pre><code>
+Draft ? Complete ? Confirm ? Approved
+          ?
+       Return (with notes)
+          ?
+       Update ? Complete (again)
+<pre><code>
+
+<strong>Actions:</strong>
+1. <strong>Complete Handover</strong> (<code>action_complete_hand</code>)
+   - Marks data collection complete
+   - Triggers document preparation tasks
+   - Updates checkpoint status
+
+2. <strong>Confirm Handover</strong> (<code>action_confirm_hand</code>)
+   - Project manager approves
+   - Locks handover data
+   - Enables deliverable preparation
+
+3. <strong>Return Handover</strong> (<code>action_return_hand</code>)
+   - Opens wizard for return notes
+   - Flags issues to be corrected
+   - Notifies salesperson
+
+4. <strong>Update Handover</strong> (<code>action_update_hand</code>)
+   - After corrections made
+   - Resets for re-completion
+   - Logs update in audit trail
+
+<strong>Critical Gate:</strong>
+<pre><code>
+IF not is_confirm_hand:
+    BLOCK deliverable document confirmation
+    BLOCK project completion
+<pre><code>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_handover_notes</code>
+<strong>Model:</strong> <code>project.visa.application</code>
+
+<strong>Visa Types:</strong>
+- Investor Visa
+- Partner Visa
+- Employee Visa
+- Dependent Visa
+
+<strong>Tracking Fields:</strong>
+- Application date
+- Approval status
+- Visa number
+- Issue date
+- Expiry date
+- Renewal due date
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_compliance</code>
+<strong>Model:</strong> <code>initial.client.onboarding</code>
+
+<strong>Purpose:</strong> KYC/AML compliance for UAE company formation.
+
+<strong>Onboarding States:</strong>
+<pre><code>
+Draft ? Submitted ? Validated ? Secondary Review ? Approved
+  ?________________________________________?
+            Reset to Draft
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>Risk Categories:</strong>
+
+<strong>A. Service Risk:</strong>
+- High: Offshore structures, complex holdings
+- Medium: Standard FZCO/FZE formation
+- Low: Visa-only services
+
+<strong>B. Product Risk:</strong>
+- High: Banking, financial services, crypto
+- Medium: Trading, consulting
+- Low: E-commerce, retail
+
+<strong>C. Client Risk:</strong>
+- High: First-time business, complex structure
+- Medium: Established business expansion
+- Low: Repeat customer, simple structure
+
+<strong>D. Geography Risk:</strong>
+- High: High-risk jurisdictions (FATF grey/blacklist)
+- Medium: Emerging markets
+- Low: GCC, Western countries
+
+<strong>E. PEP (Politically Exposed Person):</strong>
+- High: Government officials, family members
+- Medium: Former officials (within 1 year)
+- Low: No PEP connection
+
+<strong>F. Sanction Risk:</strong>
+- High: Sanctioned individual/entity
+- Medium: Country under partial sanctions
+- Low: No sanctions
+
+<strong>G. Adverse Media:</strong>
+- High: Negative news, legal issues
+- Medium: Minor disputes, complaints
+- Low: Clean record
+
+<h3>$3</h3>
+
+<strong>Scoring System:</strong>
+<pre><code>
+Risk Score = (
+    Service Risk � 15% +
+    Product Risk � 15% +
+    Client Risk � 15% +
+    Geography Risk � 20% +
+    PEP Risk � 15% +
+    Sanction Risk � 10% +
+    Adverse Media � 10%
+)
+
+Rating:
+- Low Risk: Score < 30
+- Medium Risk: Score 30-60
+- High Risk: Score > 60
+<pre><code>
+
+<strong>Document Requirements by Risk:</strong>
+<pre><code>
+Low Risk:
+??> Passport copy
+??> Proof of address
+??> Bank reference
+
+Medium Risk (Low + additional):
+??> Source of funds declaration
+??> Bank statements (6 months)
+??> Business plan
+??> References (2)
+
+High Risk (Medium + additional):
+??> Detailed source of wealth
+??> Audited financials
+??> Multiple references
+??> Enhanced due diligence report
+??> Senior management approval
+<pre><code>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>project_compliance</code>
+<strong>Model:</strong> <code>res.partner.shareholder</code>
+
+<strong>UBO (Ultimate Beneficial Owner) Rules:</strong>
+- Ownership > 25% = UBO
+- Direct or indirect ownership calculated
+- Multi-level ownership chains supported
+
+<strong>Example:</strong>
+<pre><code>
+Company: Tech Innovations FZCO
+Shareholders:
+??> Individual A (40%) ? Direct UBO
+??> Company B (35%)
+?   ??> Individual C (60%) ? Indirect 21% (below threshold)
+?   ??> Individual D (40%) ? Indirect 14% (below threshold)
+??> Individual E (25%) ? Direct UBO (exactly at threshold)
+
+Identified UBOs:
+1. Individual A (40% direct)
+2. Individual E (25% direct)
+<pre><code>
+
+<strong>Required UBO Documents:</strong>
+- Passport
+- Proof of address
+- Source of funds/wealth declaration
+- PEP declaration
+- Sanctions screening
+
+<h3>$3</h3>
+
+<strong>Project Compliance Fields:</strong>
+- <code>compliance_onboarding_id</code>: Link to onboarding
+- <code>compliance_required</code>: Boolean (based on product)
+- <code>is_complete_compliance</code>: Compliance data complete
+- <code>is_confirm_compliance</code>: Compliance approved
+- <code>compliance_shareholder_ids</code>: Shareholder records
+
+<strong>Compliance Workflow Actions:</strong>
+<pre><code>
+1. Complete Compliance
+   ??> All risk assessments done
+   ??> All required docs uploaded
+   ??> UBOs identified
+
+2. Confirm Compliance
+   ??> Compliance officer approval
+   ??> Final risk rating assigned
+   ??> Documents locked
+
+3. Return Compliance
+   ??> Issues found
+   ??> Request additional documents
+   ??> Update risk assessment
+
+4. Update Compliance
+   ??> After corrections
+   ??> Re-submit for approval
+<pre><code>
+
+<strong>Critical Gate:</strong>
+<pre><code>
+IF product.requires_compliance AND not is_confirm_compliance:
+    BLOCK project completion
+    BLOCK deliverable handover
+    SHOW: "Compliance approval required"
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<strong>Module:</strong> <code>smart_templates</code>
+
+<strong>AI-Powered Features:</strong>
+
+<strong>A. Template Suggestions:</strong>
+<pre><code>
+<h1>Based on:</h1>
+1. Client industry
+2. Service type
+3. Historical data
+4. User preferences
+5. Success patterns
+
+Example:
+Client: "Tech Startup"
+Service: "FZCO Formation"
+
+Recommendations:
+? Use "Tech Startup FZCO Template" (85% confidence)
+? Add checkpoint: "Patent/IP registration"
+? Add document: "Technology description"
+? Suggest task: "Domain registration support"
+<pre><code>
+
+<strong>B. User Preference Learning:</strong>
+<pre><code>
+Tracks:
+- Most used templates
+- Frequently added checkpoints
+- Common customizations
+- Timeline adjustments
+
+Auto-applies:
+- Preferred task assignees
+- Custom milestones
+- Additional documents
+<pre><code>
+
+<strong>C. Pattern Recognition:</strong>
+<pre><code>
+System learns from:
+- 100+ completed projects
+- Which checkpoints added manually
+- Common return reasons
+- Timeline deviations
+
+Suggests improvements:
+- Update templates
+- Add missing checkpoints
+- Adjust time estimates
+<pre><code>
+
+<h3>$3</h3>
+
+<strong>Document Automation:</strong>
+<pre><code>
+Trigger: Project created
+Action: Auto-create folder structure
+<pre><code>
+
+<pre><code>
+Trigger: Milestone "License Issued" reached
+Action: 
+  - Create deliverable documents
+  - Send email to document team
+  - Create handover preparation task
+<pre><code>
+
+<strong>Task Automation:</strong>
+<pre><code>
+Trigger: is_complete_required = True
+Action:
+  - Move "Document Collection" tasks to Done
+  - Start "License Application" tasks
+  - Send notification to processing team
+<pre><code>
+
+<strong>Checkpoint Automation:</strong>
+<pre><code>
+Trigger: is_confirm_deliverable = True
+Action:
+  - Mark all delivery checkpoints complete
+  - Trigger handover workflow
+  - Update project progress to 90%
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+<pre><code>
+? Install modules in order
+? Configure document types
+? Create project templates
+? Set up task libraries
+? Configure compliance rules
+? Set commission settings
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+Create Service Product:
+??> Set service_tracking (if using project templates)
+??> Link to project template
+??> Configure required documents
+??> Configure deliverable documents
+??> Map task templates
+??> Define partner required fields
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Create Quotation
+   ??> Add products
+
+2. Customer Data Collection
+   ??> Required partner fields
+   ??> Wizard if fields missing
+
+3. Confirm Sale Order
+   ??> Generate invoice
+   ??> Wait for payment (if prepayment)
+
+4. Project Auto-Created
+   ??> Tasks generated
+   ??> Documents created
+   ??> Folders set up
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. System creates required document placeholders
+2. Customer uploads documents
+3. Document controller reviews
+4. Complete ? Confirm workflow
+5. Gate: Cannot proceed until confirmed
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Fill company formation details
+2. Add shareholder information
+3. Configure license & activities
+4. Add visa applications (if any)
+5. Complete ? Confirm workflow
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Create or link compliance onboarding
+2. Complete risk assessments
+3. Upload required KYC documents
+4. Identify UBOs
+5. Submit ? Validate ? Approve workflow
+6. Link to project compliance
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Tasks progress through stages
+2. Checkpoints marked complete
+3. Milestones trigger automation
+4. Email notifications sent
+5. Progress tracked in real-time
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. License obtained from authority
+2. Documents prepared
+3. Upload to deliverable placeholders
+4. Complete ? Confirm workflow
+5. Quality check passed
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Prepare handover package
+2. Schedule client appointment
+3. Physical handover via cabinet directory
+4. Client sign-off
+5. Project marked complete
+<pre><code>
+
+<h3>$3</h3>
+<pre><code>
+1. Project completion triggers commission
+2. Auto-create partner commission (if eligible)
+3. Sales commission added to payroll
+4. Approve partner commission
+5. Vendor bill generated
+6. Payment processed
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+
+<strong>What Mazagawy Modules Provide:</strong>
+
+<strong>1. Template-Based Flexibility</strong>
+- ? Reusable project templates for different service packages
+- ? Task templates with hierarchy and dependencies
+- ? Checkpoint templates for consistent quality
+- ? Document templates for automation
+- ? Freezoner: Fixed service_tracking field, less flexible
+
+<strong>2. Checkpoint Granularity</strong>
+- ? Detailed task checklists
+- ? Multiple checkpoints per task
+- ? Automated stage changes based on checkpoints
+- ? Progress tracking at checkpoint level
+- ? Freezoner: Boolean flags only, less granular
+
+<strong>3. Smart Automation</strong>
+- ? AI-powered template recommendations
+- ? Usage pattern learning
+- ? User preference tracking
+- ? Continuous improvement suggestions
+- ? Freezoner: No smart features
+
+<strong>4. Document Flexibility</strong>
+- ? Product-specific document configuration
+- ? Project-specific automation
+- ? Service-specific folder structures
+- ? Version control support
+- ? Freezoner: Global document types only
+
+<strong>5. Modular Design</strong>
+- ? Install only needed modules
+- ? No dependencies on custom modules
+- ? Each module independent
+- ? Easy to upgrade/extend
+- ? Freezoner: Tight coupling, complex dependencies
+
+<strong>6. Compliance Modularity</strong>
+- ? Separate compliance module
+- ? Optional for non-regulated services
+- ? Shareholder registry independent
+- ? UBO calculation automatic
+- ? Freezoner: Compliance embedded in project_custom
+
+<strong>7. Handover Separation</strong>
+- ? Dedicated handover module
+- ? Company formation data isolated
+- ? Approval workflows independent
+- ? Can be used standalone
+- ? Freezoner: Handover mixed with project fields
+
+<h3>$3</h3>
+
+<strong>Critical Gaps:</strong>
+
+<strong>1. Invoice Workflow Integration</strong>
+<pre><code>
+Missing:
+- Automatic invoice creation rules
+- Payment status gates
+- Milestone-based invoicing
+- Commission eligibility based on payment
+
+Need to Add:
+- Invoice state constraints
+- Payment checking before project start
+- Integration with accounting module
+<pre><code>
+
+<strong>2. Definition of Done (Hard Gates)</strong>
+<pre><code>
+Missing:
+- Enforced state transition rules
+- Validation constraints
+- Blocking logic for incomplete work
+
+Need to Add:
+@api.constrains('state')
+def _check_completion_criteria(self):
+    # Implement hard gates
+<pre><code>
+
+<strong>3. Partner Field Collection Wizard</strong>
+<pre><code>
+Missing:
+- Pre-confirmation data collection
+- Wizard to capture required fields
+- Validation before SO confirmation
+
+Need to Add:
+- customer.data.wizard model
+- Integration with SO confirmation
+<pre><code>
+
+<strong>4. Multi-Product SO Handling</strong>
+<pre><code>
+Missing:
+- Logic for multiple new_workflow products
+- Project consolidation rules
+- Repeat customer detection
+
+Need to Add:
+- Consolidation wizard
+- Project merge/split logic
+<pre><code>
+
+<strong>5. Commission Auto-Trigger</strong>
+<pre><code>
+Missing:
+- Automatic commission creation
+- Eligibility calculation
+- Integration with project completion
+
+Need to Add:
+- Commission generation on project done
+- Rate calculation from partner plan
+- Sales commission payroll integration
+<pre><code>
+
+<strong>6. Compliance-Project Auto-Linking</strong>
+<pre><code>
+Missing:
+- Auto-create onboarding on project creation
+- Auto-link existing onboarding
+- Compliance state gates
+
+Need to Add:
+- Onboarding creation logic
+- Search & link logic
+- State constraint checks
+<pre><code>
+
+<strong>7. Document Deduplication by Template Key</strong>
+<pre><code>
+Missing:
+- Template-based unique keys
+- Version control
+- Superseded document tracking
+
+Need to Add:
+- template_key field
+- version field
+- superseded_by_id field
+- Smart search/create logic
+<pre><code>
+
+<strong>8. Role-Based Access Control</strong>
+<pre><code>
+Missing:
+- Granular permission matrix
+- Role-specific button visibility
+- Approval hierarchy enforcement
+
+Need to Add:
+- Security groups
+- Record rules
+- Method-level access checks
+<pre><code>
+
+<strong>9. Notification Trigger Mapping</strong>
+<pre><code>
+Missing:
+- Email template creation
+- Trigger point definitions
+- Recipient logic
+
+Need to Add:
+- Create all email templates
+- Add send_mail() calls in methods
+- Configure recipients
+<pre><code>
+
+<strong>10. Audit Trail System</strong>
+<pre><code>
+Missing:
+- Audit log model
+- Automatic logging
+- Trail visibility
+
+Need to Add:
+- audit.log model
+- _log_audit() helper method
+- Audit trail view
+<pre><code>
+
+---
+
+<h2>$2</h2>
+
+<h3>$3</h3>
+1. Invoice workflow integration
+2. Definition of done gates
+3. Partner field collection wizard
+4. Commission auto-trigger
+
+<h3>$3</h3>
+5. Compliance auto-linking
+6. Document template keys
+7. Multi-product SO handling
+
+<h3>$3</h3>
+8. Role-based access control
+9. Notification triggers
+10. Audit trail system
+
+---
+
+<h2>$2</h2>
+
+- <strong>Installation Guide</strong>: See <code>MODULE_INSTALLATION_ORDER.md</code>
+- <strong>Individual Module READMEs</strong>: Check each module folder
+- <strong>Technical Specs</strong>: See module <code>__manifest__.py</code> files
+- <strong>GitHub Repository</strong>: https://github.com/sabryyoussef/mazagaey_26
+
+---
+
+<h2>$2</h2>
+
+- <strong>Odoo Version</strong>: 18.0 Enterprise
+- <strong>Module Version</strong>: 1.0.0
+- <strong>Last Updated</strong>: January 17, 2026
+- <strong>Maintained By</strong>: Sabry Youssef
+- <strong>Business Focus</strong>: UAE Business Formation & Company Services
+
+---
+
+*For technical support or feature requests, please create an issue on GitHub.*
+
+</body></html>
