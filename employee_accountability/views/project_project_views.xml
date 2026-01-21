@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Extend Project Form View with Employee Assignment Section -->
+    <record id="view_project_form_employee_accountability" model="ir.ui.view">
+        <field name="name">project.project.form.employee.accountability</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <!-- Add Employee Team section in Settings tab -->
+            <xpath expr="//page[@name='settings']" position="inside">
+                <group string="Employee Assignment">
+                    <group>
+                        <field name="manager_employee_id" 
+                               options="{'no_create': True}"/>
+                        <field name="default_responsible_employee_id" 
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="default_department_id"/>
+                        <field name="preferred_employee_tag_ids" 
+                               widget="many2many_tags"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="team_employee_ids" 
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Project List View -->
+    <record id="view_project_list_employee_accountability" model="ir.ui.view">
+        <field name="name">project.project.list.employee.accountability</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="manager_employee_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add Search Filters -->
+    <record id="view_project_search_employee_accountability" model="ir.ui.view">
+        <field name="name">project.project.search.employee.accountability</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="manager_employee_id"/>
+                <field name="default_department_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Manager Employee" 
+                        name="group_by_manager_employee"
+                        context="{'group_by': 'manager_employee_id'}"/>
+                <filter string="Default Department" 
+                        name="group_by_default_department"
+                        context="{'group_by': 'default_department_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

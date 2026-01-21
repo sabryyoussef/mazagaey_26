@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Employee Switcher Systray Widget -->
+    <t t-name="employee_accountability.EmployeeSwitcher">
+        <div t-if="shouldShow" class="o_employee_switcher d-flex align-items-center" t-att-class="statusClass">
+            
+            <!-- Loading State -->
+            <t t-if="state.isLoading">
+                <div class="o_employee_switcher_loading px-2">
+                    <i class="fa fa-spinner fa-spin me-1"/>
+                    <span class="d-none d-md-inline">Loading...</span>
+                </div>
+            </t>
+
+            <!-- Loaded State -->
+            <t t-else="">
+                <!-- Single employee (no dropdown needed) -->
+                <t t-if="!state.showSwitcher and state.activeEmployee">
+                    <div class="o_employee_switcher_single px-2 d-flex align-items-center">
+                        <i class="fa fa-user me-1 text-muted"/>
+                        <span class="o_employee_name d-none d-md-inline" t-esc="activeEmployeeName"/>
+                    </div>
+                </t>
+
+                <!-- Multiple employees (show dropdown) -->
+                <t t-if="state.showSwitcher">
+                    <Dropdown>
+                        <button class="btn o_employee_switcher_btn d-flex align-items-center">
+                            <i class="fa fa-user me-1"/>
+                            <span class="o_employee_name d-none d-md-inline me-1" t-esc="activeEmployeeName"/>
+                            <i class="fa fa-caret-down"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <div class="o_employee_switcher_menu">
+                                <!-- Header -->
+                                <div class="o_employee_switcher_header px-3 py-2 border-bottom bg-light">
+                                    <small class="text-muted fw-bold">Switch Employee</small>
+                                </div>
+                                
+                                <!-- Employee List -->
+                                <t t-foreach="state.availableEmployees" t-as="employee" t-key="employee.id">
+                                    <DropdownItem
+                                        class="'o_employee_item d-flex align-items-center px-3 py-2'"
+                                        onSelected="() => this.onEmployeeSelect(employee.id)"
+                                    >
+                                        <div class="d-flex align-items-center w-100">
+                                            <!-- Employee Avatar -->
+                                            <div class="o_employee_avatar me-2">
+                                                <t t-if="employee.avatar_128">
+                                                    <img t-att-src="'data:image/png;base64,' + employee.avatar_128" 
+                                                         class="rounded-circle"
+                                                         style="width: 28px; height: 28px;"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                                         style="width: 28px; height: 28px; font-size: 12px;">
+                                                        <t t-esc="employee.name.charAt(0).toUpperCase()"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            
+                                            <!-- Employee Info -->
+                                            <div class="flex-grow-1">
+                                                <div class="o_employee_name fw-medium" t-esc="employee.name"/>
+                                                <t t-if="employee.job_title">
+                                                    <small class="text-muted" t-esc="employee.job_title"/>
+                                                </t>
+                                            </div>
+                                            
+                                            <!-- Active Indicator -->
+                                            <t t-if="state.activeEmployee and state.activeEmployee.id === employee.id">
+                                                <i class="fa fa-check text-success ms-2"/>
+                                            </t>
+                                            
+                                            <!-- PIN Required Indicator -->
+                                            <t t-if="employee.pin_required">
+                                                <i class="fa fa-lock text-muted ms-2" title="PIN Required"/>
+                                            </t>
+                                        </div>
+                                    </DropdownItem>
+                                </t>
+                                
+                                <!-- No Active Employee Warning -->
+                                <t t-if="!state.activeEmployee and state.isSharedUser">
+                                    <div class="o_no_employee_warning px-3 py-2 bg-warning-subtle text-warning-emphasis">
+                                        <i class="fa fa-exclamation-triangle me-1"/>
+                                        <small>Please select an employee</small>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </t>
+
+                <!-- No employee selected (shared user warning) -->
+                <t t-if="!state.activeEmployee and state.isSharedUser and !state.showSwitcher">
+                    <button class="btn o_employee_switcher_btn btn-warning" t-on-click="openSelectWizard">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        <span class="d-none d-md-inline">Select Employee</span>
+                    </button>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

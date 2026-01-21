@@ -1,0 +1,88 @@
+/* Employee Switcher Component Styles */
+
+.o_employee_switcher {
+    height: 100%;
+}
+
+.o_employee_switcher_btn {
+    background: transparent;
+    border: none;
+    color: var(--o-navbar-color, #fff);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.15s ease;
+}
+
+.o_employee_switcher_btn:hover,
+.o_employee_switcher_btn:focus {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--o-navbar-color, #fff);
+}
+
+.o_employee_switcher_single {
+    color: var(--o-navbar-color, #fff);
+}
+
+.o_employee_switcher_warning .o_employee_switcher_btn {
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid rgba(255, 193, 7, 0.5);
+}
+
+.o_employee_switcher_warning .o_employee_switcher_btn:hover {
+    background: rgba(255, 193, 7, 0.3);
+}
+
+/* Dropdown Menu Styles */
+.o_employee_switcher_menu {
+    min-width: 250px;
+    max-width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.o_employee_switcher_header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.o_employee_item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.o_employee_item:hover {
+    background-color: var(--o-dropdown-item-hover-bg, #f8f9fa);
+}
+
+.o_employee_item.active {
+    background-color: var(--o-primary-bg-subtle, #e8f4ff);
+}
+
+.o_employee_avatar img {
+    object-fit: cover;
+}
+
+.o_no_employee_warning {
+    font-size: 0.875rem;
+}
+
+/* Loading Animation */
+.o_employee_switcher_loading {
+    color: var(--o-navbar-color, #fff);
+    opacity: 0.7;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .o_employee_switcher_menu {
+        min-width: 200px;
+    }
+    
+    .o_employee_name {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

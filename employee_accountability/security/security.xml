@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================= -->
+    <!-- Security Groups -->
+    <!-- ============================================= -->
+    
+    <!-- Group: Employee Accountability User -->
+    <record id="group_employee_accountability_user" model="res.groups">
+        <field name="name">Employee Accountability: User</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="comment">Basic access to employee accountability features. Can select active employee and view own sessions.</field>
+    </record>
+    
+    <!-- Group: Employee Accountability Manager -->
+    <record id="group_employee_accountability_manager" model="res.groups">
+        <field name="name">Employee Accountability: Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_employee_accountability_user'))]"/>
+        <field name="comment">Full access to employee accountability features. Can reset PINs, view all sessions, manage employee assignments.</field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Record Rules -->
+    <!-- ============================================= -->
+    
+    <!-- Rule: Users can only see their own sessions -->
+    <record id="rule_employee_session_context_user" model="ir.rule">
+        <field name="name">Employee Session Context: Own Sessions</field>
+        <field name="model_id" ref="model_employee_session_context"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    
+    <!-- Rule: Managers can see all sessions in their department -->
+    <record id="rule_employee_session_context_manager" model="ir.rule">
+        <field name="name">Employee Session Context: Manager Access</field>
+        <field name="model_id" ref="model_employee_session_context"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_employee_accountability_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================= -->
+    <!-- Employee Session Context - Tree View -->
+    <!-- ============================================= -->
+    <record id="view_employee_session_context_list" model="ir.ui.view">
+        <field name="name">employee.session.context.list</field>
+        <field name="model">employee.session.context</field>
+        <field name="arch" type="xml">
+            <list string="Employee Sessions">
+                <field name="user_id"/>
+                <field name="active_employee_id"/>
+                <field name="session_start"/>
+                <field name="session_end"/>
+                <field name="pin_verified"/>
+                <field name="state" 
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'ended'"
+                       decoration-warning="state == 'expired'"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Employee Session Context - Form View -->
+    <!-- ============================================= -->
+    <record id="view_employee_session_context_form" model="ir.ui.view">
+        <field name="name">employee.session.context.form</field>
+        <field name="model">employee.session.context</field>
+        <field name="arch" type="xml">
+            <form string="Employee Session">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Session Info">
+                            <field name="user_id"/>
+                            <field name="active_employee_id"/>
+                            <field name="pin_verified"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="session_start"/>
+                            <field name="session_end"/>
+                        </group>
+                    </group>
+                    <group string="Technical Info" groups="base.group_no_one">
+                        <field name="ip_address"/>
+                        <field name="user_agent"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Employee Session Context - Search View -->
+    <!-- ============================================= -->
+    <record id="view_employee_session_context_search" model="ir.ui.view">
+        <field name="name">employee.session.context.search</field>
+        <field name="model">employee.session.context</field>
+        <field name="arch" type="xml">
+            <search string="Employee Sessions">
+                <field name="user_id"/>
+                <field name="active_employee_id"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('state', '=', 'active')]"/>
+                <filter name="ended" string="Ended" domain="[('state', '=', 'ended')]"/>
+                <filter name="expired" string="Expired" domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter name="today" string="Today" domain="[('session_start', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_employee" string="Employee" context="{'group_by': 'active_employee_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Employee Session Context - Action -->
+    <!-- ============================================= -->
+    <record id="action_employee_session_context" model="ir.actions.act_window">
+        <field name="name">Employee Sessions</field>
+        <field name="res_model">employee.session.context</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_employee_session_context_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No employee sessions yet
+            </p>
+            <p>
+                Employee sessions track which employee is currently active 
+                when using shared user accounts.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Menu Items -->
+    <!-- ============================================= -->
+    <!-- Add to HR Configuration menu -->
+    <menuitem id="menu_employee_session_context"
+              name="Employee Sessions"
+              parent="hr.menu_human_resources_configuration"
+              action="action_employee_session_context"
+              sequence="100"
+              groups="group_employee_accountability_manager"/>
+</odoo>

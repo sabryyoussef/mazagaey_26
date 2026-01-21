@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_session_context_user,employee.session.context.user,model_employee_session_context,base.group_user,1,0,0,0
+access_employee_session_context_hr,employee.session.context.hr,model_employee_session_context,hr.group_hr_user,1,1,1,1
+access_employee_select_wizard,employee.select.wizard,model_employee_select_wizard,base.group_user,1,1,1,1
+access_employee_pin_wizard,employee.pin.wizard,model_employee_pin_wizard,base.group_user,1,1,1,1
