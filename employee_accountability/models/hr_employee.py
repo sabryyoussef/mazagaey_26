@@ -10,208 +10,203 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     # ===========================================
-    # Remove the unique user constraint to allow shared users
+    # Employee Code System
+    # NOTE: Instead of linking multiple employees to one user (blocked by Odoo),
+    # each employee gets their own Employee Code that identifies them.
+    # The code is linked to a parent user account for authentication.
     # ===========================================
-    _sql_constraints = [
-        # Override the original constraint with a dummy one that always passes
-        ('user_uniq', 'CHECK(1=1)', 'A user can be linked to multiple employees when using shared user accounts.'),
-    ]
-
-    @api.constrains('user_id', 'company_id')
-    def _check_user_id(self):
-        """Override to allow multiple employees per user (shared users)."""
-        # Skip the original constraint - we allow shared users
-        pass
-
-    # ===========================================
-    # PIN Security Fields
-    # ===========================================
-    employee_pin = fields.Char(
-        string='Employee PIN',
-        help='Encrypted PIN for employee identification when using shared user accounts.',
+    
+    employee_code = fields.Char(
+        string='Employee Code',
         copy=False,
-        groups='hr.group_hr_user',
+        readonly=True,
+        index=True,
+        help='Unique code for this employee. Used for identification in shared user scenarios.',
     )
-    employee_pin_salt = fields.Char(
-        string='PIN Salt',
+    employee_code_hash = fields.Char(
+        string='Code Hash',
         copy=False,
+        readonly=True,
         groups='hr.group_hr_user',
+        help='Hashed version of the employee code for secure validation.',
     )
-    pin_required = fields.Boolean(
-        string='PIN Required',
+    code_created_date = fields.Datetime(
+        string='Code Created',
+        readonly=True,
+    )
+    code_last_used = fields.Datetime(
+        string='Code Last Used',
+        readonly=True,
+    )
+    code_active = fields.Boolean(
+        string='Code Active',
         default=True,
-        help='If checked, this employee must enter PIN when selecting themselves on shared user login.',
+        help='If unchecked, this employee cannot use their code to authenticate.',
     )
-    pin_failed_attempts = fields.Integer(
-        string='Failed PIN Attempts',
-        default=0,
-        help='Number of consecutive failed PIN attempts. Resets on successful verification.',
+    
+    # Parent user for authentication (the shared user account)
+    parent_user_id = fields.Many2one(
+        'res.users',
+        string='Parent User Account',
+        help='The Odoo user account this employee authenticates through. '
+             'Multiple employees can share one parent user (license sharing).',
+        index=True,
     )
-    pin_locked_until = fields.Datetime(
-        string='PIN Locked Until',
-        help='If set, PIN verification is locked until this datetime.',
-    )
-
-    # ===========================================
-    # Shared User Configuration
-    # ===========================================
+    
     is_shared_user_employee = fields.Boolean(
-        string='Uses Shared User',
+        string='Uses Shared Login',
         compute='_compute_is_shared_user_employee',
         store=True,
-        help='Automatically set to True if this employee shares their user account with other employees.',
-    )
-    shared_user_employee_ids = fields.Many2many(
-        'hr.employee',
-        'hr_employee_shared_user_rel',
-        'employee_id',
-        'shared_employee_id',
-        string='Employees Sharing Same User',
-        compute='_compute_shared_user_employee_ids',
-        help='Other employees who share the same user account.',
+        help='True if this employee uses a shared user account via employee code.',
     )
 
-    # ===========================================
-    # Computed Fields
-    # ===========================================
-    @api.depends('user_id')
+    @api.depends('parent_user_id', 'employee_code')
     def _compute_is_shared_user_employee(self):
-        """Check if this employee shares their user with other employees."""
+        """Check if this employee uses shared user authentication."""
         for employee in self:
-            if employee.user_id:
-                other_employees = self.search([
-                    ('user_id', '=', employee.user_id.id),
-                    ('id', '!=', employee.id),
-                ])
-                employee.is_shared_user_employee = bool(other_employees)
-            else:
-                employee.is_shared_user_employee = False
-
-    @api.depends('user_id')
-    def _compute_shared_user_employee_ids(self):
-        """Get all other employees sharing the same user."""
-        for employee in self:
-            if employee.user_id:
-                shared_employees = self.search([
-                    ('user_id', '=', employee.user_id.id),
-                    ('id', '!=', employee.id),
-                ])
-                employee.shared_user_employee_ids = shared_employees
-            else:
-                employee.shared_user_employee_ids = False
+            employee.is_shared_user_employee = bool(employee.parent_user_id and employee.employee_code)
 
     # ===========================================
-    # PIN Management Methods
+    # Employee Code Generation & Management
     # ===========================================
-    def _hash_pin(self, pin, salt=None):
-        """Hash the PIN with salt using SHA-256."""
-        if not salt:
-            salt = secrets.token_hex(16)
-        hashed = hashlib.sha256((pin + salt).encode()).hexdigest()
-        return hashed, salt
+    def _generate_employee_code(self):
+        """Generate a unique employee code."""
+        # Format: EMP-XXXX-XXXX (readable, 8 chars)
+        code = f"EMP-{secrets.token_hex(2).upper()}-{secrets.token_hex(2).upper()}"
+        return code
 
-    def set_employee_pin(self, new_pin):
-        """Set a new PIN for the employee."""
+    def _hash_code(self, code):
+        """Hash the employee code using SHA-256."""
+        return hashlib.sha256(code.encode()).hexdigest()
+
+    def generate_employee_code(self):
+        """Generate a new employee code for this employee."""
         self.ensure_one()
-        if not new_pin or len(new_pin) < 4:
-            raise ValidationError("PIN must be at least 4 characters long.")
-        if len(new_pin) > 8:
-            raise ValidationError("PIN must not exceed 8 characters.")
-        if not new_pin.isdigit():
-            raise ValidationError("PIN must contain only digits.")
         
-        hashed_pin, salt = self._hash_pin(new_pin)
+        if not self.parent_user_id:
+            raise ValidationError("Please set a Parent User Account before generating an employee code.")
+        
+        new_code = self._generate_employee_code()
+        
+        # Ensure uniqueness
+        while self.search_count([('employee_code', '=', new_code)]) > 0:
+            new_code = self._generate_employee_code()
+        
         self.write({
-            'employee_pin': hashed_pin,
-            'employee_pin_salt': salt,
-            'pin_failed_attempts': 0,
-            'pin_locked_until': False,
+            'employee_code': new_code,
+            'employee_code_hash': self._hash_code(new_code),
+            'code_created_date': fields.Datetime.now(),
+            'code_active': True,
         })
-        return True
+        
+        return new_code
 
-    def verify_employee_pin(self, pin):
-        """Verify the provided PIN against stored hash."""
+    def verify_employee_code(self, code):
+        """Verify the provided employee code."""
         self.ensure_one()
         
-        # Check if PIN is locked
-        if self.pin_locked_until and fields.Datetime.now() < self.pin_locked_until:
-            remaining = (self.pin_locked_until - fields.Datetime.now()).seconds // 60
-            raise ValidationError(f"PIN is locked. Try again in {remaining} minutes.")
+        if not self.code_active:
+            raise ValidationError("This employee code has been deactivated.")
         
-        # If no PIN set, and PIN not required, allow access
-        if not self.employee_pin:
-            if not self.pin_required:
-                return True
-            raise ValidationError("No PIN has been set for this employee. Please contact your manager.")
+        if not self.employee_code:
+            raise ValidationError("No employee code has been set.")
         
-        # Verify PIN
-        hashed_input, _ = self._hash_pin(pin, self.employee_pin_salt)
-        if hashed_input == self.employee_pin:
-            # Reset failed attempts on success
-            self.write({
-                'pin_failed_attempts': 0,
-                'pin_locked_until': False,
-            })
+        if code == self.employee_code:
+            # Update last used timestamp
+            self.sudo().write({'code_last_used': fields.Datetime.now()})
             return True
-        else:
-            # Increment failed attempts
-            failed = self.pin_failed_attempts + 1
-            lock_until = False
-            
-            # Lock after 5 failed attempts for 15 minutes
-            if failed >= 5:
-                lock_until = fields.Datetime.add(fields.Datetime.now(), minutes=15)
-            
-            self.write({
-                'pin_failed_attempts': failed,
-                'pin_locked_until': lock_until,
-            })
-            
-            if lock_until:
-                raise ValidationError("Too many failed attempts. PIN locked for 15 minutes.")
-            else:
-                remaining = 5 - failed
-                raise ValidationError(f"Incorrect PIN. {remaining} attempts remaining.")
+        
+        return False
 
-    def reset_employee_pin(self):
-        """Reset PIN (for managers). Clears PIN and requires new setup."""
+    def deactivate_employee_code(self):
+        """Deactivate the employee code (revoke access)."""
         self.ensure_one()
-        self.write({
-            'employee_pin': False,
-            'employee_pin_salt': False,
-            'pin_failed_attempts': 0,
-            'pin_locked_until': False,
-        })
+        self.write({'code_active': False})
         return True
+
+    def reactivate_employee_code(self):
+        """Reactivate the employee code."""
+        self.ensure_one()
+        if not self.employee_code:
+            raise ValidationError("No employee code exists. Please generate one first.")
+        self.write({'code_active': True})
+        return True
+
+    @api.model
+    def find_by_code(self, code, parent_user_id=None):
+        """Find an employee by their code, optionally filtered by parent user."""
+        domain = [
+            ('employee_code', '=', code),
+            ('code_active', '=', True),
+        ]
+        if parent_user_id:
+            domain.append(('parent_user_id', '=', parent_user_id))
+        
+        employee = self.search(domain, limit=1)
+        if employee:
+            # Update last used
+            employee.sudo().write({'code_last_used': fields.Datetime.now()})
+        return employee
 
     # ===========================================
     # Action Methods
     # ===========================================
-    def action_set_pin(self):
-        """Open wizard to set employee PIN."""
+    def action_generate_code(self):
+        """Generate employee code and show it."""
         self.ensure_one()
-        return {
-            'name': 'Set Employee PIN',
-            'type': 'ir.actions.act_window',
-            'res_model': 'employee.pin.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_employee_id': self.id,
-            },
-        }
-
-    def action_reset_pin(self):
-        """Reset the employee PIN (manager action)."""
-        self.ensure_one()
-        self.reset_employee_pin()
+        code = self.generate_employee_code()
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': 'PIN Reset',
-                'message': f'PIN has been reset for {self.name}. They will need to set a new PIN.',
+                'title': 'Employee Code Generated',
+                'message': f'Employee code for {self.name}: {code}',
+                'type': 'success',
+                'sticky': True,
+            }
+        }
+
+    def action_deactivate_code(self):
+        """Deactivate the employee code."""
+        self.ensure_one()
+        self.deactivate_employee_code()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Code Deactivated',
+                'message': f'Employee code for {self.name} has been deactivated.',
+                'type': 'warning',
+                'sticky': False,
+            }
+        }
+
+    def action_reactivate_code(self):
+        """Reactivate the employee code."""
+        self.ensure_one()
+        self.reactivate_employee_code()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Code Reactivated',
+                'message': f'Employee code for {self.name} has been reactivated.',
                 'type': 'success',
                 'sticky': False,
+            }
+        }
+
+    def action_regenerate_code(self):
+        """Regenerate a new employee code (invalidates old one)."""
+        self.ensure_one()
+        code = self.generate_employee_code()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'New Employee Code Generated',
+                'message': f'New code for {self.name}: {code}\n(Previous code is now invalid)',
+                'type': 'success',
+                'sticky': True,
             }
         }

@@ -7,7 +7,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     # ===========================================
-    # Computed Fields
+    # Fields for Shared User Support (Employee Code System)
     # ===========================================
     active_employee_id = fields.Many2one(
         'hr.employee',
@@ -18,17 +18,19 @@ class ResUsers(models.Model):
     is_shared_user = fields.Boolean(
         string='Is Shared User',
         compute='_compute_is_shared_user',
-        help='True if multiple employees share this user account.',
+        help='True if this user has employees linked via parent_user_id.',
     )
-    shared_employee_ids = fields.One2many(
+    
+    # Employees that use this user as their parent (for shared login)
+    child_employee_ids = fields.One2many(
         'hr.employee',
-        'user_id',
-        string='Linked Employees',
-        help='All employees linked to this user account.',
+        'parent_user_id',
+        string='Child Employees',
+        help='Employees that authenticate through this user account.',
     )
-    shared_employee_count = fields.Integer(
-        string='Linked Employees Count',
-        compute='_compute_shared_employee_count',
+    child_employee_count = fields.Integer(
+        string='Child Employees Count',
+        compute='_compute_child_employee_count',
     )
 
     # ===========================================
@@ -42,90 +44,92 @@ class ResUsers(models.Model):
             user.active_employee_id = session.active_employee_id if session else False
 
     def _compute_is_shared_user(self):
-        """Check if this user is shared by multiple employees."""
+        """Check if this user has child employees (is a shared account)."""
         for user in self:
-            employee_count = self.env['hr.employee'].search_count([
-                ('user_id', '=', user.id),
-            ])
-            user.is_shared_user = employee_count > 1
+            user.is_shared_user = len(user.child_employee_ids) > 0
 
-    def _compute_shared_employee_count(self):
-        """Count employees linked to this user."""
+    def _compute_child_employee_count(self):
+        """Count employees that use this user as parent."""
         for user in self:
-            user.shared_employee_count = self.env['hr.employee'].search_count([
-                ('user_id', '=', user.id),
-            ])
+            user.child_employee_count = len(user.child_employee_ids)
 
     # ===========================================
-    # Helper Methods
+    # Employee Code Authentication
     # ===========================================
+    def authenticate_employee_code(self, code):
+        """
+        Authenticate an employee by their code.
+        
+        Args:
+            code: The employee code (e.g., 'EMP-A1B2-C3D4')
+            
+        Returns:
+            dict: Result with employee info or error
+        """
+        self.ensure_one()
+        
+        # Find employee with this code that belongs to this user
+        employee = self.env['hr.employee'].find_by_code(code, self.id)
+        
+        if not employee:
+            return {
+                'success': False,
+                'message': 'Invalid employee code or code not active.',
+            }
+        
+        # Set active employee in session
+        session = self.env['employee.session.context'].set_active_employee_by_code(
+            employee.id,
+            self.id,
+        )
+        
+        if session:
+            return {
+                'success': True,
+                'employee_id': employee.id,
+                'employee_name': employee.name,
+                'employee_code': employee.employee_code,
+                'session_id': session.id,
+                'message': f'Authenticated as {employee.name}',
+            }
+        
+        return {
+            'success': False,
+            'message': 'Failed to create session.',
+        }
+
     def get_active_employee(self):
         """Get the active employee for the current user."""
         self.ensure_one()
         return self.env['employee.session.context'].get_active_employee(self.id)
-
-    def set_active_employee(self, employee_id, pin=None):
-        """Set the active employee for this user.
-        
-        Returns:
-            dict: Result with success status and employee info for OWL widget
-        """
-        self.ensure_one()
-        try:
-            session = self.env['employee.session.context'].set_active_employee(
-                employee_id, 
-                pin=pin
-            )
-            if session:
-                return {
-                    'success': True,
-                    'employee_id': session.active_employee_id.id,
-                    'employee_name': session.active_employee_id.name,
-                    'session_id': session.id,
-                    'message': f'Now working as {session.active_employee_id.name}',
-                }
-            return {
-                'success': False,
-                'message': 'Failed to create session',
-            }
-        except Exception as e:
-            return {
-                'success': False,
-                'message': str(e),
-            }
 
     def clear_active_employee(self):
         """Clear the active employee session."""
         self.ensure_one()
         return self.env['employee.session.context'].clear_active_employee(self.id)
 
-    def requires_employee_selection(self):
-        """Check if this user needs to select an employee on login."""
-        self.ensure_one()
-        # If multiple employees share this user, selection is required
-        if self.shared_employee_count > 1:
-            # Check if there's already an active session
-            session = self.env['employee.session.context'].get_active_session(self.id)
-            return not session
-        return False
-
-    def get_selectable_employees(self):
-        """Get employees that this user can select from."""
-        self.ensure_one()
-        return self.env['hr.employee'].search([
-            ('user_id', '=', self.id),
-        ])
-
     # ===========================================
     # Action Methods
     # ===========================================
-    def action_select_employee(self):
-        """Open the employee selection wizard."""
+    def action_view_child_employees(self):
+        """View all employees that use this account."""
         self.ensure_one()
         return {
-            'name': 'Select Employee',
+            'name': 'Child Employees',
             'type': 'ir.actions.act_window',
-            'res_model': 'employee.select.wizard',
+            'res_model': 'hr.employee',
+            'view_mode': 'list,form',
+            'domain': [('parent_user_id', '=', self.id)],
+            'context': {'default_parent_user_id': self.id},
+        }
+
+    def action_enter_employee_code(self):
+        """Open wizard to enter employee code."""
+        self.ensure_one()
+        return {
+            'name': 'Enter Employee Code',
+            'type': 'ir.actions.act_window',
+            'res_model': 'employee.code.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {
@@ -133,39 +137,20 @@ class ResUsers(models.Model):
             },
         }
 
-    def action_view_linked_employees(self):
-        """View all employees linked to this user."""
-        self.ensure_one()
-        return {
-            'name': 'Linked Employees',
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
-            'view_mode': 'list,form',
-            'domain': [('user_id', '=', self.id)],
-            'context': {'create': False},
-        }
-
     # ===========================================
-    # API Methods for OWL Components
+    # API Methods for Frontend
     # ===========================================
-    @api.model
-    def get_employee_switcher_data(self):
+    def get_employee_status(self):
         """
-        Get data for the employee switcher widget.
-        Called from the OWL component in the navbar.
+        Get current employee status for the UI.
         
         Returns:
-            dict: Employee switcher data including active employee and available employees
+            dict: Current employee info and available actions
         """
-        user = self.env.user
-        
-        # Get all employees linked to this user
-        employees = self.env['hr.employee'].search([
-            ('user_id', '=', user.id),
-        ])
-        
-        # Check if this is a shared user
-        is_shared_user = len(employees) > 1
+        if self:
+            user = self[0]
+        else:
+            user = self.env.user
         
         # Get active employee from session
         active_employee = None
@@ -175,27 +160,19 @@ class ResUsers(models.Model):
             active_employee = {
                 'id': emp.id,
                 'name': emp.name,
+                'employee_code': emp.employee_code,
                 'job_title': emp.job_title or '',
-                'avatar_128': emp.avatar_128 or False,
+                'department_name': emp.department_id.name if emp.department_id else '',
             }
         
-        # Build available employees list
-        available_employees = []
-        for emp in employees:
-            available_employees.append({
-                'id': emp.id,
-                'name': emp.name,
-                'job_title': emp.job_title or '',
-                'avatar_128': emp.avatar_128 or False,
-                'pin_required': emp.pin_required,
-                'department_id': emp.department_id.id if emp.department_id else False,
-                'department_name': emp.department_id.name if emp.department_id else '',
-            })
+        # Check if this is a shared user
+        is_shared_user = len(user.child_employee_ids) > 0
         
         return {
             'active_employee': active_employee,
-            'available_employees': available_employees,
             'is_shared_user': is_shared_user,
+            'requires_code': is_shared_user and not active_employee,
+            'child_employee_count': len(user.child_employee_ids),
             'user_id': user.id,
             'user_name': user.name,
         }

@@ -12,7 +12,8 @@
                 <field name="active_employee_id"/>
                 <field name="session_start"/>
                 <field name="session_end"/>
-                <field name="pin_verified"/>
+                <field name="code_verified"/>
+                <field name="employee_code_used"/>
                 <field name="state" 
                        decoration-success="state == 'active'"
                        decoration-muted="state == 'ended'"
@@ -38,7 +39,8 @@
                         <group string="Session Info">
                             <field name="user_id"/>
                             <field name="active_employee_id"/>
-                            <field name="pin_verified"/>
+                            <field name="code_verified"/>
+                            <field name="employee_code_used"/>
                         </group>
                         <group string="Timing">
                             <field name="session_start"/>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TODO: Implement portal menu items -->
+<!-- See docs/IMPLEMENTATION_PLAN.md Phase 2.1 for detailed specifications -->
+<odoo>
+    <data>
+        <!-- Portal menu items to be implemented -->
+    </data>
+</odoo>

@@ -3,106 +3,75 @@
     <data noupdate="1">
 
         <!-- ============================================== -->
-        <!-- DEPARTMENT SHARED USERS                        -->
+        <!-- PARENT SHARED USER                             -->
+        <!-- This is the single Odoo user license shared   -->
+        <!-- by multiple employees in Operations           -->
         <!-- ============================================== -->
 
-        <!-- Operations Department Shared User (for regular employees) -->
+        <!-- Operations Department Shared User (Parent User) -->
         <record id="user_dept_ops" model="res.users">
             <field name="name">Operations Department User</field>
             <field name="login">user.dept.ops</field>
             <field name="password">user.dept.ops</field>
-            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('hr.group_hr_user'))]"/>
-            <field name="active">True</field>
-        </record>
-
-        <!-- Operations Department Admin User (for manager) -->
-        <record id="admin_dept_ops" model="res.users">
-            <field name="name">Operations Admin User</field>
-            <field name="login">admin.dept.ops</field>
-            <field name="password">admin.dept.ops</field>
-            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('hr.group_hr_manager'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('hr.group_hr_user')), (4, ref('project.group_project_user'))]"/>
             <field name="active">True</field>
         </record>
 
         <!-- ============================================== -->
-        <!-- EMPLOYEES USING SHARED USER                    -->
+        <!-- EMPLOYEES USING EMPLOYEE CODE SYSTEM          -->
         <!-- ============================================== -->
         
         <!--
-            PIN Reference (for testing):
-            - Ahmed Ali:      PIN 1234
-            - Fatima Hassan:  PIN 2345
-            - Omar Said:      PIN 3456
-            - Layla Mohamed:  PIN 4567
-            - Hassan Ibrahim: PIN 5678
+            Employee Code System:
+            Each employee gets a unique code generated via the 
+            "Generate Employee Code" button on their employee form.
             
-            Note: PINs are hashed with SHA-256 and individual salts.
-            These pre-computed hashes use fixed salts for demo reproducibility.
+            For demo purposes, we create employees linked to the 
+            parent shared user. Codes will be generated manually
+            or via a script after installation.
+            
+            Parent User: user.dept.ops
+            Child Employees:
+            - Ahmed Ali (Senior Specialist)
+            - Fatima Hassan (Junior Specialist)
+            - Omar Said (Senior Specialist)
+            - Layla Mohamed (Junior Specialist)
         -->
 
         <!-- Employee 1: Ahmed Ali (Operations - Senior) -->
         <record id="employee_ahmed_ali" model="hr.employee">
             <field name="name">Ahmed Ali</field>
-            <field name="user_id" ref="user_dept_ops"/>
+            <field name="parent_user_id" ref="user_dept_ops"/>
             <field name="job_title">Operations Senior Specialist</field>
             <field name="work_email">ahmed.ali@example.com</field>
-            <field name="pin_required">True</field>
-            <!-- PIN: 1234, Salt: demo_salt_ahmed_001 -->
-            <field name="employee_pin">0237a98017af1a90e0c7da14434a7a0eb34b06e586f4d023f3c9c6828fc79031</field>
-            <field name="employee_pin_salt">demo_salt_ahmed_001</field>
-            <field name="pin_failed_attempts">0</field>
+            <field name="code_active">False</field>
         </record>
 
         <!-- Employee 2: Fatima Hassan (Operations - Junior) -->
         <record id="employee_fatima_hassan" model="hr.employee">
             <field name="name">Fatima Hassan</field>
-            <field name="user_id" ref="user_dept_ops"/>
+            <field name="parent_user_id" ref="user_dept_ops"/>
             <field name="job_title">Operations Junior Specialist</field>
             <field name="work_email">fatima.hassan@example.com</field>
-            <field name="pin_required">True</field>
-            <!-- PIN: 2345, Salt: demo_salt_fatima_002 -->
-            <field name="employee_pin">73640ef6da4968b61ab3cd5ab189e9bdc0f6173a9a3495acc4fcb20bef8b999c</field>
-            <field name="employee_pin_salt">demo_salt_fatima_002</field>
-            <field name="pin_failed_attempts">0</field>
+            <field name="code_active">False</field>
         </record>
 
         <!-- Employee 3: Omar Said (Operations - Senior) -->
         <record id="employee_omar_said" model="hr.employee">
             <field name="name">Omar Said</field>
-            <field name="user_id" ref="user_dept_ops"/>
+            <field name="parent_user_id" ref="user_dept_ops"/>
             <field name="job_title">Operations Senior Specialist</field>
             <field name="work_email">omar.said@example.com</field>
-            <field name="pin_required">True</field>
-            <!-- PIN: 3456, Salt: demo_salt_omar_003 -->
-            <field name="employee_pin">3fed40ea237d4cd9f8ba35332899db95bed22b3a9720a120e6e5a659a35b4c36</field>
-            <field name="employee_pin_salt">demo_salt_omar_003</field>
-            <field name="pin_failed_attempts">0</field>
+            <field name="code_active">False</field>
         </record>
 
         <!-- Employee 4: Layla Mohamed (Operations - Junior) -->
         <record id="employee_layla_mohamed" model="hr.employee">
             <field name="name">Layla Mohamed</field>
-            <field name="user_id" ref="user_dept_ops"/>
+            <field name="parent_user_id" ref="user_dept_ops"/>
             <field name="job_title">Operations Junior Specialist</field>
             <field name="work_email">layla.mohamed@example.com</field>
-            <field name="pin_required">True</field>
-            <!-- PIN: 4567, Salt: demo_salt_layla_004 -->
-            <field name="employee_pin">63d25f16758f9c2a2fef572b21721bb224eb8aa29687ba8cb9f1626323501757</field>
-            <field name="employee_pin_salt">demo_salt_layla_004</field>
-            <field name="pin_failed_attempts">0</field>
-        </record>
-
-        <!-- Employee 5: Hassan Ibrahim (Operations - Manager) - Uses Admin User -->
-        <record id="employee_hassan_ibrahim" model="hr.employee">
-            <field name="name">Hassan Ibrahim</field>
-            <field name="user_id" ref="admin_dept_ops"/>
-            <field name="job_title">Operations Manager</field>
-            <field name="work_email">hassan.ibrahim@example.com</field>
-            <field name="pin_required">True</field>
-            <!-- PIN: 5678, Salt: demo_salt_hassan_005 -->
-            <field name="employee_pin">6fb02c2c13d2f6df6984d8475ca37f14f73acc6ff92f8697ebe671a93f305ecf</field>
-            <field name="employee_pin_salt">demo_salt_hassan_005</field>
-            <field name="pin_failed_attempts">0</field>
+            <field name="code_active">False</field>
         </record>
 
     </data>

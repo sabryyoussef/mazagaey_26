@@ -1,0 +1,413 @@
+========================================
+SLIDE 1: TITLE SLIDE
+========================================
+
+Portal My Tasks
+User Guide
+
+Complete guide for portal users
+
+Module Version: 18.0.1.0.0
+
+========================================
+SLIDE 2: INTRODUCTION
+========================================
+
+Introduction
+
+The Portal My Tasks module provides employees with a dedicated workspace to manage their assigned tasks without requiring full Odoo internal access.
+
+Key Benefits:
+✅ Access your tasks from anywhere via web browser
+✅ Update task progress in real-time
+✅ Submit handover notes for task completion
+✅ No need for expensive internal user licenses
+✅ Full accountability and audit trail
+
+========================================
+SLIDE 3: GETTING STARTED
+========================================
+
+Getting Started
+
+Accessing Portal My Tasks:
+1. Login: Go to your company's Odoo portal URL
+2. Credentials: Use your portal user credentials (provided by your manager)
+3. Navigation: Click on "My Tasks" in the portal menu
+
+First Time Setup:
+• Your manager will create your portal user account
+• You'll receive login credentials via email
+• Tasks will be assigned to you by your manager
+• You'll see only tasks assigned to you
+
+========================================
+SLIDE 4: USER ROLES - PORTAL USER
+========================================
+
+User Roles & Permissions
+Portal User (Employee)
+
+✅ What You CAN Do:
+• View your assigned tasks
+• Post updates and comments
+• Change task status (within allowed stages)
+• Upload attachments
+• Submit handover notes
+• View task history and chatter
+
+❌ What You CANNOT Do:
+• Access backend/internal Odoo apps
+• Create new tasks
+• Assign tasks to others
+• Delete tasks
+• Access other employees' tasks
+• Approve handover notes
+• Close tasks without approved handover
+
+========================================
+SLIDE 5: USER ROLES - MANAGER
+========================================
+
+Internal User (Manager)
+
+What Managers Can Do:
+• Create and assign tasks
+• View all tasks and projects
+• Approve/reject handover notes
+• Close tasks
+• Access full reporting and analytics
+• Manage portal user assignments
+
+========================================
+SLIDE 6: USE CASE 1 - DAILY TASK UPDATES
+========================================
+
+Use Case 1: Daily Task Updates
+
+Scenario:
+You're working on a task and want to update your progress.
+
+Steps:
+1. Login to portal
+2. Navigate to My Tasks
+3. Click on the task you're working on
+4. Click "Post Update" button
+5. Type your progress update
+6. Click "Post"
+
+Result: Your update appears in the task's activity feed, and your manager is notified.
+
+Example Update:
+"Completed the initial design mockups. 
+Attached the design files for review. 
+Next step: Get client feedback."
+
+========================================
+SLIDE 7: USE CASE 2 - CHANGING TASK STATUS
+========================================
+
+Use Case 2: Changing Task Status
+
+Scenario:
+You've completed a phase of work and want to move the task to "Review" stage.
+
+Steps:
+1. Open the task detail page
+2. Click "Change Status" button
+3. Select "Review" from the dropdown
+4. Confirm the change
+
+Result: Task status updates, and manager receives notification.
+
+Allowed Stages:
+✅ In Progress
+✅ Review
+✅ Waiting Approval
+❌ Cannot move to "Done" (requires manager approval)
+
+========================================
+SLIDE 8: USE CASE 3 - SUBMITTING HANDOVER NOTE
+========================================
+
+Use Case 3: Submitting Handover Note
+
+Scenario:
+You've completed a task and need to submit a handover note for manager approval.
+
+Steps:
+1. Open the completed task
+2. Click "Submit Handover Note" button
+3. Fill in the handover content:
+   - What was completed
+   - Key deliverables
+   - Important notes for next person
+   - Any issues encountered
+4. Upload required attachments (at least one required)
+5. Click "Submit for Approval"
+
+Result:
+• Handover note is submitted
+• Task status changes to "Waiting Handover Review"
+• Manager receives notification
+• Task cannot be closed until handover is approved
+
+========================================
+SLIDE 9: HANDOVER CONTENT EXAMPLE
+========================================
+
+Handover Note Content
+What to Include:
+
+• What was completed - Summary of work done
+• Key deliverables - List all outputs
+• Important notes - Context for next person
+• Issues encountered - Any challenges or blockers
+• Next steps - What should happen next
+
+Example Structure:
+• Task Completion Summary
+• Deliverables (with attachments)
+• Important Notes
+• Next Steps
+
+========================================
+SLIDE 10: USE CASE 4 - REJECTED HANDOVER
+========================================
+
+Use Case 4: Responding to Rejected Handover
+
+Scenario:
+Your manager rejected your handover note and requested changes.
+
+Steps:
+1. You receive email notification about rejection
+2. Login to portal and open the task
+3. View the manager's comment explaining what's missing
+4. Click "Submit Handover Note" again (creates new version)
+5. Address the manager's feedback
+6. Update handover content and attachments
+7. Resubmit for approval
+
+Result: New version of handover note is created and submitted.
+
+========================================
+SLIDE 11: ALLOWED ACTIONS - TASK VIEWING
+========================================
+
+Allowed Actions
+✅ What Portal Users CAN Do
+
+Task Viewing:
+✅ View all tasks assigned to you
+✅ Filter tasks by status (In Progress, Waiting, Overdue)
+✅ Sort tasks by due date, priority, or name
+✅ View task details, description, and attachments
+✅ View project information
+✅ See task history and activity feed
+
+========================================
+SLIDE 12: ALLOWED ACTIONS - TASK UPDATES
+========================================
+
+Allowed Actions (Continued)
+
+Task Updates:
+✅ Post updates and comments to tasks
+✅ Upload attachments to tasks
+✅ Change task status to allowed stages:
+   - In Progress
+   - Review
+   - Waiting Approval
+✅ Update task progress percentage (if enabled)
+
+Handover Notes:
+✅ Create handover notes for your tasks
+✅ Upload multiple attachments
+✅ Edit draft handover notes
+✅ Resubmit rejected handover notes
+
+========================================
+SLIDE 13: APPROVAL REQUIREMENTS - TASK CLOSURE
+========================================
+
+Approval Requirements
+❌ What Requires Manager Approval
+
+Task Closure:
+❌ Cannot close tasks yourself
+✅ Manager must close tasks after handover approval
+✅ Task must have approved handover note (if required)
+
+Why: Ensures quality control and proper documentation before task completion.
+
+========================================
+SLIDE 14: APPROVAL REQUIREMENTS - HANDOVER
+========================================
+
+Approval Requirements (Continued)
+
+Handover Note Approval:
+❌ Cannot approve your own handover notes
+✅ Manager reviews and approves/rejects
+✅ Manager can request changes via comments
+
+Why: Ensures handover documentation meets quality standards.
+
+Status Changes (Restricted):
+❌ Cannot move task to "Done"
+❌ Cannot move task to "Cancelled"
+❌ Cannot change task priority
+❌ Cannot reassign task to another user
+
+Why: These actions require managerial oversight and decision-making.
+
+========================================
+SLIDE 15: COMPLETE WORKFLOW
+========================================
+
+Complete Workflow
+Task Assignment to Completion
+
+Step 1: Manager creates and assigns task
+Step 2: You work on task, post updates
+Step 3: You submit handover note
+Step 4: Manager reviews and approves/rejects
+Step 5: Manager closes task
+
+If Approved:
+• Task can be closed
+• Handover note is archived
+• Task marked as complete
+
+If Rejected:
+• You receive notification with feedback
+• Task returns to "In Progress"
+• You can resubmit with corrections
+
+========================================
+SLIDE 16: STATUS FLOW DIAGRAM
+========================================
+
+Task Status Flow
+
+[Draft/New]
+    ↓ (Manager assigns)
+[In Progress] ← Portal user can set
+    ↓ (Portal user updates)
+[Review] ← Portal user can set
+    ↓ (Portal user submits handover)
+[Waiting Handover Review] ← Automatic
+    ↓ (Manager approves)
+[Ready to Close] ← Manager can close
+    ↓ (Manager closes)
+[Done] ← Manager only
+
+========================================
+SLIDE 17: ACTIONS MATRIX
+========================================
+
+Quick Reference
+Portal User Actions Matrix
+
+Action                    | Allowed | Requires Approval | Notes
+--------------------------|---------|-------------------|------------------
+View assigned tasks       | ✅      | ❌                | Only your tasks
+Post updates              | ✅      | ❌                | Real-time updates
+Upload attachments        | ✅      | ❌                | To tasks and handovers
+Change status (allowed)   | ✅      | ❌                | In Progress, Review, Waiting
+Change status (Done)      | ❌      | ✅                | Manager only
+Submit handover note      | ✅      | ✅                | Requires manager approval
+Approve handover          | ❌      | N/A               | Manager only
+Close task                | ❌      | N/A               | Manager only
+Create task               | ❌      | N/A               | Manager only
+Assign task               | ❌      | N/A               | Manager only
+
+========================================
+SLIDE 18: BEST PRACTICES
+========================================
+
+Best Practices
+For Portal Users (Employees)
+
+• Regular Updates: Post progress updates daily or as you make progress
+• Clear Communication: Be specific in your updates and comments
+• Timely Submissions: Submit handover notes as soon as work is complete
+• Complete Documentation: Include all relevant information in handover notes
+• Attachment Quality: Ensure attachments are clear and properly named
+• Professional Tone: Maintain professional communication in all updates
+
+========================================
+SLIDE 19: HANDOVER BEST PRACTICES
+========================================
+
+Handover Note Best Practices
+
+✅ DO:
+• Include comprehensive completion summary
+• List all deliverables clearly
+• Document important decisions made
+• Note any issues or challenges encountered
+• Provide context for next steps
+• Attach all relevant files
+
+❌ DON'T:
+• Submit incomplete handover notes
+• Forget to attach required files
+• Use vague or unclear language
+• Skip important details
+• Submit without reviewing content
+
+========================================
+SLIDE 20: TROUBLESHOOTING
+========================================
+
+Troubleshooting
+Common Issues & Solutions
+
+Issue 1: "I can't see my tasks"
+• Contact your manager to verify task assignment
+• Logout and login again
+• Clear browser cache
+• Try different browser
+
+Issue 2: "I can't submit handover note"
+• Ensure at least one attachment is uploaded
+• Check if handover was already approved
+• Fill in all required fields
+• Contact manager if issue persists
+
+Issue 3: "I can't change task status"
+• Only use allowed stages (In Progress, Review, Waiting Approval)
+• Contact manager to move to "Done"
+• Refresh page and try again
+• Contact IT support if problem persists
+
+========================================
+SLIDE 21: SUPPORT & CONTACT
+========================================
+
+Support & Contact
+Getting Help
+
+• Technical Issues: Contact IT support
+• Task Assignment Questions: Contact your manager
+• Portal Access Issues: Contact system administrator
+• Workflow Questions: Refer to this guide or contact your manager
+
+Additional Resources:
+• Implementation Plan: See docs/IMPLEMENTATION_PLAN.md
+• Module README: See README.md
+• Odoo Portal Documentation
+
+========================================
+SLIDE 22: THANK YOU
+========================================
+
+Thank You
+
+Questions?
+
+Contact your manager or IT support
+
+Portal My Tasks Module v18.0.1.0.0

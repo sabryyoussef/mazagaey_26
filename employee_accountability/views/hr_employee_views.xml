@@ -9,42 +9,60 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">50</field>
         <field name="arch" type="xml">
-            <!-- Add PIN Management buttons in header -->
+            <!-- Add Employee Code Management buttons in header -->
             <xpath expr="//header" position="inside">
-                <button name="action_set_pin" 
+                <button name="action_generate_code" 
                         type="object" 
-                        string="Set PIN" 
-                        class="btn-secondary"
-                        invisible="employee_pin"/>
-                <button name="action_set_pin" 
+                        string="Generate Employee Code" 
+                        class="btn-primary"
+                        invisible="employee_code != False"
+                        groups="hr.group_hr_manager"/>
+                <button name="action_regenerate_code" 
                         type="object" 
-                        string="Change PIN" 
-                        class="btn-secondary"
-                        invisible="not employee_pin"/>
-                <button name="action_reset_pin" 
-                        type="object" 
-                        string="Reset PIN" 
+                        string="Regenerate Code" 
                         class="btn-warning"
-                        invisible="not employee_pin"
+                        invisible="employee_code == False"
+                        groups="hr.group_hr_manager"
+                        confirm="This will invalidate the current employee code. The employee will need to use the new code. Continue?"/>
+                <button name="action_deactivate_code" 
+                        type="object" 
+                        string="Deactivate Code" 
+                        class="btn-danger"
+                        invisible="code_active == False or employee_code == False"
+                        groups="hr.group_hr_manager"/>
+                <button name="action_reactivate_code" 
+                        type="object" 
+                        string="Reactivate Code" 
+                        class="btn-success"
+                        invisible="code_active != False or employee_code == False"
                         groups="hr.group_hr_manager"/>
             </xpath>
             
             <!-- Add Accountability tab -->
             <xpath expr="//notebook" position="inside">
-                <page string="Accountability" name="accountability">
+                <page string="Shared Login" name="shared_login">
                     <group>
-                        <group string="Shared User Configuration">
+                        <group string="Parent User Account">
+                            <field name="parent_user_id"/>
                             <field name="is_shared_user_employee" readonly="1"/>
-                            <field name="shared_user_employee_ids" 
-                                   widget="many2many_tags" 
-                                   readonly="1"
-                                   invisible="not is_shared_user_employee"/>
                         </group>
-                        <group string="PIN Security">
-                            <field name="pin_required"/>
-                            <field name="pin_failed_attempts" readonly="1"/>
-                            <field name="pin_locked_until" readonly="1"/>
+                        <group string="Employee Code">
+                            <field name="employee_code" readonly="1"/>
+                            <field name="code_active" readonly="1"/>
+                            <field name="code_created_date" readonly="1"/>
+                            <field name="code_last_used" readonly="1"/>
                         </group>
+                    </group>
+                    <group string="How It Works" col="1">
+                        <div class="alert alert-info" role="alert">
+                            <h4 class="alert-heading">Employee Code System</h4>
+                            <ol>
+                                <li><strong>Set Parent User:</strong> Link this employee to a shared Odoo user account (e.g., user.dept.ops)</li>
+                                <li><strong>Generate Code:</strong> Click "Generate Employee Code" to create a unique code</li>
+                                <li><strong>Employee Logs In:</strong> Employee logs in with the shared user, then enters their personal code</li>
+                                <li><strong>Automatic Tracking:</strong> All actions are stamped with this employee's identity</li>
+                            </ol>
+                        </div>
                     </group>
                 </page>
             </xpath>
@@ -63,11 +81,11 @@
             <xpath expr="//filter[@name='my_team']" position="after">
                 <separator/>
                 <filter name="shared_user" 
-                        string="Shared User Employees" 
+                        string="Shared Login Employees" 
                         domain="[('is_shared_user_employee', '=', True)]"/>
-                <filter name="pin_locked" 
-                        string="PIN Locked" 
-                        domain="[('pin_locked_until', '!=', False)]"/>
+                <filter name="code_inactive" 
+                        string="Code Deactivated" 
+                        domain="[('code_active', '=', False), ('employee_code', '!=', False)]"/>
             </xpath>
         </field>
     </record>

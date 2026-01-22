@@ -17,6 +17,22 @@
                   groups="product_category_search.group_product_search_user"
                   sequence="5"/>
         
+        <!-- Import from CSV Wizard -->
+        <menuitem id="menu_product_import_csv"
+                  name="Import from CSV"
+                  parent="menu_product_category_search_root"
+                  action="action_product_import_wizard"
+                  groups="product_category_search.group_product_search_manager"
+                  sequence="10"/>
+        
+        <!-- Bulk Categorize -->
+        <menuitem id="menu_product_bulk_categorize"
+                  name="Bulk Categorize"
+                  parent="menu_product_category_search_root"
+                  action="action_product_bulk_categorize"
+                  groups="product_category_search.group_product_search_manager"
+                  sequence="15"/>
+        
         <!-- Configuration Menu -->
         <menuitem id="menu_product_search_config"
                   name="Configuration"

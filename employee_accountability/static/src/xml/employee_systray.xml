@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    
+    <t t-name="employee_accountability.EmployeeSystray">
+        <div class="o_employee_systray d-flex align-items-center" t-if="state.isSharedUser">
+            <!-- Show employee badge if authenticated -->
+            <t t-if="state.employeeName">
+                <div class="d-flex align-items-center bg-success text-white rounded-pill px-2 py-1 me-2" 
+                     style="font-size: 12px; cursor: pointer;"
+                     t-on-click="onClickSwitch"
+                     title="Click to switch employee">
+                    <i class="fa fa-user-circle me-1"/>
+                    <span t-esc="state.employeeName"/>
+                    <i class="fa fa-exchange ms-1" style="font-size: 10px;"/>
+                </div>
+            </t>
+            <!-- Show warning if not authenticated -->
+            <t t-else="">
+                <div class="d-flex align-items-center bg-warning text-dark rounded-pill px-2 py-1 me-2" 
+                     style="font-size: 12px; cursor: pointer;"
+                     t-on-click="onClickSwitch"
+                     title="Click to identify yourself">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <span>Not Identified</span>
+                </div>
+            </t>
+        </div>
+    </t>
+    
+</templates>

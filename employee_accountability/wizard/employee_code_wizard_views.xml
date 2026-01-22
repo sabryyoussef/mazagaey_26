@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================= -->
+    <!-- Employee Code Entry Wizard View -->
+    <!-- ============================================= -->
+    <record id="view_employee_code_wizard_form" model="ir.ui.view">
+        <field name="name">employee.code.wizard.form</field>
+        <field name="model">employee.code.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enter Employee Code">
+                <div class="alert alert-info text-center mb-3" role="alert">
+                    <h4 class="alert-heading mb-2">
+                        <i class="fa fa-id-card-o me-2"/>Who are you?
+                    </h4>
+                    <p class="mb-0">Enter your personal employee code to continue.</p>
+                </div>
+                <group>
+                    <field name="user_id" invisible="1"/>
+                    <field name="employee_code" 
+                           placeholder="EMP-XXXX-XXXX"
+                           class="o_input_lg text-center"
+                           style="font-size: 1.5em; letter-spacing: 2px;"/>
+                </group>
+                <group>
+                    <div class="text-muted text-center small">
+                        <i class="fa fa-info-circle me-1"/>
+                        Don't have a code? Contact your manager.
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_authenticate" 
+                            type="object" 
+                            string="Continue" 
+                            class="btn-primary btn-lg"/>
+                    <button name="action_cancel" 
+                            type="object" 
+                            string="Cancel" 
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Action to open Employee Code wizard -->
+    <!-- ============================================= -->
+    <record id="action_employee_code_wizard" model="ir.actions.act_window">
+        <field name="name">Enter Employee Code</field>
+        <field name="res_model">employee.code.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================= -->
+    <!-- Menu to manually open the wizard -->
+    <!-- Hidden for now - use systray badge instead -->
+    <!-- ============================================= -->
+    <!-- 
+    <menuitem id="menu_employee_code_wizard"
+              name="Switch Employee"
+              action="action_employee_code_wizard"
+              parent="hr.menu_hr_root"
+              sequence="1"
+              groups="employee_accountability.group_employee_accountability_user"/>
+    -->
+</odoo>

@@ -39,10 +39,14 @@ class EmployeeSessionContext(models.Model):
         string='Session End',
         help='Set when employee switches or logs out.',
     )
-    pin_verified = fields.Boolean(
-        string='PIN Verified',
+    code_verified = fields.Boolean(
+        string='Code Verified',
         default=False,
-        help='True if the employee verified their identity with PIN.',
+        help='True if the employee was authenticated via employee code.',
+    )
+    employee_code_used = fields.Char(
+        string='Employee Code Used',
+        help='The employee code that was used to authenticate.',
     )
     
     # ===========================================
@@ -120,29 +124,45 @@ class EmployeeSessionContext(models.Model):
         return self.env['hr.employee']
 
     @api.model
-    def set_active_employee(self, employee_id, pin=None, ip_address=None, user_agent=None):
-        """Set the active employee for the current user."""
-        user = self.env.user
+    def set_active_employee(self, employee_id, user_id=None, ip_address=None, user_agent=None):
+        """Set the active employee for a user."""
+        if not user_id:
+            user_id = self.env.uid
+        
         employee = self.env['hr.employee'].browse(employee_id)
         
         if not employee.exists():
             raise ValidationError("Employee not found.")
         
-        # Verify employee belongs to this user
-        if employee.user_id and employee.user_id.id != user.id:
-            raise ValidationError("This employee is not linked to your user account.")
+        # Create new session (this will end existing ones)
+        session = self.create({
+            'user_id': user_id,
+            'active_employee_id': employee.id,
+            'code_verified': False,
+            'ip_address': ip_address,
+            'user_agent': user_agent,
+        })
         
-        # Verify PIN if required
-        if employee.pin_required and employee.employee_pin:
-            if not pin:
-                raise ValidationError("PIN is required for this employee.")
-            employee.verify_employee_pin(pin)
+        return session
+
+    @api.model
+    def set_active_employee_by_code(self, employee_id, user_id, ip_address=None, user_agent=None):
+        """Set the active employee for a user via employee code authentication."""
+        employee = self.env['hr.employee'].browse(employee_id)
+        
+        if not employee.exists():
+            raise ValidationError("Employee not found.")
+        
+        # Verify employee belongs to this parent user
+        if employee.parent_user_id.id != user_id:
+            raise ValidationError("This employee is not linked to this user account.")
         
         # Create new session (this will end existing ones)
         session = self.create({
-            'user_id': user.id,
+            'user_id': user_id,
             'active_employee_id': employee.id,
-            'pin_verified': bool(pin),
+            'code_verified': True,
+            'employee_code_used': employee.employee_code,
             'ip_address': ip_address,
             'user_agent': user_agent,
         })

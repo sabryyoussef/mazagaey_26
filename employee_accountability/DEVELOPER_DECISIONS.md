@@ -6,6 +6,25 @@ This document captures the **final decisions** for implementing the shared-user 
 
 ---
 
+## ⚠️ Important Architecture Change (January 2026)
+
+**Odoo Constraint:** Odoo 18 strictly enforces that each employee can only be linked to ONE user account. This cannot be overridden.
+
+**Solution:** Instead of linking multiple employees to one user (blocked by Odoo), we use a **"Selectable Employees"** approach:
+
+1. The shared user (`user.dept.ops`) is **NOT linked** to any employees via the standard `user_id` field
+2. Employees have a Many2many field `selectable_by_user_ids` listing which users can select them
+3. Users have an inverse field `selectable_employee_ids` showing which employees they can select
+4. The `employee.session.context` tracks the currently "active" employee for each user session
+
+This approach:
+- ✅ Works with Odoo's security model (no constraint violations)
+- ✅ Allows multiple employees to be selectable by one shared user
+- ✅ Maintains full accountability via session tracking
+- ✅ Supports PIN verification per employee
+
+---
+
 ## Core Decision: Active Employee Context (Session-Based)
 
 **Selected Approach:** Use **Session-based Active Employee** as the default UX, plus **mandatory employee stamping** on critical actions.
@@ -238,54 +257,65 @@ Sara sees a single KPI sheet per employee and exports it.
 
 | Gap # | Description | Decision | Status |
 |-------|-------------|----------|--------|
-| 1 | Assign task to employee from template | Mandatory `responsible_employee_id` with department filter | ✅ Decided |
-| 2 | Identify employee when logging timesheet | Active Employee Context default | ✅ Decided |
-| 3 | Record who completed checkpoint | `completed_by_employee_id` auto-filled from context | ✅ Decided |
-| 4 | Default employee on leave request | Active Employee Context default | ✅ Decided |
-| 5 | Reports by employee not user | Custom Ops dashboard with employee dimensions | ✅ Decided |
-| 6 | Task handover tracking | Handover model with history | ✅ Decided |
-| 7 | KPI aggregation | Nightly cron + manual recompute button | ✅ Decided |
+| 1 | Assign task to employee from template | Mandatory `responsible_employee_id` with department filter | ✅ Implemented |
+| 2 | Identify employee when logging timesheet | Active Employee Context default | ✅ Implemented |
+| 3 | Record who completed checkpoint | `completed_by_employee_id` auto-filled from context | ⬜ Pending |
+| 4 | Default employee on leave request | Active Employee Context default | ⬜ Pending |
+| 5 | Reports by employee not user | Custom Ops dashboard with employee dimensions | ⬜ Pending |
+| 6 | Task handover tracking | Handover model with history | ⬜ Pending |
+| 7 | KPI aggregation | Nightly cron + manual recompute button | ⬜ Pending |
 
 ---
 
 ## Core Technical Components Required
 
-### 1. Active Employee Context System
+### 1. Active Employee Context System ✅ IMPLEMENTED
 
 ```
-Model: employee.session.context (or extend res.users.context)
+Model: employee.session.context
 Fields:
   - user_id (Many2one: res.users)
   - active_employee_id (Many2one: hr.employee)
   - pin_verified (Boolean)
   - session_start (Datetime)
+  - session_end (Datetime)
+  - ip_address (Char)
+  - user_agent (Char)
+  - state (Selection: active/ended/expired)
 ```
 
-### 2. Employee PIN Security
+### 2. Employee PIN Security ✅ IMPLEMENTED
 
 ```
 Model: hr.employee (extend)
 Fields:
-  - employee_pin (Char, encrypted)
+  - employee_pin (Char, encrypted with salt)
+  - employee_pin_salt (Char)
   - pin_required (Boolean, default=True)
+  - pin_failed_attempts (Integer)
+  - pin_locked_until (Datetime)
+  - is_shared_user_employee (Boolean, computed)
+  - shared_user_employee_ids (Many2many, computed)
 ```
 
-### 3. Top-Bar Employee Switcher
+### 3. Top-Bar Employee Switcher ⬜ PENDING
 
 - Widget in top navbar
 - Shows: "You are: Ahmed ▼ (Switch)"
 - Click opens employee selector wizard with PIN verification
 
-### 4. Task Employee Assignment
+### 4. Task Employee Assignment ✅ IMPLEMENTED
 
 ```
 Model: project.task (extend)
 Fields:
-  - responsible_employee_id (Many2one: hr.employee, required=True)
+  - responsible_employee_id (Many2one: hr.employee)
   - performed_by_employee_id (Many2one: hr.employee)
+  - participant_employee_ids (Many2many: hr.employee)
+  - responsible_employee_department_id (Many2one, related)
 ```
 
-### 5. Checkpoint Completion Tracking
+### 5. Checkpoint Completion Tracking ⬜ PENDING
 
 ```
 Model: project.checkpoint (extend)
@@ -294,7 +324,7 @@ Fields:
   - completed_date (Datetime)
 ```
 
-### 6. Handover History
+### 6. Handover History ⬜ PENDING
 
 ```
 Model: project.task.handover (new or extend project_handover_notes)
@@ -307,7 +337,7 @@ Fields:
   - handover_date (Datetime)
 ```
 
-### 7. KPI Snapshot
+### 7. KPI Snapshot ⬜ PENDING
 
 ```
 Model: hr.employee.kpi.snapshot
@@ -335,11 +365,72 @@ Fields:
 
 ---
 
+## Implementation Status
+
+### ✅ Completed Components
+
+| Component | File(s) | Status |
+|-----------|---------|--------|
+| Active Employee Context System | `models/employee_session_context.py` | ✅ Complete |
+| Employee PIN Security | `models/hr_employee.py` | ✅ Complete |
+| Shared User Support | `models/hr_employee.py`, `models/res_users.py` | ✅ Complete |
+| Task Employee Assignment | `models/project_task.py` | ✅ Complete |
+| Employee Select Wizard | `wizard/employee_select_wizard.py` | ✅ Complete |
+| Session Cleanup Cron | `data/ir_cron.xml` | ✅ Complete |
+| Views & Forms | `views/*.xml` | ✅ Complete |
+| Security Rules | `security/` | ✅ Complete |
+
+### Implemented Features
+
+1. **Employee Session Context** (`employee.session.context`)
+   - Session tracking with start/end times
+   - PIN verification flag
+   - IP address and user agent logging
+   - Automatic session ending on new session creation
+   - State management (active/ended/expired)
+
+2. **Employee PIN Security** (`hr.employee` extension)
+   - Encrypted PIN storage with salt
+   - PIN verification with lockout protection
+   - Failed attempt tracking
+   - Configurable PIN requirement per employee
+
+3. **Shared User Support**
+   - Removed unique user constraint on employees
+   - `is_shared_user_employee` computed field
+   - `shared_user_employee_ids` relationship
+   - Multiple employees can share one `res.users` account
+
+4. **Task Employee Assignment** (`project.task` extension)
+   - `responsible_employee_id` - who is assigned
+   - `performed_by_employee_id` - who actually did the work
+   - `participant_employee_ids` - additional participants
+   - Auto-fill from active employee context on create/write
+   - "Set Responsible to Me" action
+   - "Add Me as Participant" action
+
+5. **Employee Select Wizard**
+   - Employee selection dropdown filtered by user
+   - PIN verification when required
+   - Display notification on successful selection
+
+6. **res.users Extensions**
+   - `get_active_employee()` helper method
+   - `set_active_employee()` helper method
+   - `is_shared_user` computed field
+   - `shared_employee_count` computed field
+
+---
+
 ## Next Steps
 
 1. ✅ Decisions documented
-2. ⬜ Create technical blueprint (models, fields, hooks, menus)
-3. ⬜ Design UI mockups for employee switcher
-4. ⬜ Implement Phase 1 - Active Employee Context
-5. ⬜ Implement Phase 2 - Task/Checkpoint stamping
-6. ⬜ Implement Phase 3 - KPI snapshots and dashboards
+2. ✅ Create technical blueprint (models, fields, hooks, menus)
+3. ✅ Design UI mockups for employee switcher
+4. ✅ Implement Phase 1 - Active Employee Context
+5. ✅ Implement Phase 2 - Task Employee stamping
+6. ⬜ Implement Top-Bar Employee Switcher Widget (OWL component)
+7. ⬜ Implement Checkpoint completion tracking (`completed_by_employee_id`)
+8. ⬜ Implement Handover History model
+9. ⬜ Implement KPI Snapshots and dashboards
+10. ⬜ Leave Request default employee integration

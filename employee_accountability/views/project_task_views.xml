@@ -75,15 +75,6 @@
             <xpath expr="//field[@name='user_ids']" position="after">
                 <field name="responsible_employee_id"/>
             </xpath>
-            <!-- Add employee avatar/name to kanban card -->
-            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="inside">
-                <div class="o_kanban_employee_info" t-if="record.responsible_employee_id.raw_value">
-                    <small class="text-muted">
-                        <i class="fa fa-user-circle me-1"/>
-                        <field name="responsible_employee_id"/>
-                    </small>
-                </div>
-            </xpath>
         </field>
     </record>
 
