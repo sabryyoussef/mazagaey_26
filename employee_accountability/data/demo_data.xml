@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo data for employee accountability -->
+        <!-- This file can be populated with sample employee codes and sessions for testing -->
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Employee Code Wizard Form View -->
+        <record id="view_employee_code_wizard_form" model="ir.ui.view">
+            <field name="name">employee.code.wizard.form</field>
+            <field name="model">employee.code.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Employee Code Authentication">
+                    <group>
+                        <field name="employee_code" 
+                               placeholder="Enter your employee code (e.g., EMP-A1B2-C3D4)"
+                               class="oe_inline"/>
+                        <field name="employee_id" invisible="1"/>
+                        <field name="employee_name" 
+                               readonly="1"
+                               invisible="not employee_id"
+                               class="oe_inline"/>
+                    </group>
+                    <footer>
+                        <button name="action_authenticate" 
+                                string="Authenticate" 
+                                type="object" 
+                                class="btn-primary"
+                                invisible="not employee_id"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Employee Code Wizard Action -->
+        <record id="action_employee_code_wizard" model="ir.actions.act_window">
+            <field name="name">Employee Code Authentication</field>
+            <field name="res_model">employee.code.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

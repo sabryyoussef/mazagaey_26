@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend project task form view -->
+        <record id="view_project_task_form_accountability" model="ir.ui.view">
+            <field name="name">project.task.form.accountability</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <!-- Add employee accountability fields in a group -->
+                <xpath expr="//sheet" position="inside">
+                    <group string="Employee Accountability" col="2">
+                        <field name="employee_id"/>
+                        <field name="employee_code" readonly="1"/>
+                        <field name="actual_worker_ids" widget="many2many_tags" readonly="1" colspan="2"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Extend project task tree view -->
+        <record id="view_project_task_tree_accountability" model="ir.ui.view">
+            <field name="name">project.task.tree.accountability</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="employee_id" optional="show"/>
+                    <field name="employee_code" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Employee Session Context List View -->
+        <record id="view_employee_session_context_tree" model="ir.ui.view">
+            <field name="name">employee.session.context.tree</field>
+            <field name="model">employee.session.context</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="employee_code"/>
+                    <field name="user_id"/>
+                    <field name="state" widget="badge" 
+                           decoration-success="state == 'active'"
+                           decoration-muted="state == 'ended'"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Employee Session Context Form View -->
+        <record id="view_employee_session_context_form" model="ir.ui.view">
+            <field name="name">employee.session.context.form</field>
+            <field name="model">employee.session.context</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_end_session" 
+                                type="object" 
+                                string="End Session"
+                                class="oe_highlight"
+                                invisible="state != 'active'"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="employee_id"/>
+                                <field name="employee_code" readonly="1"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="state"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Employee Session Context Search View -->
+        <record id="view_employee_session_context_search" model="ir.ui.view">
+            <field name="name">employee.session.context.search</field>
+            <field name="model">employee.session.context</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="employee_code"/>
+                    <field name="user_id"/>
+                    <filter string="Active" name="active" domain="[('state', '=', 'active')]"/>
+                    <filter string="Ended" name="ended" domain="[('state', '=', 'ended')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                        <filter string="User" name="group_user" context="{'group_by': 'user_id'}"/>
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Employee Session Context Action -->
+        <record id="action_employee_session_context" model="ir.actions.act_window">
+            <field name="name">Employee Sessions</field>
+            <field name="res_model">employee.session.context</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_employee_session_context"
+                  name="Employee Sessions"
+                  parent="hr.menu_hr_root"
+                  action="action_employee_session_context"
+                  sequence="100"/>
+    </data>
+</odoo>

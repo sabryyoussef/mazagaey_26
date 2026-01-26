@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="employee_accountability.EmployeeSystray" owl="1">
+        <div class="o-dropdown dropdown o-dropdown--no-caret">
+            <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Employee Code">
+                <i class="fa fa-user" aria-label="Employee"/>
+                <t t-if="state.currentCode">
+                    <span class="ms-2"><t t-esc="state.currentCode"/></span>
+                </t>
+                <t t-else="">
+                    <span class="ms-2 text-warning">No Code</span>
+                </t>
+            </a>
+            <div class="dropdown-menu" role="menu">
+                <t t-if="state.currentEmployee">
+                    <div class="dropdown-item-text">
+                        <strong>Current Employee:</strong><br/>
+                        <t t-esc="state.currentEmployee"/> (<t t-esc="state.currentCode"/>)
+                    </div>
+                    <div class="dropdown-divider"/>
+                </t>
+                <a class="dropdown-item" role="menuitem" t-on-click="openEmployeeCodeWizard">
+                    <i class="fa fa-key me-2"/>Change Employee Code
+                </a>
+            </div>
+        </div>
+    </t>
+</templates>
