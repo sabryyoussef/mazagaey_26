@@ -7,14 +7,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='work_contact_id']" position="after">
-                    <field name="employee_code"/>
-                    <field name="parent_user_id"/>
-                    <field name="employee_tag_ids" widget="many2many_tags"/>
-                    <field name="current_session_id" readonly="1"/>
-                </xpath>
-                
-                <!-- Add KPI smart button -->
+                <!-- Add KPI smart buttons -->
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="action_view_kpis"
                             type="object"
@@ -28,6 +21,43 @@
                             icon="fa-clock-o">
                         <field name="total_hours" widget="statinfo" string="Hours"/>
                     </button>
+                    <button name="action_view_sessions"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-history"
+                            string="Sessions"/>
+                </xpath>
+                
+                <!-- Add Accountability Tab -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Accountability" name="accountability">
+                        <group>
+                            <group string="Employee Identification">
+                                <field name="employee_code" readonly="1"/>
+                                <button name="action_regenerate_code" 
+                                        type="object" 
+                                        string="Regenerate Code" 
+                                        class="btn-secondary"
+                                        confirm="Are you sure? The employee will need to use the new code."/>
+                            </group>
+                            <group string="Shared User Configuration">
+                                <field name="parent_user_id"/>
+                                <field name="is_shared_user_employee" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Current Session">
+                                <field name="current_session_id" readonly="1"/>
+                                <field name="current_session_start" readonly="1"/>
+                                <field name="current_session_state" readonly="1"/>
+                            </group>
+                            <group string="Classification">
+                                <field name="employee_tag_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <separator string="Session History"/>
+                        <field name="session_ids" nolabel="1" readonly="1"/>
+                    </page>
                 </xpath>
             </field>
         </record>
@@ -37,6 +67,20 @@
             <field name="name">hr.employee.tree.accountability</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="employee_code"/>
+                    <field name="parent_user_id" optional="hide"/>
+                    <field name="is_shared_user_employee" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search view extension -->
+        <record id="view_employee_search_accountability" model="ir.ui.view">
+            <field name="name">hr.employee.search.accountability</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="employee_code"/>

@@ -12,7 +12,6 @@ class HrEmployee(models.Model):
     employee_code = fields.Char(
         string='Employee Code',
         required=True,
-        unique=True,
         copy=False,
         default=lambda self: self._generate_employee_code(),
         help='Unique code for employee identification (e.g., EMP-A1B2-C3D4)'
@@ -23,6 +22,14 @@ class HrEmployee(models.Model):
         'res.users',
         string='Shared User',
         help='Odoo user account shared by multiple employees in this department'
+    )
+    
+    # Is this employee using a shared user account?
+    is_shared_user_employee = fields.Boolean(
+        string='Is Shared User Employee',
+        compute='_compute_is_shared_user',
+        store=True,
+        help='Indicates if this employee shares a user account with others'
     )
     
     # Employee tags for classification
@@ -60,6 +67,38 @@ class HrEmployee(models.Model):
         store=False
     )
     
+    current_session_start = fields.Datetime(
+        string='Session Started',
+        related='current_session_id.start_date',
+        readonly=True
+    )
+    
+    current_session_state = fields.Selection(
+        related='current_session_id.state',
+        string='Session State',
+        readonly=True
+    )
+    
+    # Session history
+    session_ids = fields.One2many(
+        'employee.session.context',
+        'employee_id',
+        string='Session History'
+    )
+    
+    @api.depends('parent_user_id')
+    def _compute_is_shared_user(self):
+        """Check if this employee is using a shared user account"""
+        for employee in self:
+            if employee.parent_user_id:
+                # Count how many employees share this user
+                shared_count = self.search_count([
+                    ('parent_user_id', '=', employee.parent_user_id.id)
+                ])
+                employee.is_shared_user_employee = shared_count > 1
+            else:
+                employee.is_shared_user_employee = False
+    
     def _generate_employee_code(self):
         """Generate unique employee code"""
         while True:
@@ -68,6 +107,12 @@ class HrEmployee(models.Model):
                    ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(4))
             if not self.search([('employee_code', '=', code)], limit=1):
                 return code
+    
+    def action_regenerate_code(self):
+        """Regenerate employee code"""
+        for employee in self:
+            employee.employee_code = self._generate_employee_code()
+        return True
     
     @api.depends('employee_code')
     def _compute_current_session(self):
@@ -89,18 +134,16 @@ class HrEmployee(models.Model):
             employee.total_tasks = len(tasks)
             
             # Timesheet hours
-            timesheets = self.env['account.analytic.line'].search([
-                ('employee_id', '=', employee.id)
-            ])
-            employee.total_hours = sum(timesheets.mapped('unit_amount'))
+            if 'account.analytic.line' in self.env:
+                timesheets = self.env['account.analytic.line'].search([
+                    ('employee_id', '=', employee.id)
+                ])
+                employee.total_hours = sum(timesheets.mapped('unit_amount'))
+            else:
+                employee.total_hours = 0.0
             
             # Commission (if sale_commission module is installed)
             employee.total_commission = 0.0
-            if 'sale.commission' in self.env:
-                commissions = self.env['sale.commission'].search([
-                    ('employee_id', '=', employee.id)
-                ])
-                employee.total_commission = sum(commissions.mapped('amount'))
     
     @api.constrains('employee_code')
     def _check_employee_code_unique(self):
@@ -117,10 +160,10 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Employee KPIs'),
-            'res_model': 'hr.employee',
-            'res_id': self.id,
-            'view_mode': 'form',
+            'name': _('Tasks'),
+            'res_model': 'project.task',
+            'domain': [('employee_id', '=', self.id)],
+            'view_mode': 'tree,form',
             'target': 'current',
         }
     
@@ -129,9 +172,22 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Employee Timesheets'),
+            'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
             'domain': [('employee_id', '=', self.id)],
             'view_mode': 'tree,form',
             'target': 'current',
+        }
+    
+    def action_view_sessions(self):
+        """Open session history for this employee"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Session History'),
+            'res_model': 'employee.session.context',
+            'domain': [('employee_id', '=', self.id)],
+            'view_mode': 'tree,form',
+            'target': 'current',
+            'context': {'default_employee_id': self.id},
         }
