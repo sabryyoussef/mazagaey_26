@@ -24,7 +24,7 @@ Key Features:
 - Session Tracking: Audit trail of who worked when via their code
 - Simple Wizard: Enter code to identify yourself
     """,
-    'author': 'Mazagawy',
+    'author': 'Sabry Youssef',
     'website': '',
     'license': 'LGPL-3',
     'depends': [
