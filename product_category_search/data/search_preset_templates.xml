@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Search Preset Templates for Common Searches -->
+        
+        <!-- 1. All Visa Services -->
+        <record id="preset_all_visa_services" model="product.search.preset">
+            <field name="name">All Visa Services</field>
+            <field name="description">Find all visa-related services (Employment, Investor, Golden, Dependent)</field>
+            <field name="search_domain">[('is_visa_service', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"is_visa_service": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <!-- 2. All Accounting Services -->
+        <record id="preset_all_accounting_services" model="product.search.preset">
+            <field name="name">All Accounting Services</field>
+            <field name="description">Find all accounting and tax services (CT, VAT, Audit, Bookkeeping)</field>
+            <field name="search_domain">[('is_accounting_service', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"is_accounting_service": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <!-- 3. All Banking Services -->
+        <record id="preset_all_banking_services" model="product.search.preset">
+            <field name="name">All Banking Services</field>
+            <field name="description">Find all banking assistance services (Corporate, Personal, Digital)</field>
+            <field name="search_domain">[('is_banking_service', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"is_banking_service": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">30</field>
+        </record>
+        
+        <!-- 4. Business Formation Services -->
+        <record id="preset_business_setup" model="product.search.preset">
+            <field name="name">Business Formation</field>
+            <field name="description">Company setup and pre-approval services</field>
+            <field name="search_domain">[('is_business_setup', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"is_business_setup": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">40</field>
+        </record>
+        
+        <!-- 5. Value Added Services -->
+        <record id="preset_value_added" model="product.search.preset">
+            <field name="name">Value Added Services</field>
+            <field name="description">Certificates, POA, insurance, translation, and support services</field>
+            <field name="search_domain">[('is_value_added', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"is_value_added": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">50</field>
+        </record>
+        
+        <!-- 6. High Value Services (AED 1000+) -->
+        <record id="preset_high_value_services" model="product.search.preset">
+            <field name="name">High Value Services (AED 1000+)</field>
+            <field name="description">Premium services with price AED 1000 or higher</field>
+            <field name="search_domain">[('list_price', '>=', 1000), ('active', '=', True), ('sale_ok', '=', True)]</field>
+            <field name="filter_criteria">{"price_min": 1000, "active_only": true, "can_be_sold": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">60</field>
+        </record>
+        
+        <!-- 7. Services with Document Requirements -->
+        <record id="preset_document_required" model="product.search.preset">
+            <field name="name">Services with Document Requirements</field>
+            <field name="description">Services that require customer documents for processing</field>
+            <field name="search_domain">[('has_documents', '=', True), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"has_documents": true, "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">70</field>
+        </record>
+        
+        <!-- 8. Operations Department Services -->
+        <record id="preset_operations_services" model="product.search.preset">
+            <field name="name">Operations Services</field>
+            <field name="description">Services managed by Operations department</field>
+            <field name="search_domain">[('product_department_id', '=', ref('department_operations')), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"department_ids": [ref('department_operations')], "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">80</field>
+        </record>
+        
+        <!-- 9. Sales Department Services -->
+        <record id="preset_sales_services" model="product.search.preset">
+            <field name="name">Sales Services</field>
+            <field name="description">Services managed by Sales department</field>
+            <field name="search_domain">[('product_department_id', '=', ref('department_sales')), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"department_ids": [ref('department_sales')], "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">90</field>
+        </record>
+        
+        <!-- 10. Golden Visa Services -->
+        <record id="preset_golden_visa" model="product.search.preset">
+            <field name="name">Golden Visa Services (10 Years)</field>
+            <field name="description">Premium Golden Visa services (Investment, Property, Executive, Deposit)</field>
+            <field name="search_domain">[('service_type_id', '=', ref('service_type_visa_golden')), ('active', '=', True)]</field>
+            <field name="filter_criteria">{"service_type_ids": [ref('service_type_visa_golden')], "active_only": true}</field>
+            <field name="is_global">True</field>
+            <field name="sequence">100</field>
+        </record>
+        
+    </data>
+</odoo>

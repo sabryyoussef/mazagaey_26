@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Bulk Categorize Wizard Form View -->
+        <record id="view_product_bulk_categorize_form" model="ir.ui.view">
+            <field name="name">product.bulk.categorize.form</field>
+            <field name="model">product.bulk.categorize</field>
+            <field name="arch" type="xml">
+                <form string="Bulk Categorize Products">
+                    
+                    <!-- Configuration State -->
+                    <div invisible="state != 'config'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Bulk Categorize Products</strong>
+                            <p>Apply service types and departments to multiple products at once.</p>
+                        </div>
+                        
+                        <group>
+                            <group string="Product Selection">
+                                <field name="selection_mode" widget="radio"/>
+                                <field name="product_ids" widget="many2many_tags" 
+                                       invisible="selection_mode != 'selected'"/>
+                                <field name="filter_name" 
+                                       invisible="selection_mode != 'by_filter'"/>
+                                <field name="filter_category_id" 
+                                       invisible="selection_mode != 'by_filter'"/>
+                                <field name="product_count" class="fw-bold"/>
+                            </group>
+                            
+                            <group string="Action">
+                                <field name="action_type" widget="radio"/>
+                                <field name="service_type_id" 
+                                       invisible="action_type != 'manual'"/>
+                                <field name="department_id" 
+                                       invisible="action_type != 'manual'"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Options">
+                            <group>
+                                <field name="update_service_type"/>
+                                <field name="update_department"/>
+                            </group>
+                            <group>
+                                <field name="overwrite_existing"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Preview" invisible="not result_log">
+                            <field name="result_log" nolabel="1" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <!-- Done State -->
+                    <div invisible="state != 'done'">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Categorization Complete!</strong>
+                        </div>
+                        
+                        <group>
+                            <group string="Results">
+                                <field name="processed_count" class="text-muted"/>
+                                <field name="updated_count" class="text-success"/>
+                                <field name="skipped_count" class="text-warning"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Log">
+                            <field name="result_log" nolabel="1" readonly="1"/>
+                        </group>
+                    </div>
+                    
+                    <footer>
+                        <!-- Config buttons -->
+                        <button string="Preview Changes" 
+                                name="action_preview" 
+                                type="object"
+                                invisible="state != 'config'"
+                                class="btn-secondary"/>
+                        <button string="Apply Categorization" 
+                                name="action_apply" 
+                                type="object" 
+                                class="btn-primary"
+                                invisible="state != 'config'"
+                                confirm="Apply categorization to selected products?"/>
+                        
+                        <!-- Done buttons -->
+                        <button string="Categorize More" 
+                                name="action_back" 
+                                type="object"
+                                invisible="state != 'done'"/>
+                        <button string="View Products" 
+                                name="action_view_products" 
+                                type="object" 
+                                class="btn-primary"
+                                invisible="state != 'done'"/>
+                        
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Action to Open Bulk Categorize Wizard -->
+        <record id="action_product_bulk_categorize" model="ir.actions.act_window">
+            <field name="name">Bulk Categorize Products</field>
+            <field name="res_model">product.bulk.categorize</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_bulk_categorize_form"/>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</odoo>

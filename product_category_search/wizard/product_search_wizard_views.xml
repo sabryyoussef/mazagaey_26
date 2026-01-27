@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Advanced Product Search Wizard Form -->
+        <record id="view_product_search_wizard_form" model="ir.ui.view">
+            <field name="name">product.search.wizard.form</field>
+            <field name="model">product.search.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Advanced Product Search">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="result_count" widget="statinfo" string="Products Found"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Load Saved Search">
+                                <field name="search_preset_id" 
+                                       placeholder="Select a saved search preset..."
+                                       options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <!-- Service & Department Tab -->
+                            <page string="Service &amp; Department" name="service_dept">
+                                <group>
+                                    <group string="Service Types">
+                                        <field name="service_type_ids" 
+                                               widget="many2many_tags"
+                                               options="{'color_field': 'color', 'no_create': True}"/>
+                                    </group>
+                                    <group string="Departments">
+                                        <field name="department_ids" 
+                                               widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                    </group>
+                                </group>
+                                
+                                <separator string="Quick Service Filters"/>
+                                <group>
+                                    <group>
+                                        <field name="is_visa_service"/>
+                                        <field name="is_accounting_service"/>
+                                        <field name="is_banking_service"/>
+                                    </group>
+                                    <group>
+                                        <field name="is_business_setup"/>
+                                        <field name="is_value_added"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- Categories & Price Tab -->
+                            <page string="Categories &amp; Price" name="category_price">
+                                <group>
+                                    <group string="Product Categories">
+                                        <field name="category_ids" 
+                                               widget="many2many_tags"
+                                               options="{'no_create': True}"/>
+                                    </group>
+                                </group>
+                                
+                                <separator string="Price Range"/>
+                                <group>
+                                    <group>
+                                        <field name="price_min" widget="monetary"/>
+                                    </group>
+                                    <group>
+                                        <field name="price_max" widget="monetary"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- Documents & Compliance Tab -->
+                            <page string="Documents &amp; Compliance" name="documents">
+                                <group>
+                                    <group string="Document Requirements">
+                                        <field name="has_documents"/>
+                                    </group>
+                                    <group string="Compliance">
+                                        <field name="compliance_level"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <!-- Status & Options Tab -->
+                            <page string="Status &amp; Options" name="status">
+                                <group>
+                                    <group string="Product Status">
+                                        <field name="active_only"/>
+                                        <field name="can_be_sold"/>
+                                    </group>
+                                </group>
+                                
+                                <separator string="Save This Search"/>
+                                <group>
+                                    <group>
+                                        <field name="save_as_preset"/>
+                                        <field name="name" 
+                                               placeholder="Enter search name to save..."
+                                               required="save_as_preset"/>
+                                    </group>
+                                    <group>
+                                        <field name="preset_is_global" 
+                                               invisible="not save_as_preset"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                        
+                        <!-- Search Results Preview -->
+                        <separator string="Search Results Preview"/>
+                        <field name="product_ids" nolabel="1">
+                            <list string="Products" limit="10" create="0" edit="0" delete="0">
+                                <field name="default_code" optional="show"/>
+                                <field name="name"/>
+                                <field name="service_type_id" optional="show"/>
+                                <field name="product_department_id" optional="show"/>
+                                <field name="categ_id" optional="hide"/>
+                                <field name="list_price" optional="show"/>
+                                <field name="active" optional="hide"/>
+                            </list>
+                        </field>
+                    </sheet>
+                    
+                    <footer>
+                        <button name="action_search" 
+                                string="Search" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button name="action_export_results" 
+                                string="Export Results" 
+                                type="object" 
+                                class="btn-secondary"
+                                invisible="result_count == 0"/>
+                        <button name="action_clear_filters" 
+                                string="Clear All" 
+                                type="object" 
+                                class="btn-link"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Search Wizard Action -->
+        <record id="action_product_search_wizard" model="ir.actions.act_window">
+            <field name="name">Advanced Product Search</field>
+            <field name="res_model">product.search.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_search_wizard_form"/>
+            <field name="target">current</field>
+        </record>
+        
+    </data>
+</odoo>
