@@ -1,149 +1,60 @@
-# Sabry Youssef - Odoo Development Portfolio
+# compound-mobile-access-pass
 
-A comprehensive HTML portfolio showcasing the complete journey of Odoo development work, from migration projects to advanced implementations.
+Planning-only repository for a compound mobile access system using Odoo backend services, resident mobile passes, and N60 Android gate scanners.
 
-## Portfolio Structure
+## Project Overview
+This project defines the product and technical plan for replacing physical gate access with secure digital passes. Residents use a mobile app QR pass, while security guards validate entry at gates using N60 scanner devices connected to Odoo.
 
-### 📁 Files
-- `index.html` - Main portfolio page
-- `styles.css` - Modern responsive styling
-- `script.js` - Interactive features and animations
-- `README.md` - This documentation
+## Main Business Idea
+Deliver a controlled, auditable, and user-friendly gate access platform that:
+- Reduces manual gate checks and paper visitor logs
+- Improves resident and visitor entry speed
+- Gives compound management full visibility over access events
+- Centralizes rules and logs in Odoo
 
-## Portfolio Sections
+## MVP Scope
+- Resident authentication and unit mapping
+- Dynamic resident QR pass (Phase 1)
+- Visitor and delivery invitations with expiring QR
+- N60 gate scanner app with PASS/REJECT decision display
+- Gate/device authorization and real-time backend verification
+- Entry/exit access logs and audit trail
+- Admin controls for blocking resident, unit, or device
 
-### 🏠 Hero Section
-- Professional introduction
-- Key statistics (15+ repositories, 100+ modules, 50K+ lines of code)
-- Contact information
+### Out of MVP (Future)
+- NFC HCE pass mode (planned for Phase 5)
+- Offline gate queue and sync mode (planned for Phase 6)
 
-### 🛣️ Development Journey
-Interactive timeline showing three major phases:
+## Main Actors
+- Resident/Owner
+- Visitor
+- Delivery courier
+- Maintenance worker
+- Security guard
+- Compound admin
+- Security manager/auditor
 
-#### Phase 1: Odoo 16 → 18 Migration & Enhancement
-- Complete migration of 40+ modules
-- Document workflow implementation
-- Project module enhancement
-- Business process optimization
+## High-Level Architecture
+```mermaid
+flowchart LR
+    A[Resident Mobile App] -->|QR/Invitation Request| B[Odoo Access API]
+    V[Visitor QR] -->|Scanned at Gate| C[N60 Gate Scanner App]
+    C -->|verify_pass / verify_invitation| B
+    B -->|PASS / REJECT + reason| C
+    B --> D[(Odoo Access Logs)]
+    E[Admin Dashboard] --> B
+```
 
-#### Phase 2: Fresh Implementation & Workflow Redesign
-- Clean architecture rebuild
-- Advanced workflow systems
-- Enhanced UI/UX
-- Performance optimization
+## Documentation Index
+- `docs/FULL_PLAN.md`
+- `docs/USE_CASES.md`
+- `docs/API_SPEC.md`
+- `docs/ODOO_MODELS.md`
+- `docs/ANDROID_APP_PLAN.md`
+- `docs/N60_GATE_DEVICE_PLAN.md`
+- `docs/SECURITY_RULES.md`
+- `docs/IMPLEMENTATION_PHASES.md`
+- `docs/DEMO_FLOW.md`
 
-#### Phase 3: Advanced Development & Innovation
-- Mazagawy project with awesome functions
-- System integrations
-- Advanced analytics
-- Enterprise architecture
-
-### 💻 Technical Expertise
-- Odoo Development
-- Programming Languages
-- System Architecture
-- Business Solutions
-
-### 📂 Project Portfolio
-- **Freezoner Ecosystem** (10 repositories, 60+ modules)
-- **Ian Project Series** (2 versions, advanced implementations)
-- **Mazagawy** (Premium private solution)
-
-### 📧 Contact Section
-- GitHub profile links
-- Email contact
-- GitHub statistics
-
-## Features
-
-### 🎨 Visual Design
-- Modern gradient backgrounds
-- Glass morphism effects
-- Responsive grid layouts
-- Professional typography (Inter font)
-- Icon integration (Font Awesome)
-
-### ⚡ Interactive Elements
-- Smooth scrolling
-- Animated statistics counters
-- Timeline animations
-- Card hover effects
-- Typing effect on title
-- Particle background
-- Scroll progress indicator
-
-### 📱 Responsive Design
-- Mobile-first approach
-- Tablet and desktop optimization
-- Flexible grid systems
-- Adaptive typography
-
-## Usage
-
-### Local Development
-1. Open `index.html` in a web browser
-2. No build process required
-3. All dependencies loaded via CDN
-
-### Deployment
-- Can be deployed to any static hosting service
-- GitHub Pages compatible
-- Netlify/Vercel ready
-
-## Customization
-
-### Content Updates
-- Edit `index.html` for content changes
-- Update repository links and statistics
-- Modify project descriptions
-
-### Styling Changes
-- Edit `styles.css` for visual modifications
-- Customize colors, fonts, and layouts
-- Adjust responsive breakpoints
-
-### Interactive Features
-- Modify `script.js` for behavior changes
-- Add new animations or effects
-- Customize timing and transitions
-
-## Technical Stack
-
-- **HTML5** - Semantic markup
-- **CSS3** - Modern styling with flexbox/grid
-- **Vanilla JavaScript** - Interactive features
-- **Font Awesome** - Icon library
-- **Google Fonts** - Inter typography
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
-
-## Performance
-
-- Optimized for fast loading
-- Minimal external dependencies
-- Efficient animations
-- Responsive images
-
-## SEO Features
-
-- Semantic HTML structure
-- Meta tags for social sharing
-- Proper heading hierarchy
-- Alt text for images
-
-## Accessibility
-
-- WCAG 2.1 compliant
-- Keyboard navigation support
-- Screen reader friendly
-- High contrast ratios
-
----
-
-This portfolio effectively showcases the complete development journey and technical expertise in Odoo development, presenting a professional image for potential clients and employers.
+## Final Summary
+This repository is a practical MVP-first planning baseline for delivering secure compound access using Odoo, Android resident apps, and N60 gate scanners with QR in early phases and NFC in future scope.
